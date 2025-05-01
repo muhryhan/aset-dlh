@@ -14,6 +14,7 @@ import {
   TableIcon,
   HomeIcon,
   UserCircleIcon,
+  WrenchIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 
@@ -26,7 +27,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    icon: <HomeIcon className="w-6 h-6 text-gray-500 group-hover:text-primary transition-colors" />,
+    icon: <HomeIcon />,
     name: "Dashboard",
     path: "/home",
   },
@@ -42,7 +43,7 @@ const navItems: NavItem[] = [
     ]
   },
   {
-    icon: <GridIcon/>,
+    icon: <WrenchIcon/>,
     name: "Servis",
     subItems: [
       {name: "Servis Kendaraan", path: "/servis-kendaraan"}, 
