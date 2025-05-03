@@ -9,11 +9,7 @@ import Alerts from "./pages/UiElements/Alerts";
 import Badges from "./pages/UiElements/Badges";
 import Avatars from "./pages/UiElements/Avatars";
 import Buttons from "./pages/UiElements/Buttons";
-import LineChart from "./pages/Charts/LineChart";
-import BarChart from "./pages/Charts/BarChart";
 import Calendar from "./pages/Calendar";
-import BasicTables from "./pages/Tables/BasicTables";
-import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
@@ -23,6 +19,7 @@ import AlatBerat from "./pages/Kategori/AlatBerat"
 import AlatKerja from "./pages/Kategori/AlatKerja"
 import Ac from "./pages/Kategori/Ac"
 import Tumbuhan from "./pages/Kategori/Tumbuhan"
+import ServiceKendaraan from "./pages/Service/ServiceKendaraan"
 
 export default function App() {
   return (
@@ -48,11 +45,12 @@ export default function App() {
             <Route path="/ac" element={<Ac/>}/>
             <Route path="/tumbuhan" element={<Tumbuhan/>}/>
 
-            {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
-
-            {/* Tables */}
-            <Route path="/basic-tables" element={<BasicTables />} />
+            {/* Forms Service page */}
+            <Route path="/service-kendaraan" element={<ServiceKendaraan/>}/>
+            {/* <Route path="/alat-berat" element={<AlatBerat/>}/>
+            <Route path="/alat-kerja" element={<AlatKerja/>}/>
+            <Route path="/ac" element={<Ac/>}/>
+            <Route path="/tumbuhan" element={<Tumbuhan/>}/> */}
 
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
@@ -61,10 +59,6 @@ export default function App() {
             <Route path="/buttons" element={<Buttons />} />
             <Route path="/images" element={<Images />} />
             <Route path="/videos" element={<Videos />} />
-
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
           </Route>
 
           {/* Auth Layout */}

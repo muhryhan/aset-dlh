@@ -8,12 +8,7 @@ import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  TableIcon,
   HomeIcon,
-  UserCircleIcon,
   WrenchIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
@@ -46,51 +41,15 @@ const navItems: NavItem[] = [
     icon: <WrenchIcon/>,
     name: "Servis",
     subItems: [
-      {name: "Servis Kendaraan", path: "/servis-kendaraan"}, 
+      {name: "Servis Kendaraan", path: "/service-kendaraan"}, 
       {name: "Servis Alat Berat", path:"/servis-alat-berat"},
       {name: "Servis Alat Kerja", path:"/servis-alat-kerja"},
       {name: "Servis Ac", path:"/servis-ac"}
     ]
   },
-  {
-    icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
-  },
-  {
-    name: "Forms",
-    icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  },
-  {
-    name: "Tables",
-    icon: <TableIcon />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
-    subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
-    ],
-  },
 ];
 
 const othersItems: NavItem[] = [
-  {
-    icon: <PieChartIcon />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
-    ],
-  },
   {
     icon: <BoxCubeIcon />,
     name: "UI Elements",
@@ -102,6 +61,11 @@ const othersItems: NavItem[] = [
       { name: "Images", path: "/images", pro: false },
       { name: "Videos", path: "/videos", pro: false },
     ],
+  },
+  {
+    icon: <CalenderIcon />,
+    name: "Calendar",
+    path: "/calendar",
   },
 ];
 
@@ -316,22 +280,22 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link to="/">
+        <Link to="/home">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <img
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/images/logo/logo-dlh.svg"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={250}
+                height={70}
               />
               <img
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/images/logo/logo-dlh.svg"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={250}
+                height={70}
               />
             </>
           ) : (
