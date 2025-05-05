@@ -54,6 +54,7 @@ import { ReactComponent as AlertHexaIcon } from "./alert-hexa.svg?react";
 import { ReactComponent as ErrorHexaIcon } from "./info-hexa.svg?react";
 import { ReactComponent as HomeIcon } from "./home.svg?react";
 import { ReactComponent as WrenchIcon } from "./wrench.svg?react";
+import { ReactComponent as PeriodicIcon } from "./periodic-service.svg?react";
 import { ReactComponent as MotorIcon } from "./motorcycle.svg?react";
 import { ReactComponent as CarIcon } from "./car.svg?react";
 import { ReactComponent as TruckIcon } from "./truck.svg?react";
@@ -127,4 +128,5 @@ export {
   ChawnIcon,
   AcIcon,
   PlantIcon,
+  PeriodicIcon,
 };

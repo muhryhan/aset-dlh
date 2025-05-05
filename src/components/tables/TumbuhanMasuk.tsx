@@ -4,41 +4,41 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "../../ui/table";
+} from "../ui/table";
 
 interface Order {
   id: number;
-  merek: string;
-  nomorRegist: string;
-  nomorSerial: string;
-  tahunPembelian: string;
-  kondisi: string;
-  aksi: string;
+  kategori: string;
+  nomorPolisi: string;
+  namaBengkel: string;
+  namaOnderdil: string;
+  satuan: string;
+  harga: string;
 }
 
 // Define the table data using the interface
 const tableData: Order[] = [
   {
     id: 1,
-    merek: "Polytron",
-    nomorRegist: "23.83495",
-    nomorSerial: "SADH234",
-    tahunPembelian: "2020",
-    kondisi: "Baik",
-    aksi: "Lihat Update Delete"
+    kategori: "R4",
+    nomorPolisi: "DN 4224",
+    namaBengkel: "Bengkel Seni",
+    namaOnderdil: "Kaca Spion",
+    satuan: "2",
+    harga: "200.000",
   },
   {
-    id: 2,
-    merek: "Sharp",
-    nomorRegist: "24933495",
-    nomorSerial: "DSFJDKF234",
-    tahunPembelian: "2023",
-    kondisi: "Baik Sekali",
-    aksi: "Lihat Update Delete"
+    id: 1,
+    kategori: "R2",
+    nomorPolisi: "DN 4224",
+    namaBengkel: "Bengkel Seni",
+    namaOnderdil: "Isi Angin",
+    satuan: "2",
+    harga: "50.000",
   },
 ];
 
-export default function Ac() {
+export default function PlantsEnter() {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -51,37 +51,37 @@ export default function Ac() {
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Merek
+                  Kategori
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  No Registrasi
+                  No Polisi
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  No Serial
+                  Nama Bengkel
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Tahun Pembelian
+                  Onderdil
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Kondisi
+                  Satuan
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Aksi
+                  Harga
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -92,23 +92,23 @@ export default function Ac() {
               <TableRow key={order.id}>
                 <TableCell className="px-5 py-4 sm:px-6 text-start">
                   <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                    {order.merek}
+                    {order.kategori}
                   </span>
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.nomorRegist}
+                  {order.nomorPolisi}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.nomorSerial}
+                  {order.namaBengkel}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.tahunPembelian}
+                  {order.namaOnderdil}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.kondisi}
+                  {order.satuan}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {order.aksi}
+                  {order.harga}
                 </TableCell>
               </TableRow>
             ))}

@@ -14,12 +14,20 @@ import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
-import Kendaraan from "./pages/Kategori/Kendaraan";
-import AlatBerat from "./pages/Kategori/AlatBerat"
-import AlatKerja from "./pages/Kategori/AlatKerja"
-import Ac from "./pages/Kategori/Ac"
-import Tumbuhan from "./pages/Kategori/Tumbuhan"
-import ServiceKendaraan from "./pages/Service/ServiceKendaraan"
+import Kendaraan from "./pages/Assets/Kendaraan";
+import AlatBerat from "./pages/Assets/AlatBerat";
+import AlatKerja from "./pages/Assets/AlatKerja";
+import Ac from "./pages/Assets/Ac";
+import TumbuhanMasuk from "./pages/Assets/TumbuhanMasuk";
+import TumbuhanKeluar from "./pages/Assets/TumbuhanKeluar";
+import ServiceKendaraan from "./pages/Service/ServiceKendaraan";
+import ServiceAlatBerat from "./pages/Service/ServiceAlatBerat";
+import ServiceAlatKerja from "./pages/Service/ServiceAlatKerja";
+import ServiceAc from "./pages/Service/ServiceAc";
+import PeriodicKendaraan from "./pages/PeriodicService/PeriodicKendaraan";
+import PeriodicAlatBerat from "./pages/PeriodicService/PeriodicAlatBerat";
+import PeriodicAlatKerja from "./pages/PeriodicService/PeriodicAlatKerja";
+import PeriodicAc from "./pages/PeriodicService/PeriodicAc";
 
 export default function App() {
   return (
@@ -38,19 +46,27 @@ export default function App() {
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
 
-            {/* Kategori page */}
+            {/* Aset DLH Page */}
             <Route path="/kendaraan" element={<Kendaraan/>}/>
             <Route path="/alat-berat" element={<AlatBerat/>}/>
             <Route path="/alat-kerja" element={<AlatKerja/>}/>
             <Route path="/ac" element={<Ac/>}/>
-            <Route path="/tumbuhan" element={<Tumbuhan/>}/>
 
-            {/* Forms Service page */}
+            {/* Plants Page */}
+            <Route path="/tumbuhan-in" element={<TumbuhanMasuk/>}/>
+            <Route path="/tumbuhan-out" element={<TumbuhanKeluar/>}/>
+
+            {/* Service Page */}
             <Route path="/service-kendaraan" element={<ServiceKendaraan/>}/>
-            {/* <Route path="/alat-berat" element={<AlatBerat/>}/>
-            <Route path="/alat-kerja" element={<AlatKerja/>}/>
-            <Route path="/ac" element={<Ac/>}/>
-            <Route path="/tumbuhan" element={<Tumbuhan/>}/> */}
+            <Route path="/service-alat-berat" element={<ServiceAlatBerat/>}/>
+            <Route path="/service-alat-kerja" element={<ServiceAlatKerja/>}/>
+            <Route path="/service-ac" element={<ServiceAc/>}/>
+
+            {/* Periodic Service Page */}
+            <Route path="/periodic-kendaraan" element={<PeriodicKendaraan/>}/>
+            <Route path="/periodic-alat-berat" element={<PeriodicAlatBerat/>}/>
+            <Route path="/periodic-alat-kerja" element={<PeriodicAlatKerja/>}/>
+            <Route path="/periodic-ac" element={<PeriodicAc/>}/>
 
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />

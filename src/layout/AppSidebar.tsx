@@ -3,13 +3,14 @@ import { Link, useLocation } from "react-router";
 
 // Assume these icons are imported from an icon library
 import {
-  BoxCubeIcon,
   CalenderIcon,
   ChevronDownIcon,
-  GridIcon,
+  PlantIcon,
   HorizontaLDots,
   HomeIcon,
   WrenchIcon,
+  PeriodicIcon,
+  GridIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 
@@ -28,13 +29,20 @@ const navItems: NavItem[] = [
   },
   {
     icon: <GridIcon/>,
-    name: "Kategori",
+    name: "Aset DLH",
     subItems: [
       {name: "Kendaraan", path: "/kendaraan"}, 
       {name: "Alat Berat", path:"/alat-berat"},
       {name: "Alat Kerja", path:"/alat-kerja"},
-      {name: "Ac", path:"/ac"},
-      {name: "Tumbuhan", path:"/tumbuhan"}
+      {name: "AC", path:"/ac"}
+    ]
+  },
+  {
+    icon: <PlantIcon/>,
+    name: "Tumbuhan",
+    subItems: [
+      {name: "Tumbuhan Masuk", path: "/tumbuhan-in"},
+      {name: "Tumbuhan Keluar", path: "/tumbuhan-out"}
     ]
   },
   {
@@ -42,26 +50,24 @@ const navItems: NavItem[] = [
     name: "Servis",
     subItems: [
       {name: "Servis Kendaraan", path: "/service-kendaraan"}, 
-      {name: "Servis Alat Berat", path:"/servis-alat-berat"},
-      {name: "Servis Alat Kerja", path:"/servis-alat-kerja"},
-      {name: "Servis Ac", path:"/servis-ac"}
+      {name: "Servis Alat Berat", path:"/service-alat-berat"},
+      {name: "Servis Alat Kerja", path:"/service-alat-kerja"},
+      {name: "Servis AC", path:"/service-ac"}
+    ]
+  },
+  {
+    icon: <PeriodicIcon/>,
+    name: "Servis Berkala",
+    subItems: [
+      {name: "Servis Kendaraan Berkala", path: "/periodic-kendaraan"}, 
+      {name: "Servis Alat Berat Berkala", path:"/periodic-alat-berat"},
+      {name: "Servis Alat Kerja Berkala", path:"/periodic-alat-kerja"},
+      {name: "Servis AC Berkala", path:"/periodic-ac"}
     ]
   },
 ];
 
 const othersItems: NavItem[] = [
-  {
-    icon: <BoxCubeIcon />,
-    name: "UI Elements",
-    subItems: [
-      { name: "Alerts", path: "/alerts", pro: false },
-      { name: "Avatar", path: "/avatars", pro: false },
-      { name: "Badge", path: "/badge", pro: false },
-      { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
-      { name: "Videos", path: "/videos", pro: false },
-    ],
-  },
   {
     icon: <CalenderIcon />,
     name: "Calendar",
