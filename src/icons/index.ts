@@ -59,7 +59,7 @@ import { ReactComponent as MotorIcon } from "./motorcycle.svg?react";
 import { ReactComponent as CarIcon } from "./car.svg?react";
 import { ReactComponent as TruckIcon } from "./truck.svg?react";
 import { ReactComponent as ExcaIcon } from "./excavator.svg?react";
-import { ReactComponent as ChawnIcon } from "./chawn.svg?react";
+import { ReactComponent as LawnIcon } from "./lawn.svg?react";
 import { ReactComponent as AcIcon } from "./ac.svg?react";
 import { ReactComponent as PlantIcon } from "./plant.svg?react";
 
@@ -125,7 +125,7 @@ export {
   CarIcon,
   TruckIcon,
   ExcaIcon,
-  ChawnIcon,
+  LawnIcon,
   AcIcon,
   PlantIcon,
   PeriodicIcon,

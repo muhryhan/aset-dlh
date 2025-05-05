@@ -3,7 +3,7 @@ import {
   CarIcon,
   TruckIcon,
   ExcaIcon,    
-  ChawnIcon,
+  LawnIcon,
   AcIcon,
   PlantIcon,
 } from "../../icons";
@@ -93,7 +93,7 @@ export default function EcommerceMetrics() {
       <div className="relative rounded-2xl border border-gray-200 bg-white px-6 py-8 shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
       {/* Ikon kiri atas */}
         <div className="absolute top-4 left-4 w-12 h-12 flex items-center justify-center bg-gray-100 rounded-xl dark:bg-gray-800">
-          <ChawnIcon className="text-gray-800 size-6 dark:text-white/90" />
+          <LawnIcon className="text-gray-800 size-6 dark:text-white/90" />
         </div>
 
       {/* Angka tengah */}
