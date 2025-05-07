@@ -5,6 +5,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import ActionButtons from "../button/actionbuttons";
 
 interface Order {
   id: number;
@@ -13,7 +14,6 @@ interface Order {
   tahunPembuatan: string;
   kategori: string;
   kondisi: string;
-  aksi: string;
 }
 
 // Define the table data using the interface
@@ -24,8 +24,7 @@ const tableData: Order[] = [
     nomorPolisi: "DN 4442 DF",
     tahunPembuatan: "2024",
     kategori: "R4",
-    kondisi: "Baik",
-    aksi: "Lihat Update Delete"
+    kondisi: "Baik"
   },
   {
     id: 2,
@@ -34,7 +33,6 @@ const tableData: Order[] = [
     tahunPembuatan: "2021",
     kategori: "R2",
     kondisi: "Kurang Baik",
-    aksi: "Lihat Update Delete"
   },
 ];
 
@@ -108,7 +106,11 @@ export default function Kendaraan() {
                   {order.kondisi}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {order.aksi}
+                <ActionButtons
+                        onView={() => console.log("Lihat", order.id)}
+                        onEdit={() => console.log("Edit", order.id)}
+                        onDelete={() => console.log("Hapus", order.id)}
+                      />
                 </TableCell>
               </TableRow>
             ))}
