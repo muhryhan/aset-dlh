@@ -11,6 +11,8 @@ import {
   WrenchIcon,
   PeriodicIcon,
   GridIcon,
+  ParkIcon,
+  BurialIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 
@@ -39,11 +41,18 @@ const navItems: NavItem[] = [
   },
   {
     icon: <PlantIcon/>,
-    name: "Tumbuhan",
-    subItems: [
-      {name: "Tumbuhan Masuk", path: "/tumbuhan-in"},
-      {name: "Tumbuhan Keluar", path: "/tumbuhan-out"}
-    ]
+    name: "Tumbuhan", 
+    path: "/tumbuhan"
+  },
+  {
+    icon: <ParkIcon/>,
+    name: "Taman Kota",
+    path: "/taman-kota"
+  },
+  {
+    icon: <BurialIcon/>,
+    name: "TPU Kota",
+    path: "/tpu"
   },
   {
     icon: <WrenchIcon/>,
@@ -52,7 +61,7 @@ const navItems: NavItem[] = [
       {name: "Servis Kendaraan", path: "/service-kendaraan"}, 
       {name: "Servis Alat Berat", path:"/service-alat-berat"},
       {name: "Servis Alat Kerja", path:"/service-alat-kerja"},
-      {name: "Servis AC", path:"/service-ac"}
+      {name: "Servis AC", path:"/service-ac"},
     ]
   },
   {

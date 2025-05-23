@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
+import { ChevronLeftIcon, EyeCloseIcon, EyeIcon, QRIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import Checkbox from "../form/input/Checkbox";
@@ -22,6 +22,12 @@ export default function SignInForm() {
       </div>
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
+          <div className="flex justify-center mb-6">
+            <Link to="/scan">
+              <QRIcon className="w-40 h-40 text-gray-700 dark:text-white cursor-pointer hover:scale-105 transition-transform duration-300" />
+            </Link>
+          </div>
+
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
               Masuk
@@ -31,10 +37,8 @@ export default function SignInForm() {
             </p>
           </div>
           <div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
-            </div>
-            <div className="relative py-3 sm:py-5">
-            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5"></div>
+            <div className="relative py-3 sm:py-5"></div>
             <form>
               <div className="space-y-6">
                 <div>
@@ -73,12 +77,10 @@ export default function SignInForm() {
                   </div>
                 </div>
                 <div>
-                  <Link 
-                  to={"/home"}
-                  >
-                  <Button className="w-full" size="sm">
-                    Masuk
-                  </Button>
+                  <Link to={"/home"}>
+                    <Button className="w-full" size="sm">
+                      Masuk
+                    </Button>
                   </Link>
                 </div>
               </div>

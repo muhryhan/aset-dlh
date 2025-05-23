@@ -62,7 +62,9 @@ import { ReactComponent as ExcaIcon } from "./excavator.svg?react";
 import { ReactComponent as LawnIcon } from "./lawn.svg?react";
 import { ReactComponent as AcIcon } from "./ac.svg?react";
 import { ReactComponent as PlantIcon } from "./plant.svg?react";
-
+import { ReactComponent as ParkIcon } from "./park.svg?react";
+import { ReactComponent as BurialIcon } from "./burial.svg?react";
+import { ReactComponent as QRIcon } from "./qr.svg?react";
 
 export {
   ErrorHexaIcon,
@@ -129,4 +131,7 @@ export {
   AcIcon,
   PlantIcon,
   PeriodicIcon,
+  ParkIcon,
+  BurialIcon,
+  QRIcon,
 };

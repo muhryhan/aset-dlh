@@ -13,123 +13,74 @@ import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 
-interface AcData {
+interface TumbuhanData {
   id: number;
-  qrCode: string;
   gambar: string;
-  merek: string;
-  noRegistrasi: string;
-  
-  ukuran: string;
-  ruangan: string;
-  asal: string;
-  tahunPembelian: string;
-  hargaPembelian: number;
-  kondisi: string;
+  nama: string;
+  jenis: string;
+  stok: number;
   keterangan: string;
 }
 
-const tableData: AcData[] = [
+// Define the table data using the interface
+const tableData: TumbuhanData[] = [
   {
     id: 1,
-    qrCode: "QR001",
-    gambar: "/images/ac1.jpg",
-    merek: "Polytron",
-    noRegistrasi: "23.83495",
-    
-    ukuran: "1 PK",
-    ruangan: "Ruang Server",
-    asal: "Pembelian",
-    tahunPembelian: "2020",
-    hargaPembelian: 3500000,
-    kondisi: "Baik",
-    keterangan: "-",
+    gambar: "https://example.com/images/anggrek.jpg",
+    nama: "Anggrek Bulan",
+    jenis: "Hias",
+    stok: 10,
+    keterangan: "Tanaman hias populer dengan bunga berwarna putih.",
   },
   {
     id: 2,
-    qrCode: "QR002",
-    gambar: "/images/ac2.jpg",
-    merek: "Sharp",
-    noRegistrasi: "24933495",
-    
-    ukuran: "1.5 PK",
-    ruangan: "Ruang Kepala",
-    asal: "Hibah",
-    tahunPembelian: "2023",
-    hargaPembelian: 4000000,
-    kondisi: "Baik Sekali",
-    keterangan: "AC baru diganti",
+    gambar: "https://example.com/images/kaktus.jpg",
+    nama: "Kaktus Mini",
+    jenis: "Hias",
+    stok: 25,
+    keterangan: "Perawatan mudah, cocok untuk dekorasi meja.",
   },
   {
     id: 3,
-    qrCode: "QR003",
-    gambar: "/images/ac3.jpg",
-    merek: "LG",
-    noRegistrasi: "11020394",
-    
-    ukuran: "2 PK",
-    ruangan: "Ruang Rapat",
-    asal: "Pembelian",
-    tahunPembelian: "2021",
-    hargaPembelian: 5000000,
-    kondisi: "Baik",
-    keterangan: "-",
+    gambar: "https://example.com/images/lidah-mertua.jpg",
+    nama: "Lidah Mertua",
+    jenis: "Penyaring Udara",
+    stok: 15,
+    keterangan: "Efektif menyaring udara, cocok untuk dalam ruangan.",
   },
   {
     id: 4,
-    qrCode: "QR004",
-    gambar: "/images/ac4.jpg",
-    merek: "Samsung",
-    noRegistrasi: "55488221",
-    
-    ukuran: "1 PK",
-    ruangan: "Lobby",
-    asal: "Hibah",
-    tahunPembelian: "2019",
-    hargaPembelian: 3000000,
-    kondisi: "Perlu Servis",
-    keterangan: "Sering bocor",
+    gambar: "https://example.com/images/pakis.jpg",
+    nama: "Pakis Boston",
+    jenis: "Hias",
+    stok: 8,
+    keterangan: "Tanaman dengan daun lebat, suka tempat teduh.",
   },
   {
     id: 5,
-    qrCode: "QR005",
-    gambar: "/images/ac5.jpg",
-    merek: "Daikin",
-    noRegistrasi: "33449920",
-    
-    ukuran: "1 PK",
-    ruangan: "Ruang Tunggu",
-    asal: "Pembelian",
-    tahunPembelian: "2018",
-    hargaPembelian: 3200000,
-    kondisi: "Kurang Baik",
-    keterangan: "Bunyi keras saat dinyalakan",
+    gambar: "https://example.com/images/mint.jpg",
+    nama: "Daun Mint",
+    jenis: "Herbal",
+    stok: 20,
+    keterangan: "Biasa digunakan untuk minuman dan masakan.",
   },
   {
     id: 6,
-    qrCode: "QR006",
-    gambar: "/images/ac6.jpg",
-    merek: "Panasonic",
-    noRegistrasi: "99887766",
-    
-    ukuran: "1.5 PK",
-    ruangan: "Ruang Administrasi",
-    asal: "Hibah",
-    tahunPembelian: "2022",
-    hargaPembelian: 3800000,
-    kondisi: "Baik",
-    keterangan: "Digunakan setiap hari",
+    gambar: "https://example.com/images/bunga-matahari.jpg",
+    nama: "Bunga Matahari",
+    jenis: "Hias",
+    stok: 12,
+    keterangan: "Membutuhkan cahaya matahari penuh untuk tumbuh optimal.",
   },
 ];
 
-export default function Ac() {
+export default function Tumbuhan() {
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
 
   const filteredData = tableData
-    .filter(
-      (AcData) =>
-        AcData.merek.toLowerCase().includes(search.toLowerCase())
+    .filter((TumbuhanData) =>
+      TumbuhanData.nama.toLowerCase().includes(search.toLowerCase())
     )
     .slice(0, rows);
 
@@ -150,6 +101,7 @@ export default function Ac() {
           <PDFButton onClick={handleExportPDF} />
         </div>
       </div>
+
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px]">
           <Table>
@@ -160,25 +112,19 @@ export default function Ac() {
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Merek
+                  Nama
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Ruangan
+                  Jenis
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Harga Pembelian
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Kondisi
+                  Stok
                 </TableCell>
                 <TableCell
                   isHeader
@@ -191,27 +137,24 @@ export default function Ac() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.map((ac) => (
-                <TableRow key={ac.id}>
+              {filteredData.map((TumbuhanData) => (
+                <TableRow key={TumbuhanData.id}>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                      {ac.merek}
+                      {TumbuhanData.nama}
                     </span>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.ruangan}
+                    {TumbuhanData.jenis}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {ac.hargaPembelian.toLocaleString("id-ID")}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.kondisi}
+                    {TumbuhanData.stok}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <ActionButton
-                      onView={() => console.log("Lihat", ac.id)}
-                      onEdit={() => console.log("Edit", ac.id)}
-                      onDelete={() => console.log("Hapus", ac.id)}
+                      onView={() => console.log("Lihat", TumbuhanData.id)}
+                      onEdit={() => console.log("Edit", TumbuhanData.id)}
+                      onDelete={() => console.log("Hapus", TumbuhanData.id)}
                     />
                   </TableCell>
                 </TableRow>

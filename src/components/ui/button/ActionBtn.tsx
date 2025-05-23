@@ -1,4 +1,3 @@
-// src/components/ActionButtons.tsx
 import React from "react";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
@@ -8,7 +7,7 @@ interface ActionButtonsProps {
   onDelete: () => void;
 }
 
-const ActionButtons: React.FC<ActionButtonsProps> = ({ onView, onEdit, onDelete }) => {
+const ActionButton: React.FC<ActionButtonsProps> = ({ onView, onEdit, onDelete }) => {
   return (
     <div className="flex space-x-2">
       <button onClick={onView} className="text-blue-600 hover:text-blue-800" title="Lihat">
@@ -24,4 +23,4 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onView, onEdit, onDelete 
   );
 };
 
-export default ActionButtons;
+export default ActionButton;

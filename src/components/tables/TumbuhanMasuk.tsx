@@ -5,42 +5,97 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import ActionButton from "../ui/button/ActionBtnLite";
+import { useState } from "react";
+import AddButton from "../ui/button/AddBtn";
+import ExcelButton from "../ui/button/ExcelBtn";
+import PDFButton from "../ui/button/PdfBtn";
+import SearchInput from "../ui/search/Search";
+import RowsSelector from "../ui/rowsSelector/rowsSelector";
 
-interface Order {
+interface TumbuhanMasukData {
+  idTumbuhanMasuk: number;
   id: number;
-  kategori: string;
-  nomorPolisi: string;
-  namaBengkel: string;
-  namaOnderdil: string;
-  satuan: string;
-  harga: string;
+  tanggal: string;
+  jumlah: number;
+  keterangan: string;
 }
 
+
 // Define the table data using the interface
-const tableData: Order[] = [
+const tableData: TumbuhanMasukData[] = [
   {
-    id: 1,
-    kategori: "R4",
-    nomorPolisi: "DN 4224",
-    namaBengkel: "Bengkel Seni",
-    namaOnderdil: "Kaca Spion",
-    satuan: "2",
-    harga: "200.000",
+    idTumbuhanMasuk: 1,
+    id: 101,
+    tanggal: "2025-05-01",
+    jumlah: 10,
+    keterangan: "Penambahan stok awal bulan",
   },
   {
-    id: 1,
-    kategori: "R2",
-    nomorPolisi: "DN 4224",
-    namaBengkel: "Bengkel Seni",
-    namaOnderdil: "Isi Angin",
-    satuan: "2",
-    harga: "50.000",
+    idTumbuhanMasuk: 2,
+    id: 102,
+    tanggal: "2025-05-03",
+    jumlah: 5,
+    keterangan: "Sumbangan dari komunitas hijau",
+  },
+  {
+    idTumbuhanMasuk: 3,
+    id: 103,
+    tanggal: "2025-05-05",
+    jumlah: 20,
+    keterangan: "Pembelian dari supplier luar",
+  },
+  {
+    idTumbuhanMasuk: 4,
+    id: 104,
+    tanggal: "2025-05-07",
+    jumlah: 8,
+    keterangan: "Stok pengganti yang mati",
+  },
+  {
+    idTumbuhanMasuk: 5,
+    id: 105,
+    tanggal: "2025-05-10",
+    jumlah: 12,
+    keterangan: "Tambahan koleksi tanaman baru",
+  },
+  {
+    idTumbuhanMasuk: 6,
+    id: 106,
+    tanggal: "2025-05-15",
+    jumlah: 15,
+    keterangan: "Donasi dari yayasan lingkungan",
   },
 ];
 
-export default function PlantsEnter() {
+export default function TumbuhanMasuk() {
+  const [search, setSearch] = useState("");
+  const [rows, setRows] = useState(5);
+
+  const filteredData = tableData
+    .filter((TumbuhanMasukData) =>
+      TumbuhanMasukData.tanggal.toLowerCase().includes(search.toLowerCase())
+    )
+    .slice(0, rows);
+
+  const handleAddData = () => console.log("Tambah Data");
+  const handleExportExcel = () => console.log("Export ke Excel");
+  const handleExportPDF = () => console.log("Export ke PDF");
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
+        <div className="flex gap-2 items-center">
+          <AddButton onClick={handleAddData} />
+          <RowsSelector value={rows} onChange={setRows} />
+        </div>
+        <div className="flex gap-2 items-center">
+          <SearchInput value={search} onChange={setSearch} />
+          <ExcelButton onClick={handleExportExcel} />
+          <PDFButton onClick={handleExportPDF} />
+        </div>
+      </div>
+
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px]">
           <Table>
@@ -51,68 +106,53 @@ export default function PlantsEnter() {
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Kategori
+                  Tanggal
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  No Polisi
+                  Jumlah
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Nama Bengkel
+                  Keterangan
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Onderdil
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Satuan
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Harga
+                  Aksi
                 </TableCell>
               </TableRow>
             </TableHeader>
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {tableData.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="px-5 py-4 sm:px-6 text-start">
-                  <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                    {order.kategori}
-                  </span>
-                </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.nomorPolisi}
-                </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.namaBengkel}
-                </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.namaOnderdil}
-                </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.satuan}
-                </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {order.harga}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+              {filteredData.map((TumbuhanMasukData) => (
+                <TableRow key={TumbuhanMasukData.id}>
+                  <TableCell className="px-5 py-4 sm:px-6 text-start">
+                    <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                      {TumbuhanMasukData.tanggal}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {TumbuhanMasukData.jumlah}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {TumbuhanMasukData.keterangan}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                    <ActionButton
+                      onEdit={() => console.log("Edit", TumbuhanMasukData.id)}
+                      onDelete={() => console.log("Hapus", TumbuhanMasukData.id)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </div>
       </div>

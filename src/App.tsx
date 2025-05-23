@@ -18,8 +18,7 @@ import Kendaraan from "./pages/Assets/Kendaraan";
 import AlatBerat from "./pages/Assets/AlatBerat";
 import AlatKerja from "./pages/Assets/AlatKerja";
 import Ac from "./pages/Assets/Ac";
-import TumbuhanMasuk from "./pages/Assets/TumbuhanMasuk";
-import TumbuhanKeluar from "./pages/Assets/TumbuhanKeluar";
+import Tumbuhan from "./pages/Assets/Tumbuhan";
 import ServiceKendaraan from "./pages/Service/ServiceKendaraan";
 import ServiceAlatBerat from "./pages/Service/ServiceAlatBerat";
 import ServiceAlatKerja from "./pages/Service/ServiceAlatKerja";
@@ -28,6 +27,9 @@ import PeriodicKendaraan from "./pages/PeriodicService/PeriodicKendaraan";
 import PeriodicAlatBerat from "./pages/PeriodicService/PeriodicAlatBerat";
 import PeriodicAlatKerja from "./pages/PeriodicService/PeriodicAlatKerja";
 import PeriodicAc from "./pages/PeriodicService/PeriodicAc";
+import FormService from "./pages/Service/FormService";
+import TamanKota from "./pages/Assets/TamanKota";
+import TPUKota from "./pages/Assets/TPU";
 
 export default function App() {
   return (
@@ -51,16 +53,18 @@ export default function App() {
             <Route path="/alat-berat" element={<AlatBerat/>}/>
             <Route path="/alat-kerja" element={<AlatKerja/>}/>
             <Route path="/ac" element={<Ac/>}/>
+            <Route path="/taman-kota" element={<TamanKota/>}/>
+            <Route path="/tpu" element={<TPUKota/>}/>
 
             {/* Plants Page */}
-            <Route path="/tumbuhan-in" element={<TumbuhanMasuk/>}/>
-            <Route path="/tumbuhan-out" element={<TumbuhanKeluar/>}/>
+            <Route path="/tumbuhan" element={<Tumbuhan/>}/>
 
             {/* Service Page */}
             <Route path="/service-kendaraan" element={<ServiceKendaraan/>}/>
             <Route path="/service-alat-berat" element={<ServiceAlatBerat/>}/>
             <Route path="/service-alat-kerja" element={<ServiceAlatKerja/>}/>
             <Route path="/service-ac" element={<ServiceAc/>}/>
+            <Route path="/form-service" element={<FormService/>}/>
 
             {/* Periodic Service Page */}
             <Route path="/periodic-kendaraan" element={<PeriodicKendaraan/>}/>

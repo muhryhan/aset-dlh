@@ -13,123 +13,61 @@ import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 
-interface AcData {
+interface Order {
   id: number;
-  qrCode: string;
-  gambar: string;
-  merek: string;
-  noRegistrasi: string;
-  
-  ukuran: string;
-  ruangan: string;
-  asal: string;
-  tahunPembelian: string;
-  hargaPembelian: number;
+  nama: string;
+  lokasi: string;
+  tahunPembuatan: string;
   kondisi: string;
-  keterangan: string;
 }
 
-const tableData: AcData[] = [
+const tableData: Order[] = [
   {
     id: 1,
-    qrCode: "QR001",
-    gambar: "/images/ac1.jpg",
-    merek: "Polytron",
-    noRegistrasi: "23.83495",
-    
-    ukuran: "1 PK",
-    ruangan: "Ruang Server",
-    asal: "Pembelian",
-    tahunPembelian: "2020",
-    hargaPembelian: 3500000,
+    nama: "Taman Vatulemo",
+    lokasi: "Kantor Walikota",
+    tahunPembuatan: "2022",
     kondisi: "Baik",
-    keterangan: "-",
   },
   {
     id: 2,
-    qrCode: "QR002",
-    gambar: "/images/ac2.jpg",
-    merek: "Sharp",
-    noRegistrasi: "24933495",
-    
-    ukuran: "1.5 PK",
-    ruangan: "Ruang Kepala",
-    asal: "Hibah",
-    tahunPembelian: "2023",
-    hargaPembelian: 4000000,
-    kondisi: "Baik Sekali",
-    keterangan: "AC baru diganti",
+    nama: "Taman Tondo",
+    lokasi: "Kantor Kelurahan Tondo",
+    tahunPembuatan: "2020",
+    kondisi: "Baik",
   },
   {
     id: 3,
-    qrCode: "QR003",
-    gambar: "/images/ac3.jpg",
-    merek: "LG",
-    noRegistrasi: "11020394",
-    
-    ukuran: "2 PK",
-    ruangan: "Ruang Rapat",
-    asal: "Pembelian",
-    tahunPembelian: "2021",
-    hargaPembelian: 5000000,
+    nama: "Taman Duyu",
+    lokasi: "Duyu",
+    tahunPembuatan: "2019",
     kondisi: "Baik",
-    keterangan: "-",
   },
   {
     id: 4,
-    qrCode: "QR004",
-    gambar: "/images/ac4.jpg",
-    merek: "Samsung",
-    noRegistrasi: "55488221",
-    
-    ukuran: "1 PK",
-    ruangan: "Lobby",
-    asal: "Hibah",
-    tahunPembelian: "2019",
-    hargaPembelian: 3000000,
-    kondisi: "Perlu Servis",
-    keterangan: "Sering bocor",
+    nama: "Taman Lasoso",
+    lokasi: "Bundaran Lasoso",
+    tahunPembuatan: "2023",
+    kondisi: "Kurang Baik",
   },
   {
     id: 5,
-    qrCode: "QR005",
-    gambar: "/images/ac5.jpg",
-    merek: "Daikin",
-    noRegistrasi: "33449920",
-    
-    ukuran: "1 PK",
-    ruangan: "Ruang Tunggu",
-    asal: "Pembelian",
-    tahunPembelian: "2018",
-    hargaPembelian: 3200000,
-    kondisi: "Kurang Baik",
-    keterangan: "Bunyi keras saat dinyalakan",
-  },
-  {
-    id: 6,
-    qrCode: "QR006",
-    gambar: "/images/ac6.jpg",
-    merek: "Panasonic",
-    noRegistrasi: "99887766",
-    
-    ukuran: "1.5 PK",
-    ruangan: "Ruang Administrasi",
-    asal: "Hibah",
-    tahunPembelian: "2022",
-    hargaPembelian: 3800000,
-    kondisi: "Baik",
-    keterangan: "Digunakan setiap hari",
+    nama: "Taman Kuda",
+    lokasi: "Talise",
+    tahunPembuatan: "2014",
+    kondisi: "Rusak",
   },
 ];
 
-export default function Ac() {
+export default function Kendaraan() {
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
 
   const filteredData = tableData
     .filter(
-      (AcData) =>
-        AcData.merek.toLowerCase().includes(search.toLowerCase())
+      (order) =>
+        order.nama.toLowerCase().includes(search.toLowerCase()) ||
+        order.lokasi.toLowerCase().includes(search.toLowerCase())
     )
     .slice(0, rows);
 
@@ -150,29 +88,29 @@ export default function Ac() {
           <PDFButton onClick={handleExportPDF} />
         </div>
       </div>
+
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px]">
           <Table>
-            {/* Table Header */}
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Merek
+                  Nama
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Ruangan
+                  Lokasi
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Harga Pembelian
+                  Tahun Pembuatan
                 </TableCell>
                 <TableCell
                   isHeader
@@ -189,29 +127,28 @@ export default function Ac() {
               </TableRow>
             </TableHeader>
 
-            {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.map((ac) => (
-                <TableRow key={ac.id}>
+              {filteredData.map((order) => (
+                <TableRow key={order.id}>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                      {ac.merek}
+                      {order.nama}
                     </span>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.ruangan}
+                    {order.lokasi}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {ac.hargaPembelian.toLocaleString("id-ID")}
+                    {order.tahunPembuatan}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.kondisi}
+                    {order.kondisi}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <ActionButton
-                      onView={() => console.log("Lihat", ac.id)}
-                      onEdit={() => console.log("Edit", ac.id)}
-                      onDelete={() => console.log("Hapus", ac.id)}
+                      onView={() => console.log("Lihat", order.id)}
+                      onEdit={() => console.log("Edit", order.id)}
+                      onDelete={() => console.log("Hapus", order.id)}
                     />
                   </TableCell>
                 </TableRow>
