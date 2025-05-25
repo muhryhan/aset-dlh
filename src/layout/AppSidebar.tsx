@@ -30,49 +30,49 @@ const navItems: NavItem[] = [
     path: "/home",
   },
   {
-    icon: <GridIcon/>,
-    name: "Aset DLH",
+    icon: <GridIcon />,
+    name: "Aset Dinas Lingkung Hidup",
     subItems: [
-      {name: "Kendaraan", path: "/kendaraan"}, 
-      {name: "Alat Berat", path:"/alat-berat"},
-      {name: "Alat Kerja", path:"/alat-kerja"},
-      {name: "AC", path:"/ac"}
-    ]
+      { name: "Kendaraan", path: "/kendaraan" },
+      { name: "Alat Berat", path: "/alat-berat" },
+      { name: "Alat Kerja", path: "/alat-kerja" },
+      { name: "AC", path: "/ac" },
+    ],
   },
   {
-    icon: <PlantIcon/>,
-    name: "Tumbuhan", 
-    path: "/tumbuhan"
+    icon: <PlantIcon />,
+    name: "Tumbuhan",
+    path: "/tumbuhan",
   },
   {
-    icon: <ParkIcon/>,
+    icon: <ParkIcon />,
     name: "Taman Kota",
-    path: "/taman-kota"
+    path: "/taman-kota",
   },
   {
-    icon: <BurialIcon/>,
+    icon: <BurialIcon />,
     name: "TPU Kota",
-    path: "/tpu"
+    path: "/tpu",
   },
   {
-    icon: <WrenchIcon/>,
+    icon: <WrenchIcon />,
     name: "Servis",
     subItems: [
-      {name: "Servis Kendaraan", path: "/service-kendaraan"}, 
-      {name: "Servis Alat Berat", path:"/service-alat-berat"},
-      {name: "Servis Alat Kerja", path:"/service-alat-kerja"},
-      {name: "Servis AC", path:"/service-ac"},
-    ]
+      { name: "Servis Kendaraan", path: "/service-kendaraan" },
+      { name: "Servis Alat Berat", path: "/service-alat-berat" },
+      { name: "Servis Alat Kerja", path: "/service-alat-kerja" },
+      { name: "Servis AC", path: "/service-ac" },
+    ],
   },
   {
-    icon: <PeriodicIcon/>,
+    icon: <PeriodicIcon />,
     name: "Servis Berkala",
     subItems: [
-      {name: "Servis Kendaraan Berkala", path: "/periodic-kendaraan"}, 
-      {name: "Servis Alat Berat Berkala", path:"/periodic-alat-berat"},
-      {name: "Servis Alat Kerja Berkala", path:"/periodic-alat-kerja"},
-      {name: "Servis AC Berkala", path:"/periodic-ac"}
-    ]
+      { name: "Servis Kendaraan Berkala", path: "/periodic-kendaraan" },
+      { name: "Servis Alat Berat Berkala", path: "/periodic-alat-berat" },
+      { name: "Servis Alat Kerja Berkala", path: "/periodic-alat-kerja" },
+      { name: "Servis AC Berkala", path: "/periodic-ac" },
+    ],
   },
 ];
 
@@ -360,7 +360,6 @@ const AppSidebar: React.FC = () => {
             </div>
           </div>
         </nav>
-        
       </div>
     </aside>
   );
