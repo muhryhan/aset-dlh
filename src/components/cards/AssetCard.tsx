@@ -6,11 +6,13 @@ import {
   LawnIcon,
   AcIcon,
   PlantIcon,
+  ParkIcon,
+  BurialIcon,
 } from "../../icons";
 
 
 
-export default function EcommerceMetrics() {
+export default function AssetCard() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
       {/* <!-- Metric Item Start --> */}
@@ -141,6 +143,42 @@ export default function EcommerceMetrics() {
       {/* Label dan ikon kecil di bawah angka */}
         <div className="flex items-center space-x-2">
           <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Tumbuhan</span>
+        </div>
+        </div>
+      </div>
+      {/* <!-- Metric Item End --> */}
+      {/* <!-- Metric Item Start --> */}
+      <div className="relative rounded-2xl border border-gray-200 bg-white px-6 py-8 shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+      {/* Ikon kiri atas */}
+        <div className="absolute top-4 left-4 w-12 h-12 flex items-center justify-center bg-gray-100 rounded-xl dark:bg-gray-800">
+          <ParkIcon className="text-gray-800 size-6 dark:text-white/90" />
+        </div>
+
+      {/* Angka tengah */}
+        <div className="flex flex-col items-center justify-center mt-4">
+          <h2 className="text-5xl font-extrabold text-gray-800 dark:text-white/90 mb-4">45</h2>
+
+      {/* Label dan ikon kecil di bawah angka */}
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Taman</span>
+        </div>
+        </div>
+      </div>
+      {/* <!-- Metric Item End --> */}
+      {/* <!-- Metric Item Start --> */}
+      <div className="relative rounded-2xl border border-gray-200 bg-white px-6 py-8 shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+      {/* Ikon kiri atas */}
+        <div className="absolute top-4 left-4 w-12 h-12 flex items-center justify-center bg-gray-100 rounded-xl dark:bg-gray-800">
+          <BurialIcon className="text-gray-800 size-6 dark:text-white/90" />
+        </div>
+
+      {/* Angka tengah */}
+        <div className="flex flex-col items-center justify-center mt-4">
+          <h2 className="text-5xl font-extrabold text-gray-800 dark:text-white/90 mb-4">11</h2>
+
+      {/* Label dan ikon kecil di bawah angka */}
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Tempat Pemakaman Umum</span>
         </div>
         </div>
       </div>

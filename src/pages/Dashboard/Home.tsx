@@ -1,4 +1,4 @@
-import EcommerceMetrics from "../../components/ecommerce/EcommerceMetrics";
+import AssetCard from "../../components/cards/AssetCard";
 import PageMeta from "../../components/common/PageMeta";
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
       />
       <div className="grid grid-cols-3 gap-6 w-full">
         <div className="col-span-3 space-y-6">
-          <EcommerceMetrics />
+          <AssetCard />
         </div>
       </div>
     </>
