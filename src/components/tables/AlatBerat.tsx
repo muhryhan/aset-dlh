@@ -12,6 +12,7 @@ import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
+import { useNavigate } from "react-router-dom";
 
 interface AlatBeratData {
   id: number;
@@ -25,7 +26,7 @@ interface AlatBeratData {
   hargaPembelian: number;
   tahunPembuatan: string;
   kategori: string;
-  pajak: string; // ISO format date string (YYYY-MM-DD)
+  pajak: string;
   penggunaan: string;
   kondisi: string;
 }
@@ -145,6 +146,8 @@ export default function AlatBerat() {
   const handleExportExcel = () => console.log("Export ke Excel");
   const handleExportPDF = () => console.log("Export ke PDF");
 
+  const navigate = useNavigate();
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
@@ -236,7 +239,9 @@ export default function AlatBerat() {
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <ActionButton
-                      onView={() => console.log("Lihat", AlatBeratData.id)}
+                      onService={() =>
+                        navigate(`/service-alat-berat/${AlatBeratData.id}`)
+                      }
                       onEdit={() => console.log("Edit", AlatBeratData.id)}
                       onDelete={() => console.log("Hapus", AlatBeratData.id)}
                     />

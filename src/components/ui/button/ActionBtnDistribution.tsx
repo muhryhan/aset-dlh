@@ -1,17 +1,17 @@
 import React from "react";
-import { FaTools, FaEdit, FaTrash } from "react-icons/fa";
+import { FaDollyFlatbed, FaEdit, FaTrash } from "react-icons/fa";
 
 interface ActionButtonsProps {
-  onService: () => void;
+  onDistribution: () => void;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const ActionButton: React.FC<ActionButtonsProps> = ({ onService, onEdit, onDelete }) => {
+const ActionButton: React.FC<ActionButtonsProps> = ({ onDistribution, onEdit, onDelete }) => {
   return (
     <div className="flex space-x-2">
-      <button onClick={onService} className="text-grey-600 hover:text-blue-800" title="Servis">
-        <FaTools size={20} />
+      <button onClick={onDistribution} className="text-green-600 hover:text-blue-800" title="Servis">
+        <FaDollyFlatbed size={20} />
       </button>
       <button onClick={onEdit} className="text-yellow-500 hover:text-yellow-700" title="Edit">
         <FaEdit size={20} />

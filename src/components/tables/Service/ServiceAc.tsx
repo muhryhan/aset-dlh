@@ -5,7 +5,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import ActionButton from "../../ui/button/ActionBtn";
+import ActionButton from "../../ui/button/ActionBtnLite";
 import { useState } from "react";
 import AddButton from "../../ui/button/AddBtn";
 import ExcelButton from "../../ui/button/ExcelBtn";
@@ -159,7 +159,6 @@ export default function ServisAc() {
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <ActionButton
-                      onView={() => console.log("Lihat", ServisData.id)}
                       onEdit={() => console.log("Edit", ServisData.id)}
                       onDelete={() => console.log("Hapus", ServisData.id)}
                     />

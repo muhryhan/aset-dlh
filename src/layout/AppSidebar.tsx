@@ -8,11 +8,15 @@ import {
   PlantIcon,
   HorizontaLDots,
   HomeIcon,
+  CarIcon,
+  ExcaIcon,
+  LawnIcon,
+  AcIcon,
   WrenchIcon,
   PeriodicIcon,
-  GridIcon,
-  ParkIcon,
-  BurialIcon,
+  TruckIcon
+  // ParkIcon,
+  // BurialIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 
@@ -30,14 +34,24 @@ const navItems: NavItem[] = [
     path: "/home",
   },
   {
-    icon: <GridIcon />,
-    name: "Aset Dinas Lingkung Hidup",
-    subItems: [
-      { name: "Kendaraan", path: "/kendaraan" },
-      { name: "Alat Berat", path: "/alat-berat" },
-      { name: "Alat Kerja", path: "/alat-kerja" },
-      { name: "AC", path: "/ac" },
-    ],
+    icon: <CarIcon />,
+    name: "Kendaraan",
+    path: "/kendaraan",
+  },
+  {
+    icon: <ExcaIcon />,
+    name: "Alat Berat",
+    path: "/alat-berat",
+  },
+  {
+    icon: <LawnIcon />,
+    name: "Alat Kerja",
+    path: "/alat-kerja",
+  },
+  {
+    icon: <AcIcon />,
+    name: "Ac",
+    path: "/ac",
   },
   {
     icon: <PlantIcon />,
@@ -45,20 +59,19 @@ const navItems: NavItem[] = [
     path: "/tumbuhan",
   },
   {
-    icon: <ParkIcon />,
-    name: "Taman Kota",
-    path: "/taman-kota",
+    icon: <TruckIcon />,
+    name: "Tumbuhan Masuk",
+    path: "/distribusi-tumbuhan/:id",
   },
-  {
-    icon: <BurialIcon />,
-    name: "TPU Kota",
-    path: "/tpu",
-  },
+  // {
+  //   icon: <BurialIcon />,
+  //   name: "TPU Kota",
+  //   path: "/tpu",
+  // },
   {
     icon: <WrenchIcon />,
     name: "Servis",
     subItems: [
-      { name: "Servis Kendaraan", path: "/service-kendaraan" },
       { name: "Servis Alat Berat", path: "/service-alat-berat" },
       { name: "Servis Alat Kerja", path: "/service-alat-kerja" },
       { name: "Servis AC", path: "/service-ac" },

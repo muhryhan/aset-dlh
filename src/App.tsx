@@ -19,6 +19,7 @@ import AlatBerat from "./pages/Assets/AlatBerat";
 import AlatKerja from "./pages/Assets/AlatKerja";
 import Ac from "./pages/Assets/Ac";
 import Tumbuhan from "./pages/Assets/Tumbuhan";
+import DistribusiTumbuhan from "./pages/Plants/DistribusiTumbuhan";
 import ServiceKendaraan from "./pages/Service/ServiceKendaraan";
 import ServiceAlatBerat from "./pages/Service/ServiceAlatBerat";
 import ServiceAlatKerja from "./pages/Service/ServiceAlatKerja";
@@ -27,7 +28,6 @@ import PeriodicKendaraan from "./pages/PeriodicService/PeriodicKendaraan";
 import PeriodicAlatBerat from "./pages/PeriodicService/PeriodicAlatBerat";
 import PeriodicAlatKerja from "./pages/PeriodicService/PeriodicAlatKerja";
 import PeriodicAc from "./pages/PeriodicService/PeriodicAc";
-import FormService from "./pages/Service/FormService";
 import TamanKota from "./pages/Assets/TamanKota";
 import TPUKota from "./pages/Assets/TPU";
 
@@ -59,12 +59,14 @@ export default function App() {
             {/* Plants Page */}
             <Route path="/tumbuhan" element={<Tumbuhan/>}/>
 
+            {/* Plants Distribution Page */}
+            <Route path="/distribusi-tumbuhan/:id" element={<DistribusiTumbuhan/>}/>
+
             {/* Service Page */}
-            <Route path="/service-kendaraan" element={<ServiceKendaraan/>}/>
-            <Route path="/service-alat-berat" element={<ServiceAlatBerat/>}/>
-            <Route path="/service-alat-kerja" element={<ServiceAlatKerja/>}/>
-            <Route path="/service-ac" element={<ServiceAc/>}/>
-            <Route path="/form-service" element={<FormService/>}/>
+            <Route path="/service-kendaraan/:id" element={<ServiceKendaraan/>}/>
+            <Route path="/service-alat-berat/:id" element={<ServiceAlatBerat/>}/>
+            <Route path="/service-alat-kerja/:id" element={<ServiceAlatKerja/>}/>
+            <Route path="/service-ac/:id" element={<ServiceAc/>}/>
 
             {/* Periodic Service Page */}
             <Route path="/periodic-kendaraan" element={<PeriodicKendaraan/>}/>

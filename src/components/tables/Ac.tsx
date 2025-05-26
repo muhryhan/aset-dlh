@@ -12,6 +12,7 @@ import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
+import { useNavigate } from "react-router-dom";
 
 interface AcData {
   id: number;
@@ -19,7 +20,7 @@ interface AcData {
   gambar: string;
   merek: string;
   noRegistrasi: string;
-  
+  noSerial: string;
   ukuran: string;
   ruangan: string;
   asal: string;
@@ -36,7 +37,7 @@ const tableData: AcData[] = [
     gambar: "/images/ac1.jpg",
     merek: "Polytron",
     noRegistrasi: "23.83495",
-    
+    noSerial: "SADH234",
     ukuran: "1 PK",
     ruangan: "Ruang Server",
     asal: "Pembelian",
@@ -51,7 +52,7 @@ const tableData: AcData[] = [
     gambar: "/images/ac2.jpg",
     merek: "Sharp",
     noRegistrasi: "24933495",
-    
+    noSerial: "DSFJ999234",
     ukuran: "1.5 PK",
     ruangan: "Ruang Kepala",
     asal: "Hibah",
@@ -66,7 +67,7 @@ const tableData: AcData[] = [
     gambar: "/images/ac3.jpg",
     merek: "LG",
     noRegistrasi: "11020394",
-    
+    noSerial: "HTC567321",
     ukuran: "2 PK",
     ruangan: "Ruang Rapat",
     asal: "Pembelian",
@@ -74,51 +75,6 @@ const tableData: AcData[] = [
     hargaPembelian: 5000000,
     kondisi: "Baik",
     keterangan: "-",
-  },
-  {
-    id: 4,
-    qrCode: "QR004",
-    gambar: "/images/ac4.jpg",
-    merek: "Samsung",
-    noRegistrasi: "55488221",
-    
-    ukuran: "1 PK",
-    ruangan: "Lobby",
-    asal: "Hibah",
-    tahunPembelian: "2019",
-    hargaPembelian: 3000000,
-    kondisi: "Perlu Servis",
-    keterangan: "Sering bocor",
-  },
-  {
-    id: 5,
-    qrCode: "QR005",
-    gambar: "/images/ac5.jpg",
-    merek: "Daikin",
-    noRegistrasi: "33449920",
-    
-    ukuran: "1 PK",
-    ruangan: "Ruang Tunggu",
-    asal: "Pembelian",
-    tahunPembelian: "2018",
-    hargaPembelian: 3200000,
-    kondisi: "Kurang Baik",
-    keterangan: "Bunyi keras saat dinyalakan",
-  },
-  {
-    id: 6,
-    qrCode: "QR006",
-    gambar: "/images/ac6.jpg",
-    merek: "Panasonic",
-    noRegistrasi: "99887766",
-    
-    ukuran: "1.5 PK",
-    ruangan: "Ruang Administrasi",
-    asal: "Hibah",
-    tahunPembelian: "2022",
-    hargaPembelian: 3800000,
-    kondisi: "Baik",
-    keterangan: "Digunakan setiap hari",
   },
 ];
 
@@ -136,6 +92,8 @@ export default function Ac() {
   const handleAddData = () => console.log("Tambah Data");
   const handleExportExcel = () => console.log("Export ke Excel");
   const handleExportPDF = () => console.log("Export ke PDF");
+
+  const navigate = useNavigate();
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -209,7 +167,9 @@ export default function Ac() {
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <ActionButton
-                      onView={() => console.log("Lihat", ac.id)}
+                      onService={() =>
+                        navigate(`/service-ac/${ac.id}`)
+                      }
                       onEdit={() => console.log("Edit", ac.id)}
                       onDelete={() => console.log("Hapus", ac.id)}
                     />

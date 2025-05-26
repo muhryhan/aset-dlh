@@ -14,7 +14,6 @@ export default function Kendaraan () {
       <div className="space-y-6">
         <ComponentCard title="Tabel Kendaraan">
           <TableKendaraan />
-        
         </ComponentCard>
       </div>
     </>
