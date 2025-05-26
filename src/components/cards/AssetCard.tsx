@@ -160,7 +160,7 @@ export default function AssetCard() {
 
       {/* Label dan ikon kecil di bawah angka */}
         <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Taman</span>
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Taman Kota</span>
         </div>
         </div>
       </div>

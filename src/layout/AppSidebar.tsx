@@ -12,9 +12,7 @@ import {
   ExcaIcon,
   LawnIcon,
   AcIcon,
-  WrenchIcon,
   PeriodicIcon,
-  TruckIcon
   // ParkIcon,
   // BurialIcon,
 } from "../icons";
@@ -58,25 +56,11 @@ const navItems: NavItem[] = [
     name: "Tumbuhan",
     path: "/tumbuhan",
   },
-  {
-    icon: <TruckIcon />,
-    name: "Tumbuhan Masuk",
-    path: "/distribusi-tumbuhan/:id",
-  },
   // {
   //   icon: <BurialIcon />,
   //   name: "TPU Kota",
   //   path: "/tpu",
   // },
-  {
-    icon: <WrenchIcon />,
-    name: "Servis",
-    subItems: [
-      { name: "Servis Alat Berat", path: "/service-alat-berat" },
-      { name: "Servis Alat Kerja", path: "/service-alat-kerja" },
-      { name: "Servis AC", path: "/service-ac" },
-    ],
-  },
   {
     icon: <PeriodicIcon />,
     name: "Servis Berkala",
