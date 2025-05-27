@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 
-// Assume these icons are imported from an icon library
 import {
   CalenderIcon,
   ChevronDownIcon,
@@ -13,8 +12,6 @@ import {
   LawnIcon,
   AcIcon,
   PeriodicIcon,
-  // ParkIcon,
-  // BurialIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 
@@ -56,11 +53,6 @@ const navItems: NavItem[] = [
     name: "Tumbuhan",
     path: "/tumbuhan",
   },
-  // {
-  //   icon: <BurialIcon />,
-  //   name: "TPU Kota",
-  //   path: "/tpu",
-  // },
   {
     icon: <PeriodicIcon />,
     name: "Servis Berkala",
