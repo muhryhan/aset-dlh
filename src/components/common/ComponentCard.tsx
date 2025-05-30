@@ -5,7 +5,7 @@ interface ComponentCardProps {
   desc?: string; // Description text
 }
 
-const ComponentCard: React.FC<ComponentCardProps> = ({
+const   ComponentCard: React.FC<ComponentCardProps> = ({
   title,
   children,
   className = "",

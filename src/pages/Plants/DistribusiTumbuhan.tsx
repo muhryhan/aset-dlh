@@ -1,8 +1,8 @@
 import ComponentCard from "../../components/common/ComponentCard"
 import PageBreadcrumb from "../../components/common/PageBreadCrumb"
 import PageMeta from "../../components/common/PageMeta"
-import TumbuhanMasuk from "../../components/tables/TumbuhanMasuk"
-import TumbuhanKeluar from "../../components/tables/TumbuhanKeluar"
+import TumbuhanMasuk from "../../components/tables/TumbuhanMasukTable"
+import TumbuhanKeluar from "../../components/tables/TumbuhanKeluarTable"
 import FormDisableTumbuhan from "../../components/formDisable/Tumbuhan"
 
 export default function PlantsDistribution () {

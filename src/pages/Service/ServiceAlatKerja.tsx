@@ -1,7 +1,7 @@
 import ComponentCard from "../../components/common/ComponentCard";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
-import TableServiceAlatKerja from "../../components/tables/Service/ServiceAlatKerja";
+import TableServiceAlatKerja from "../../components/tables/Service/ServiceAlatKerjaTable";
 import FormAlatKerja from "../../components/formDisable/AlatKerja";
 
 export default function ServiceAlatKerja() {

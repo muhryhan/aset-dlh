@@ -1,7 +1,7 @@
 "use client"; // kalau kamu pakai Next.js dan interaksi klien
 
 import { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { EyeCloseIcon, EyeIcon } from "../../icons";
 
 type User = {
   id: number;
@@ -76,9 +76,9 @@ export default function User() {
                       aria-label="Toggle Password Visibility"
                     >
                       {visiblePasswords[user.id] ? (
-                        <FaEyeSlash size={18} />
+                        <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
                       ) : (
-                        <FaEye size={18} />
+                        <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
                       )}
                     </button>
                   </div>
