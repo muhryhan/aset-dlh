@@ -28,11 +28,6 @@ export default function KendaraanFormInput() {
     }
   };
 
-  const handleOnlyNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    e.target.value = value;
-  };
-
   return (
     <ComponentCard title="Masukkan Data Kendaraan">
       <div className="space-y-6 w-full">
@@ -73,12 +68,11 @@ export default function KendaraanFormInput() {
               Rp
             </span>
             <Input
-              type="text"
+              type="number"
               id="harga"
               inputMode="numeric"
               pattern="[0-9]*"
               className="pl-10 w-full"
-              onInput={handleOnlyNumber}
             />
           </div>
         </div>
@@ -86,12 +80,11 @@ export default function KendaraanFormInput() {
         <div>
           <Label htmlFor="tahun_pembuatan">Tahun Pembuatan</Label>
           <Input
-            type="text"
+            type="number"
             id="tahun"
             inputMode="numeric"
             pattern="[0-9]*"
             className="w-full"
-            onInput={handleOnlyNumber}
           />
         </div>
 
@@ -118,12 +111,11 @@ export default function KendaraanFormInput() {
         <div>
           <Label htmlFor="nik">NIK</Label>
           <Input
-            type="text"
+            type="number"
             id="nik"
             inputMode="numeric"
             pattern="[0-9]*"
             className="w-full"
-            onInput={handleOnlyNumber}
           />
         </div>
 

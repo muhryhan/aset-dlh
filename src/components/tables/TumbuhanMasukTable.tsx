@@ -9,75 +9,46 @@ import {
   EditButton,
   DeleteButton,
 } from "../ui/button/ActionBtn";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddButton from "../ui/button/AddBtn";
 import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
+import { tumbuhanMasukData, TumbuhanMasukData } from "../../dataDummy/tumbuhanMasukData";
 
-interface TumbuhanMasukData {
-  idTumbuhanMasuk: number;
-  id: number;
-  tanggal: string;
-  jumlah: number;
-  keterangan: string;
-}
-
-
-// Define the table data using the interface
-const tableData: TumbuhanMasukData[] = [
-  {
-    idTumbuhanMasuk: 1,
-    id: 101,
-    tanggal: "2025-05-01",
-    jumlah: 10,
-    keterangan: "Penambahan stok awal bulan",
-  },
-  {
-    idTumbuhanMasuk: 2,
-    id: 102,
-    tanggal: "2025-05-03",
-    jumlah: 5,
-    keterangan: "Sumbangan dari komunitas hijau",
-  },
-  {
-    idTumbuhanMasuk: 3,
-    id: 103,
-    tanggal: "2025-05-05",
-    jumlah: 20,
-    keterangan: "Pembelian dari supplier luar",
-  },
-  {
-    idTumbuhanMasuk: 4,
-    id: 104,
-    tanggal: "2025-05-07",
-    jumlah: 8,
-    keterangan: "Stok pengganti yang mati",
-  },
-  {
-    idTumbuhanMasuk: 5,
-    id: 105,
-    tanggal: "2025-05-10",
-    jumlah: 12,
-    keterangan: "Tambahan koleksi tanaman baru",
-  },
-  {
-    idTumbuhanMasuk: 6,
-    id: 106,
-    tanggal: "2025-05-15",
-    jumlah: 15,
-    keterangan: "Donasi dari yayasan lingkungan",
-  },
-];
+const tableData: TumbuhanMasukData[] = tumbuhanMasukData;
 
 export default function TumbuhanMasuk() {
+  const [tumbuhanMasukData, setTumbuhanMasukData] = useState<TumbuhanMasukData[]>([]); 
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
 
+  //  fetch dari API
+      // useEffect(() => {
+      //   const fetchTumbuhanMasuk = async () => {
+      //     try {
+      //       const response = await api.get("/api/tumbuhan-masuk");
+      //       setTumbuhanData(response.data);
+      //     } catch (error) {
+      //       console.error("Gagal ambil data tumbuhan masuk", error);
+      //     }
+      //   };
+    
+      //   fetchTumbuhanMasuk();
+      // }, []);
+    
+    
+      useEffect(() => {
+      // Simulasi fetch data dari backend
+      const dummyData: TumbuhanMasukData[] = tumbuhanMasukData;
+    
+      setTumbuhanMasukData(dummyData);
+    }, [tumbuhanMasukData]);
+
   const filteredData = tableData
-    .filter((TumbuhanMasukData) =>
-      TumbuhanMasukData.tanggal.toLowerCase().includes(search.toLowerCase())
+    .filter((item) =>
+      item.tanggal.toLowerCase().includes(search.toLowerCase())
     )
     .slice(0, rows);
 
@@ -134,26 +105,26 @@ export default function TumbuhanMasuk() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.map((TumbuhanMasukData) => (
-                <TableRow key={TumbuhanMasukData.id}>
+              {filteredData.map((item) => (
+                <TableRow key={item.id}>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                      {TumbuhanMasukData.tanggal}
+                      {item.tanggal}
                     </span>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {TumbuhanMasukData.jumlah}
+                    {item.jumlah}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {TumbuhanMasukData.keterangan}
+                    {item.keterangan}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <div className="flex items-center gap-2">
                     <EditButton
-                      onClick={() => console.log("Edit", TumbuhanMasukData.id)}
+                      onClick={() => console.log("Edit", item.id)}
                     />
                     <DeleteButton
-                      onClick={() => console.log("Delete", TumbuhanMasukData.id)}
+                      onClick={() => console.log("Delete", item.id)}
                     />
                     </div>
                   </TableCell>

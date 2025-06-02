@@ -10,7 +10,7 @@ import {
   EditButton,
   DeleteButton,
 } from "../ui/button/ActionBtn";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddButton from "../ui/button/AddBtn";
 import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
@@ -18,80 +18,41 @@ import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import AcFormInputModal from "../../pages/Modals/AcInputModal";
+import { acData, AcData } from "../../dataDummy/acData";
 
-interface AcData {
-  id: number;
-  qrCode: string;
-  gambar: string;
-  merek: string;
-  noRegistrasi: string;
-  noSerial: string;
-  ukuran: string;
-  ruangan: string;
-  asal: string;
-  tahunPembelian: string;
-  hargaPembelian: number;
-  kondisi: string;
-  keterangan: string;
-}
-
-const tableData: AcData[] = [
-  {
-    id: 1,
-    qrCode: "QR001",
-    gambar: "/images/ac1.jpg",
-    merek: "Polytron",
-    noRegistrasi: "23.83495",
-    noSerial: "SADH234",
-    ukuran: "1 PK",
-    ruangan: "Ruang Server",
-    asal: "Pembelian",
-    tahunPembelian: "2020",
-    hargaPembelian: 3500000,
-    kondisi: "Baik",
-    keterangan: "-",
-  },
-  {
-    id: 2,
-    qrCode: "QR002",
-    gambar: "/images/ac2.jpg",
-    merek: "Sharp",
-    noRegistrasi: "24933495",
-    noSerial: "DSFJ999234",
-    ukuran: "1.5 PK",
-    ruangan: "Ruang Kepala",
-    asal: "Hibah",
-    tahunPembelian: "2023",
-    hargaPembelian: 4000000,
-    kondisi: "Baik Sekali",
-    keterangan: "AC baru diganti",
-  },
-  {
-    id: 3,
-    qrCode: "QR003",
-    gambar: "/images/ac3.jpg",
-    merek: "LG",
-    noRegistrasi: "11020394",
-    noSerial: "HTC567321",
-    ukuran: "2 PK",
-    ruangan: "Ruang Rapat",
-    asal: "Pembelian",
-    tahunPembelian: "2021",
-    hargaPembelian: 5000000,
-    kondisi: "Baik",
-    keterangan: "-",
-  },
-];
+const tableData: AcData[] = acData;
 
 export default function Ac() {
+  const [acData, setAcData] = useState<AcData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
 
+  //  fetch dari API
+    // useEffect(() => {
+    //   const fetchAc = async () => {
+    //     try {
+    //       const response = await api.get("/api/ac"); // sesuaikan endpoint backend-mu
+    //       setAcData(response.data);
+    //     } catch (error) {
+    //       console.error("Gagal ambil data ac", error);
+    //     }
+    //   };
+  
+    //   fetchAc();
+    // }, []);
+  
+  
+    useEffect(() => {
+    // Simulasi fetch data dari backend
+    const dummyData: AcData[] = acData;
+  
+    setAcData(dummyData);
+  }, [acData]);
+
   const filteredData = tableData
-    .filter((AcData) =>
-      AcData.merek.toLowerCase().includes(search.toLowerCase())
+    .filter((item) =>
+      item.merek.toLowerCase().includes(search.toLowerCase())
     )
     .slice(0, rows);
 
@@ -206,56 +167,56 @@ export default function Ac() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.map((ac) => (
-                <TableRow key={ac.id}>
+              {filteredData.map((acData) => (
+                <TableRow key={acData.id}>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.qrCode}
+                    {acData.qrCode}
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <img
-                      src={ac.gambar}
-                      alt={`Gambar ${ac.merek}`}
+                      src={acData.gambar}
+                      alt={`Gambar ${acData.merek}`}
                       className="w-16 h-16 object-cover rounded"
                     />
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.merek}
+                    {acData.merek}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.noRegistrasi}
+                    {acData.noRegistrasi}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.noSerial}
+                    {acData.noSerial}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.ukuran}
+                    {acData.ukuran}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.ruangan}
+                    {acData.ruangan}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.asal}
+                    {acData.asal}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.tahunPembelian}
+                    {acData.tahunPembelian}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {ac.hargaPembelian.toLocaleString("id-ID")}
+                    Rp {acData.hargaPembelian.toLocaleString("id-ID")}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.kondisi}
+                    {acData.kondisi}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {ac.keterangan}
+                    {acData.keterangan}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <div className="flex items-center gap-2">
                       <ServiceButton
-                        onClick={() => navigate(`/service-ac/${ac.id}`)}
+                        onClick={() => navigate(`/service-ac/${acData.id}`)}
                       />
-                      <EditButton onClick={() => console.log("Edit", ac.id)} />
+                      <EditButton onClick={() => console.log("Edit", acData.id)} />
                       <DeleteButton
-                        onClick={() => console.log("Delete", ac.id)}
+                        onClick={() => console.log("Delete", acData.id)}
                       />
                     </div>
                   </TableCell>

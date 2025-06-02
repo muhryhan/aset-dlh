@@ -10,7 +10,7 @@ import {
   EditButton,
   DeleteButton,
 } from "../ui/button/ActionBtn";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddButton from "../ui/button/AddBtn";
 import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
@@ -18,77 +18,42 @@ import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import TumbuhanFormInputModal from "../../pages/Modals/TumbuhanInputModal";
+// import api from "../../../services/api";
+import { tumbuhanData, TumbuhanData } from "../../dataDummy/tumbuhanData";
 
-interface TumbuhanData {
-  id: number;
-  gambar: string;
-  nama: string;
-  jenis: string;
-  stok: number;
-  keterangan: string;
-}
-
-// Define the table data using the interface
-const tableData: TumbuhanData[] = [
-  {
-    id: 1,
-    gambar: "https://example.com/images/anggrek.jpg",
-    nama: "Anggrek Bulan",
-    jenis: "Hias",
-    stok: 10,
-    keterangan: "Tanaman hias populer dengan bunga berwarna putih.",
-  },
-  {
-    id: 2,
-    gambar: "https://example.com/images/kaktus.jpg",
-    nama: "Kaktus Mini",
-    jenis: "Hias",
-    stok: 25,
-    keterangan: "Perawatan mudah, cocok untuk dekorasi meja.",
-  },
-  {
-    id: 3,
-    gambar: "https://example.com/images/lidah-mertua.jpg",
-    nama: "Lidah Mertua",
-    jenis: "Penyaring Udara",
-    stok: 15,
-    keterangan: "Efektif menyaring udara, cocok untuk dalam ruangan.",
-  },
-  {
-    id: 4,
-    gambar: "https://example.com/images/pakis.jpg",
-    nama: "Pakis Boston",
-    jenis: "Hias",
-    stok: 8,
-    keterangan: "Tanaman dengan daun lebat, suka tempat teduh.",
-  },
-  {
-    id: 5,
-    gambar: "https://example.com/images/mint.jpg",
-    nama: "Daun Mint",
-    jenis: "Herbal",
-    stok: 20,
-    keterangan: "Biasa digunakan untuk minuman dan masakan.",
-  },
-  {
-    id: 6,
-    gambar: "https://example.com/images/bunga-matahari.jpg",
-    nama: "Bunga Matahari",
-    jenis: "Hias",
-    stok: 12,
-    keterangan: "Membutuhkan cahaya matahari penuh untuk tumbuh optimal.",
-  },
-];
+const tableData: TumbuhanData[] = tumbuhanData;
 
 export default function Tumbuhan() {
+  const [tumbuhanData, setTumbuhanData] = useState<TumbuhanData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
 
+  //  fetch dari API
+    // useEffect(() => {
+    //   const fetchTumbuhan = async () => {
+    //     try {
+    //       const response = await api.get("/api/tumbuhan");
+    //       setTumbuhanData(response.data);
+    //     } catch (error) {
+    //       console.error("Gagal ambil data tumbuhan", error);
+    //     }
+    //   };
+  
+    //   fetchTumbuhan();
+    // }, []);
+  
+  
+    useEffect(() => {
+    // Simulasi fetch data dari backend
+    const dummyData: TumbuhanData[] = tumbuhanData;
+  
+    setTumbuhanData(dummyData);
+  }, [tumbuhanData]);
+
   const filteredData = tableData
-    .filter((TumbuhanData) =>
-      TumbuhanData.nama.toLowerCase().includes(search.toLowerCase())
+    .filter((item) =>
+      item.nama.toLowerCase().includes(search.toLowerCase())
     )
     .slice(0, rows);
 

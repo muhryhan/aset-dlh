@@ -9,74 +9,46 @@ import {
   EditButton,
   DeleteButton,
 } from "../ui/button/ActionBtn";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddButton from "../ui/button/AddBtn";
 import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
+import { tumbuhanKeluarData, TumbuhanKeluarData } from "../../dataDummy/tumbuhanKeluarData";
 
-interface TumbuhanKeluarData {
-  idTumbuhanKeluar: number;
-  id: number;
-  tanggal: string;
-  jumlah: number;
-  keterangan: string;
-}
+const tableData: TumbuhanKeluarData[] = tumbuhanKeluarData;
 
-// Define the table data using the interface
-const tableData: TumbuhanKeluarData[] = [
-  {
-    idTumbuhanKeluar: 1,
-    id: 101,
-    tanggal: "2025-05-01",
-    jumlah: 10,
-    keterangan: "Penambahan stok awal bulan",
-  },
-  {
-    idTumbuhanKeluar: 2,
-    id: 102,
-    tanggal: "2025-05-03",
-    jumlah: 5,
-    keterangan: "Sumbangan dari komunitas hijau",
-  },
-  {
-    idTumbuhanKeluar: 3,
-    id: 103,
-    tanggal: "2025-05-05",
-    jumlah: 20,
-    keterangan: "Pembelian dari supplier luar",
-  },
-  {
-    idTumbuhanKeluar: 4,
-    id: 104,
-    tanggal: "2025-05-07",
-    jumlah: 8,
-    keterangan: "Stok pengganti yang mati",
-  },
-  {
-    idTumbuhanKeluar: 5,
-    id: 105,
-    tanggal: "2025-05-10",
-    jumlah: 12,
-    keterangan: "Tambahan koleksi tanaman baru",
-  },
-  {
-    idTumbuhanKeluar: 6,
-    id: 106,
-    tanggal: "2025-05-15",
-    jumlah: 15,
-    keterangan: "Donasi dari yayasan lingkungan",
-  },
-];
-
-export default function TumbuhanMasuk() {
+export default function TumbuhanKeluar() {
+  const [tumbuhanKeluarData, setTumbuhanKeluarData] = useState<TumbuhanKeluarData[]>([]); 
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
 
+  //  fetch dari API
+        // useEffect(() => {
+        //   const fetchTumbuhanKeluar = async () => {
+        //     try {
+        //       const response = await api.get("/api/tumbuhan-keluar");
+        //       setTumbuhanData(response.data);
+        //     } catch (error) {
+        //       console.error("Gagal ambil data tumbuhan Keluar", error);
+        //     }
+        //   };
+      
+        //   fetchTumbuhanKeluar();
+        // }, []);
+      
+      
+        useEffect(() => {
+        // Simulasi fetch data dari backend
+        const dummyData: TumbuhanKeluarData[] = tumbuhanKeluarData;
+      
+        setTumbuhanKeluarData(dummyData);
+      }, [tumbuhanKeluarData]);
+
   const filteredData = tableData
-    .filter((TumbuhanKeluarData) =>
-      TumbuhanKeluarData.tanggal.toLowerCase().includes(search.toLowerCase())
+    .filter((item) =>
+      item.tanggal.toLowerCase().includes(search.toLowerCase())
     )
     .slice(0, rows);
 
