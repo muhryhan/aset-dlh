@@ -23,6 +23,7 @@ import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import AcFormInputModal from "../../pages/Modals/AcInputModal";
 import api from "../../../services/api";
+import { Link } from "react-router-dom";
 
 type AcData = {
   id_ac: number;
@@ -47,13 +48,14 @@ export default function TableAc() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await api.get("/api/ac"); // url sementara
-        setAcData(response.data);
+        setAcData(response.data.data);
       } catch (err) {
         console.error("Gagal mengambil data ac:", err);
         setError("Gagal mengambil data");
@@ -160,8 +162,6 @@ export default function TableAc() {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
-        {loading && <p className="p-4 text-gray-500">Loading data...</p>}
-        {error && <p className="p-4 text-red-500">{error}</p>}
         <div className="flex gap-2 items-center">
           <AddButton onClick={openModal} />
           {isModalOpen && <AcFormInputModal onClose={closeModal} />}
@@ -173,6 +173,8 @@ export default function TableAc() {
           <PDFButton onClick={handleExportPDF} />
         </div>
       </div>
+      {loading && <p className="p-4 text-gray-500">Loading data...</p>}
+        {error && <p className="p-4 text-red-500">{error}</p>}
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px]">
           <Table>
@@ -271,15 +273,19 @@ export default function TableAc() {
               )}
               {filteredData.map((acData) => (
                 <TableRow key={acData.id_ac}>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.qrcode}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    <Link
+                      to={`http://localhost:5000/uploads/kendaraan/qrcode/${acData.qrcode}`}
+                    >
+                      Lihat
+                    </Link>
                   </TableCell>
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <img
-                      className="w-14 h-14 object-cover rounded"
-                      src={acData.gambar}
-                      alt={acData.merek}
-                    />
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    <Link
+                      to={`http://localhost:5000/uploads/kendaraan/${acData.gambar}`}
+                    >
+                      Lihat
+                    </Link>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     {acData.merek}

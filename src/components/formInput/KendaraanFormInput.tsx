@@ -8,7 +8,11 @@ import { useState } from "react";
 import api from "../../../services/api";
 import Alert from "../alert/Alert";
 
-export default function KendaraanFormInput() {
+type Props = {
+  onSuccess?: () => void;
+};
+
+export default function KendaraanFormInput({ onSuccess }: Props) {
   const [formData, setFormData] = useState({
     qrcode: "",
     gambar: null as File | null,
@@ -27,10 +31,12 @@ export default function KendaraanFormInput() {
     kondisi: "",
   });
 
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+
   const kategori = [
-    { value: "r2", label: "Roda 2" },
-    { value: "r4", label: "Roda 4" },
-    { value: "r6", label: "Roda 6" },
+    { value: "Roda 2", label: "Roda 2" },
+    { value: "Roda 4", label: "Roda 4" },
+    { value: "Roda 6", label: "Roda 6" },
   ];
   const kondisi = [
     { value: "Baik", label: "Baik" },
@@ -52,13 +58,32 @@ export default function KendaraanFormInput() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
+  const resetForm = () => {
+    setFormData({
+      qrcode: "",
+      gambar: null,
+      merek: "",
+      no_polisi: "",
+      no_mesin: "",
+      no_rangka: "",
+      warna: "",
+      harga_pembelian: "",
+      tahun_pembuatan: "",
+      kategori: "",
+      pajak: "",
+      pemegang: "",
+      nik: "",
+      penggunaan: "",
+      kondisi: "",
+    });
+  };
+
   const handleSubmit = async () => {
     const data = new FormData();
 
     // Append semua field dari formData ke FormData
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== null && value !== "") {
-        // Kalau gambar, append sebagai file
         if (key === "gambar" && value instanceof File) {
           data.append(key, value);
         } else if (typeof value === "string") {
@@ -68,22 +93,24 @@ export default function KendaraanFormInput() {
     });
 
     try {
-      // console.log(data);
-      const response = await api.post("/api/kendaraan", data, {
-        // Jangan set Content-Type, biarkan Axios atur otomatis
-      });
+      const response = await api.post("/api/kendaraan", data);
       console.log(response);
       if (response.status != 201) throw new Error("Gagal menyimpan data");
-      <Alert message="Data berhasil disimpan." />;
+      setAlertMessage(response.data.message);
+
+      if (onSuccess) onSuccess();
+
+      resetForm();
     } catch (err) {
       console.error("Error saat submit:", err);
-      <Alert message="Gagal menyimpan data." />;
+      setAlertMessage("Gagal menyimpan data");
     }
   };
 
   return (
     <ComponentCard title="Masukkan Data Kendaraan">
       <div className="space-y-6 w-full">
+        {alertMessage && <Alert message={alertMessage} />}
         <div>
           <Label htmlFor="gambar">Upload file</Label>
           <FileInput
@@ -251,29 +278,7 @@ export default function KendaraanFormInput() {
           <Button size="md" variant="primary" onClick={handleSubmit}>
             Submit
           </Button>
-          <Button
-            size="md"
-            variant="outline"
-            onClick={() =>
-              setFormData({
-                qrcode: "",
-                gambar: null,
-                merek: "",
-                no_polisi: "",
-                no_mesin: "",
-                no_rangka: "",
-                warna: "",
-                harga_pembelian: "",
-                tahun_pembuatan: "",
-                kategori: "",
-                pajak: "",
-                pemegang: "",
-                nik: "",
-                penggunaan: "",
-                kondisi: "",
-              })
-            }
-          >
+          <Button size="md" variant="outline" onClick={resetForm}>
             Reset
           </Button>
         </div>

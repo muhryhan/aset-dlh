@@ -50,32 +50,27 @@ export default function TableKendaraan() {
   const [rows, setRows] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
+  const fetchData = async () => {
+    try {
+      const response = await api.get("/api/kendaraan"); // url sementara
+      console.log("Data kendaraan dari API:", response.data);
+      setKendaraanData(response.data.data);
+    } catch (err) {
+      console.error("Gagal mengambil data kendaraan:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get("/api/kendaraan"); // url sementara
-        console.log(response.data);
-        setKendaraanData(response.data.data);
-      } catch (err) {
-        console.error("Gagal mengambil data kendaraan:", err);
-        setError("Gagal mengambil data");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
   const filteredData = kendaraanData
     .filter((item) => item.merek.toLowerCase().includes(search.toLowerCase()))
     .slice(0, rows);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const handleEdit = (id_kendaraan: number) => {
     navigate(`/edit-kendaraan/${id_kendaraan}`);
@@ -178,8 +173,17 @@ export default function TableKendaraan() {
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
         <div className="flex gap-2 items-center">
-          <AddButton onClick={openModal} />
-          {isModalOpen && <KendaraanFormInputModal onClose={closeModal} />}
+          <AddButton onClick={() => setIsModalOpen(true)} />
+          {isModalOpen && (
+            <KendaraanFormInputModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onSuccess={() => {
+                setIsModalOpen(false);
+                fetchData();
+              }}
+            />
+          )}
           <RowsSelector value={rows} onChange={setRows} />
         </div>
 
@@ -190,7 +194,6 @@ export default function TableKendaraan() {
         </div>
       </div>
       {loading && <p className="p-4 text-gray-500">Loading data...</p>}
-      {error && <p className="p-4 text-red-500">{error}</p>}
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px] max-h-[500px] overflow-y-auto">
           <Table>
@@ -295,17 +298,8 @@ export default function TableKendaraan() {
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.length === 0 && !loading && (
-                <TableRow>
-                  <TableCell>
-                    <td colSpan={3} className="text-center">
-                      Data tidak ditemukan
-                    </td>
-                  </TableCell>
-                </TableRow>
-              )}
-
-              {filteredData.map((item) => (
+              {filteredData.length > 0 ? (
+                filteredData.map((item) => (
                 <TableRow key={item.id_kendaraan}>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     <Link
@@ -374,7 +368,13 @@ export default function TableKendaraan() {
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))) : (
+                <TableRow>
+                  <TableCell className="text-center py-5 text-gray-500">
+                    Tidak ada data yang ditemukan.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>

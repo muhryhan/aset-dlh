@@ -2,13 +2,16 @@ import KendaraanFormInput from "../../components/formInput/KendaraanFormInput";
 import PageMeta from "../../components/common/PageMeta";
 import { FaTimes } from "react-icons/fa";
 
-interface KendaraanInputModalProps {
+type KendaraanInputModalProps = {
+  isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 export default function KendaraanInputModal({
-  onClose,
+  isOpen, onClose, onSuccess
 }: KendaraanInputModalProps) {
+  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/60 p-4">
       <PageMeta
@@ -26,7 +29,7 @@ export default function KendaraanInputModal({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6">
-          <KendaraanFormInput />
+          <KendaraanFormInput onSuccess={onSuccess} />
         </div>
       </div>
     </div>
