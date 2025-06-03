@@ -17,6 +17,7 @@ export default function SignInForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log(username, password);
       const response = await api.post("/api/login", {
         username,
         password,
