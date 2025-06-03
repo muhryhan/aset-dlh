@@ -56,7 +56,6 @@ export default function TableKendaraan() {
   const fetchData = async () => {
     try {
       const response = await api.get("/api/kendaraan"); // url sementara
-      console.log("Data kendaraan dari API:", response.data);
       setKendaraanData(response.data.data);
     } catch (err) {
       console.error("Gagal mengambil data kendaraan:", err);
@@ -327,7 +326,7 @@ export default function TableKendaraan() {
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     {item.no_rangka}
                   </TableCell>
-                  <TableCell className="px-harga_pembelian py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     {item.warna}
                   </TableCell>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">

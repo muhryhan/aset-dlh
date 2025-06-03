@@ -23,6 +23,7 @@ import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import AlatBeratFormInputModal from "../../pages/Modals/AlatBeratInputModal";
 import api from "../../../services/api";
+import { Link } from "react-router-dom";
 
 type AlatBeratData = {
   id_alatberat: number;
@@ -47,31 +48,26 @@ export default function TableAlatBerat() {
   const [rows, setRows] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
+  const fetchData = async () => {
+    try {
+      const response = await api.get("/api/alatberat"); // url sementara
+      setAlatBeratData(response.data.data);
+    } catch (err) {
+      console.error("Gagal mengambil data alat berat:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get("/api/alat-berat"); // url sementara
-        setAlatBeratData(response.data);
-      } catch (err) {
-        console.error("Gagal mengambil data alat berat:", err);
-        setError("Gagal mengambil data");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
   const filteredData = alatBeratData
     .filter((item) => item.merek.toLowerCase().includes(search.toLowerCase()))
     .slice(0, rows);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const handleEdit = (id_alatberat: number) => {
     navigate(`/edit-alat-berat/${id_alatberat}`);
@@ -169,11 +165,18 @@ export default function TableAlatBerat() {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
-        {loading && <p className="p-4 text-gray-500">Loading data...</p>}
-        {error && <p className="p-4 text-red-500">{error}</p>}
         <div className="flex gap-2 items-center">
-          <AddButton onClick={openModal} />
-          {isModalOpen && <AlatBeratFormInputModal onClose={closeModal} />}
+          <AddButton onClick={() => setIsModalOpen(true)} />
+          {isModalOpen && (
+            <AlatBeratFormInputModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onSuccess={() => {
+                setIsModalOpen(false);
+                fetchData();
+              }}
+            />
+          )}
           <RowsSelector value={rows} onChange={setRows} />
         </div>
         <div className="flex gap-2 items-center">
@@ -182,7 +185,7 @@ export default function TableAlatBerat() {
           <PDFButton onClick={handleExportPDF} />
         </div>
       </div>
-
+      {loading && <p className="p-4 text-gray-500">Loading data...</p>}
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px]">
           <Table>
@@ -278,25 +281,22 @@ export default function TableAlatBerat() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.length === 0 && !loading && (
-                <TableRow>
-                  <TableCell className="text-center">
-                    Data tidak ditemukan
-                  </TableCell>
-                </TableRow>
-              )}
-              {filteredData.map((item) => (
+              {filteredData.length > 0 ? (
+                filteredData.map((item) => (
                 <TableRow key={item.id_alatberat}>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.qrcode}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    <Link
+                      to={`http://localhost:5000/uploads/alat-berat/qrcode/${item.qrcode}`}
+                    >
+                      Lihat
+                    </Link>
                   </TableCell>
-
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <img
-                      className="w-14 h-14 object-cover rounded"
-                      src={item.gambar}
-                      alt={item.merek}
-                    />
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    <Link
+                      to={`http://localhost:5000/uploads/alat-berat/${item.gambar}`}
+                    >
+                      Lihat
+                    </Link>
                   </TableCell>
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -361,7 +361,13 @@ export default function TableAlatBerat() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ))) : (
+                <TableRow>
+                  <TableCell className="text-center py-5 text-gray-500">
+                    Tidak ada data yang ditemukan.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>

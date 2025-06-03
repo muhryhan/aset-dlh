@@ -3,12 +3,15 @@ import PageMeta from "../../components/common/PageMeta";
 import { FaTimes } from "react-icons/fa";
 
 interface AlatBeratInputModalProps {
+  isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 export default function AlatBeratInputModal({
-  onClose,
+  isOpen, onClose, onSuccess
 }: AlatBeratInputModalProps) {
+  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/60 p-4">
       <PageMeta
@@ -26,7 +29,7 @@ export default function AlatBeratInputModal({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6">
-          <AlatBeratFormInput />
+          <AlatBeratFormInput onSuccess={onSuccess}/>
         </div>
       </div>
     </div>

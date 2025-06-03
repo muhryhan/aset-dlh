@@ -4,67 +4,161 @@ import Input from "../form/input/InputField";
 import FileInput from "../form/input/FileInput";
 import Select from "../form/Select";
 import Button from "../ui/button/Button";
+import { useState } from "react";
+import api from "../../../services/api";
+import Alert from "../alert/Alert";
 
-export default function AlatKerjaFormInput() {
+type Props = {
+  onSuccess?: () => void;
+};
+
+export default function AlatKerjaFormInput({ onSuccess }: Props) {
+  const [formData, setFormData] = useState({
+    qrcode: "",
+    gambar: null as File | null,
+    merek: "",
+    no_registrasi: "",
+    no_serial: "",
+    asal: "",
+    tahun_pembelian: "",
+    harga_pembelian: "",
+    kondisi: "",
+    keterangan: "",
+  });
+
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+
   const kondisi = [
-    { value: "b", label: "Baik" },
-    { value: "rr", label: "Rusak ringan" },
-    { value: "rb", label: "Rusak berat" },
+    { value: "Baik", label: "Baik" },
+    { value: "Rusak Ringan", label: "Rusak ringan" },
+    { value: "Rusak Berat", label: "Rusak berat" },
   ];
 
-  const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
+  const handleSelectChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      console.log("Selected file:", file.name);
-    }
+    const file = event.target.files?.[0] || null;
+    setFormData((prev) => ({ ...prev, gambar: file }));
   };
 
-  const handleOnlyNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    e.target.value = value;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const resetForm = () => {
+    setFormData({
+      qrcode: "",
+      gambar: null,
+      merek: "",
+      no_registrasi: "",
+      no_serial: "",
+      asal: "",
+      tahun_pembelian: "",
+      harga_pembelian: "",
+      kondisi: "",
+      keterangan: "",
+    });
+  };
+
+  const handleSubmit = async () => {
+    const data = new FormData();
+
+    // Append semua field dari formData ke FormData
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null && value !== "") {
+        if (key === "gambar" && value instanceof File) {
+          data.append(key, value);
+        } else if (typeof value === "string") {
+          data.append(key, value);
+        }
+      }
+    });
+
+    try {
+      const response = await api.post("/api/alatkerja", data);
+      console.log(response);
+      if (response.status != 201) throw new Error("Gagal menyimpan data");
+      setAlertMessage(response.data.message);
+
+      if (onSuccess) onSuccess();
+
+      resetForm();
+    } catch (err) {
+      console.error("Error saat submit:", err);
+      setAlertMessage("Gagal menyimpan data");
+    }
   };
 
   return (
     <ComponentCard title="Masukkan Data Alat Kerja">
       <div className="space-y-6 w-full">
+        {alertMessage && <Alert message={alertMessage} />}
         <div>
           <Label htmlFor="gambar">Upload file</Label>
-          <FileInput onChange={handleFileChange} className="w-full" />
+          <FileInput
+            id_file="gambar"
+            onChange={handleFileChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="merek">Merek</Label>
-          <Input type="text" id="merek" className="w-full" />
+          <Input
+            type="text"
+            id="merek"
+            value={formData.merek}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="no_registrasi">Nomor Registrasi</Label>
-          <Input type="text" id="noreg" className="w-full" />
+          <Input
+            type="text"
+            id="no_registrasi"
+            value={formData.no_registrasi}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="no_serial">Nomor Serial</Label>
-          <Input type="text" id="nomesin" className="w-full" />
+          <Input
+            type="text"
+            id="no_serial"
+            value={formData.no_serial}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="asal">Asal</Label>
-          <Input type="text" id="norangka" className="w-full" />
+          <Input
+            type="text"
+            id="asal"
+            value={formData.asal}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="tahun_pembelian">Tahun Pembelian</Label>
           <Input
-            type="text"
-            id="tahun"
+            type="number"
+            id="tahun_pembelian"
+            value={formData.tahun_pembelian}
+            onChange={handleInputChange}
             inputMode="numeric"
             pattern="[0-9]*"
             className="w-full"
-            onInput={handleOnlyNumber}
           />
         </div>
 
@@ -75,12 +169,13 @@ export default function AlatKerjaFormInput() {
               Rp
             </span>
             <Input
-              type="text"
-              id="harga"
+              type="number"
+              id="harga_pembelian"
+              value={formData.harga_pembelian}
+              onChange={handleInputChange}
               inputMode="numeric"
               pattern="[0-9]*"
               className="pl-10 w-full"
-              onInput={handleOnlyNumber}
             />
           </div>
         </div>
@@ -88,25 +183,29 @@ export default function AlatKerjaFormInput() {
         <div>
           <Label htmlFor="kondisi">Kondisi</Label>
           <Select
+            value={formData.kondisi}
             options={kondisi}
             placeholder="Kondisi kendaraan"
-            onChange={handleSelectChange}
+            onChange={(value) => handleSelectChange("kondisi", value)}
             className="w-full dark:bg-dark-900"
           />
         </div>
         <div>
           <Label htmlFor="keterangan">Keterangan</Label>
-          <Input type="text" id="keterangan" className="w-full" />
+          <Input
+            type="text"
+            id="keterangan"
+            value={formData.keterangan}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
+
         <div className="flex justify-end space-x-4">
-          <Button size="md" variant="primary" onClick={() => alert("Clicked!")}>
+          <Button size="md" variant="primary" onClick={handleSubmit}>
             Submit
           </Button>
-          <Button
-            size="md"
-            variant="outline"
-            onClick={() => console.log("Outline small clicked")}
-          >
+          <Button size="md" variant="outline" onClick={resetForm}>
             Reset
           </Button>
         </div>

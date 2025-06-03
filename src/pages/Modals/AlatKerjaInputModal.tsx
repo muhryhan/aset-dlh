@@ -3,12 +3,15 @@ import PageMeta from "../../components/common/PageMeta";
 import { FaTimes } from "react-icons/fa";
 
 interface AlatKerjaInputModalProps {
+  isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 export default function AlatKerjaInputModal({
-  onClose,
+  isOpen, onClose, onSuccess
 }: AlatKerjaInputModalProps) {
+  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/60 p-4">
       <PageMeta
@@ -26,7 +29,7 @@ export default function AlatKerjaInputModal({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6">
-          <AlatKerjaFormInput />
+          <AlatKerjaFormInput onSuccess={onSuccess} />
         </div>
       </div>
     </div>

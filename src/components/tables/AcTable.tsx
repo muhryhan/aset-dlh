@@ -47,31 +47,27 @@ export default function TableAc() {
   const [rows, setRows] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  
     const fetchData = async () => {
       try {
         const response = await api.get("/api/ac"); // url sementara
         setAcData(response.data.data);
       } catch (err) {
         console.error("Gagal mengambil data ac:", err);
-        setError("Gagal mengambil data");
       } finally {
         setLoading(false);
       }
     };
+    useEffect(() => {
     fetchData();
   }, []);
 
   const filteredData = acData
     .filter((item) => item.merek.toLowerCase().includes(search.toLowerCase()))
     .slice(0, rows);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const handleEdit = (id_ac: number) => {
     navigate(`/edit-ac/${id_ac}`);
@@ -163,8 +159,17 @@ export default function TableAc() {
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
         <div className="flex gap-2 items-center">
-          <AddButton onClick={openModal} />
-          {isModalOpen && <AcFormInputModal onClose={closeModal} />}
+          <AddButton onClick={() => setIsModalOpen(true)} />
+          {isModalOpen && (
+                      <AcFormInputModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        onSuccess={() => {
+                          setIsModalOpen(false);
+                          fetchData();
+                        }}
+                      />
+                    )}
           <RowsSelector value={rows} onChange={setRows} />
         </div>
         <div className="flex gap-2 items-center">
@@ -174,7 +179,6 @@ export default function TableAc() {
         </div>
       </div>
       {loading && <p className="p-4 text-gray-500">Loading data...</p>}
-        {error && <p className="p-4 text-red-500">{error}</p>}
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px]">
           <Table>
@@ -264,72 +268,72 @@ export default function TableAc() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.length === 0 && !loading && (
-                <TableRow>
-                  <TableCell className="text-center">
-                    Data tidak ditemukan
-                  </TableCell>
-                </TableRow>
-              )}
-              {filteredData.map((acData) => (
-                <TableRow key={acData.id_ac}>
+            {filteredData.length > 0 ? (
+                filteredData.map((item) => (
+                <TableRow key={item.id_ac}>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     <Link
-                      to={`http://localhost:5000/uploads/kendaraan/qrcode/${acData.qrcode}`}
+                      to={`http://localhost:5000/uploads/ac/qrcode/${item.qrcode}`}
                     >
                       Lihat
                     </Link>
                   </TableCell>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     <Link
-                      to={`http://localhost:5000/uploads/kendaraan/${acData.gambar}`}
+                      to={`http://localhost:5000/uploads/ac/${item.gambar}`}
                     >
                       Lihat
                     </Link>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.merek}
+                    {item.merek}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.no_registrasi}
+                    {item.no_registrasi}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.no_serial}
+                    {item.no_serial}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.ukuran}
+                    {item.ukuran}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.ruangan}
+                    {item.ruangan}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.asal}
+                    {item.asal}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.tahun_pembelian}
+                    {item.tahun_pembelian}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {acData.harga_pembelian.toLocaleString("id_ac-ID")}
+                    Rp {item.harga_pembelian.toLocaleString("id-ID")}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.kondisi}
+                    {item.kondisi}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.keterangan}
+                    {item.keterangan}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <div className="flex items-center gap-2">
                       <ServiceButton
-                        onClick={() => navigate(`/service-ac/${acData.id_ac}`)}
+                        onClick={() => navigate(`/service-ac/${item.id_ac}`)}
                       />
-                      <EditButton onClick={() => handleEdit(acData.id_ac)} />
+                      <EditButton onClick={() => handleEdit(item.id_ac)} />
                       <DeleteButton
-                        onClick={() => handleDelete(acData.id_ac)}
+                        onClick={() => handleDelete(item.id_ac)}
                       />
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ))) : (
+                <TableRow>
+                  <TableCell className="text-center py-5 text-gray-500">
+                    Tidak ada data yang ditemukan.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>

@@ -23,6 +23,7 @@ import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import AlatKerjaFormInputModal from "../../pages/Modals/AlatKerjaInputModal";
 import api from "../../../services/api";
+import { Link } from "react-router-dom";
 
 type AlatKerjaData = {
   id_alatkerja: number;
@@ -44,22 +45,20 @@ export default function AlatKerja() {
   const [rows, setRows] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
+  const fetchData = async () => {
+    try {
+      const response = await api.get("/api/alatkerja");
+      setAlatKerjaData(response.data.data);
+    } catch (err) {
+      console.error("Gagal mengambil data alat kerja:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get("/api/alat-kerja"); // url sementara
-        setAlatKerjaData(response.data);
-      } catch (err) {
-        console.error("Gagal mengambil data alat kerja:", err);
-        setError("Gagal mengambil data");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
@@ -67,17 +66,14 @@ export default function AlatKerja() {
     .filter((item) => item.merek.toLowerCase().includes(search.toLowerCase()))
     .slice(0, rows);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   const handleEdit = (id_alatkerja: number) => {
-    navigate(`/edit-alat-kerja/${id_alatkerja}`);
+    navigate(`/edit-alatkerja/${id_alatkerja}`);
   };
 
   const handleDelete = async (id_alatkerja: number) => {
     if (confirm("Yakin ingin menghapus kendaraan ini?")) {
       try {
-        await api.delete(`/api/alat-kerja/${id_alatkerja}`);
+        await api.delete(`/api/alatkerja/${id_alatkerja}`);
         setAlatKerjaData((prev) =>
           prev.filter((item) => item.id_alatkerja !== id_alatkerja)
         );
@@ -155,11 +151,18 @@ export default function AlatKerja() {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
-        {loading && <p className="p-4 text-gray-500">Loading data...</p>}
-        {error && <p className="p-4 text-red-500">{error}</p>}
         <div className="flex gap-2 items-center">
-          <AddButton onClick={openModal} />
-          {isModalOpen && <AlatKerjaFormInputModal onClose={closeModal} />}
+          <AddButton onClick={() => setIsModalOpen(true)} />
+          {isModalOpen && (
+            <AlatKerjaFormInputModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onSuccess={() => {
+                setIsModalOpen(false);
+                fetchData();
+              }}
+            />
+          )}
           <RowsSelector value={rows} onChange={setRows} />
         </div>
         <div className="flex gap-2 items-center">
@@ -168,7 +171,7 @@ export default function AlatKerja() {
           <PDFButton onClick={handleExportPDF} />
         </div>
       </div>
-
+      {loading && <p className="p-4 text-gray-500">Loading data...</p>}
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px]">
           <Table>
@@ -246,74 +249,80 @@ export default function AlatKerja() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.length === 0 && !loading && (
+              {filteredData.length > 0 ? (
+                filteredData.map((item) => (
+                  <TableRow key={item.id_alatkerja}>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:5000/uploads/alat-kerja/qrcode/${item.qrcode}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:5000/uploads/alat-kerja/${item.gambar}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.merek}
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.no_registrasi}
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.no_serial}
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.asal}
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.tahun_pembelian}
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      Rp {item.harga_pembelian.toLocaleString("id-ID")}
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.kondisi}
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.keterangan}
+                    </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <ServiceButton
+                          onClick={() =>
+                            navigate(`/service-alat-kerja/${item.id_alatkerja}`)
+                          }
+                        />
+                        <EditButton
+                          onClick={() => handleEdit(item.id_alatkerja)}
+                        />
+                        <DeleteButton
+                          onClick={() => handleDelete(item.id_alatkerja)}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
-                  <TableCell className="text-center">
-                    Data tidak ditemukan
+                  <TableCell className="text-center py-5 text-gray-500">
+                    Tidak ada data yang ditemukan.
                   </TableCell>
                 </TableRow>
               )}
-              {filteredData.map((item) => (
-                <TableRow key={item.id_alatkerja}>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.qrcode}
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <img
-                      className="w-14 h-14 object-cover rounded"
-                      src={item.gambar}
-                      alt={item.merek}
-                    />
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.merek}
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.no_registrasi}
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.no_serial}
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.asal}
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.tahun_pembelian}
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {item.harga_pembelian.toLocaleString("id-ID")}
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.kondisi}
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.keterangan}
-                  </TableCell>
-
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <ServiceButton
-                        onClick={() =>
-                          navigate(`/service-alat-kerja/${item.id_alatkerja}`)
-                        }
-                      />
-                      <EditButton onClick={() => handleEdit(item.id_alatkerja)} />
-                    <DeleteButton
-                      onClick={() => handleDelete(item.id_alatkerja)}
-                    />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
             </TableBody>
           </Table>
         </div>
