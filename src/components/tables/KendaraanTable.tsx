@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,6 +10,7 @@ import {
   EditButton,
   DeleteButton,
 } from "../ui/button/ActionBtn";
+import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
@@ -22,59 +22,88 @@ import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import KendaraanFormInputModal from "../../pages/Modals/KendaraanInputModal";
-// import api from "../../../services/api";
-import { kendaraanData, KendaraanData } from "../../dataDummy/kendaraanData";
+import api from "../../../services/api";
 
-const tableData: KendaraanData[] = kendaraanData;
+type KendaraanData = {
+  id_kendaraan: number;
+  qrcode: string;
+  gambar: string;
+  merek: string;
+  no_polisi: string;
+  no_mesin: string;
+  no_rangka: string;
+  warna: string;
+  harga_pembelian: number;
+  tahun_pembuatan: number;
+  kategori: string;
+  pajak: string;
+  pemegang: string;
+  nik: number;
+  penggunaan: string;
+  kondisi: string;
+};
 
 export default function TableKendaraan() {
   const [kendaraanData, setKendaraanData] = useState<KendaraanData[]>([]);
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  //  fetch dari API
-  // useEffect(() => {
-  //   const fetchKendaraan = async () => {
-  //     try {
-  //       const response = await api.get("/api/kendaraan"); // sesuaikan endpoint backend-mu
-  //       setKendaraanData(response.data);
-  //     } catch (error) {
-  //       console.error("Gagal ambil data kendaraan", error);
-  //     }
-  //   };
-
-  //   fetchKendaraan();
-  // }, []);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
-  // Simulasi fetch data dari backend
-  const dummyData: KendaraanData[] = kendaraanData;
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/api/kendaraan"); // url sementara
+        console.log(response.data);
+        setKendaraanData(response.data);
+      } catch (err) {
+        console.error("Gagal mengambil data kendaraan:", err);
+        setError("Gagal mengambil data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
-  setKendaraanData(dummyData);
-}, [kendaraanData]);
-
-  const filteredData = tableData
-    .filter((item) =>
-      item.merek.toLowerCase().includes(search.toLowerCase())
-    )
+  const filteredData = kendaraanData
+    .filter((item) => item.merek.toLowerCase().includes(search.toLowerCase()))
     .slice(0, rows);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleEdit = (id_kendaraan: number) => {
+    navigate(`/edit-kendaraan/${id_kendaraan}`);
+  };
+
+  const handleDelete = async (id_kendaraan: number) => {
+    if (confirm("Yakin ingin menghapus kendaraan ini?")) {
+      try {
+        await api.delete(`/api/kendaraan/${id_kendaraan}`);
+        setKendaraanData((prev) =>
+          prev.filter((item) => item.id_kendaraan !== id_kendaraan)
+        );
+      } catch (err) {
+        console.error("Gagal menghapus data:", err);
+      }
+    }
+  };
+
   const handleExportExcel = () => {
     const data = filteredData.map((item) => ({
-      "QR Code": item.qrCode,
+      "QR Code": item.qrcode,
       Gambar: item.gambar,
       Merek: item.merek,
-      "No. Polisi": item.nomorPolisi,
-      "No. Mesin": item.nomorMesin,
-      "No. Rangka": item.nomorRangka,
+      "No. Polisi": item.no_polisi,
+      "No. Mesin": item.no_mesin,
+      "No. Rangka": item.no_rangka,
       Warna: item.warna,
-      "Harga Pembelian": item.hargaPembelian,
-      "Tahun Pembuatan": item.tahunPembuatan,
+      "Harga Pembelian": item.harga_pembelian,
+      "Tahun Pembuatan": item.tahun_pembuatan,
       Kategori: item.kategori,
       Pajak: item.pajak,
       Pemegang: item.pemegang,
@@ -97,6 +126,7 @@ export default function TableKendaraan() {
 
     saveAs(fileData, "data-kendaraan.xlsx");
   };
+
   const handleExportPDF = () => {
     const doc = new jsPDF();
 
@@ -118,16 +148,16 @@ export default function TableKendaraan() {
     ];
 
     const tableRows = filteredData.map((item) => [
-      item.qrCode,
+      item.qrcode,
       item.merek,
-      item.nomorPolisi,
-      item.nomorMesin,
-      item.nomorRangka,
+      item.no_polisi,
+      item.no_mesin,
+      item.no_rangka,
       item.warna,
-      `Rp ${item.hargaPembelian.toLocaleString("id-ID")}`,
-      item.tahunPembuatan,
+      `Rp ${item.harga_pembelian.toLocaleString("id_kendaraan-ID")}`,
+      item.tahun_pembuatan,
       item.kategori,
-      new Date(item.pajak).toLocaleDateString("id-ID"),
+      item.pajak ? new Date(item.pajak).toLocaleDateString("id-ID") : "-",
       item.pemegang,
       item.nik,
       item.penggunaan,
@@ -142,8 +172,6 @@ export default function TableKendaraan() {
 
     doc.save("data-kendaraan.pdf");
   };
-
-  const navigate = useNavigate();
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -160,6 +188,8 @@ export default function TableKendaraan() {
           <PDFButton onClick={handleExportPDF} />
         </div>
       </div>
+      {loading && <p className="p-4 text-gray-500">Loading data...</p>}
+      {error && <p className="p-4 text-red-500">{error}</p>}
       <div className="max-w-full overflow-x-auto">
         <div className="min-w-[1102px] max-h-[500px] overflow-y-auto">
           <Table>
@@ -257,91 +287,86 @@ export default function TableKendaraan() {
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-6 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
                 >
-                  Aksi
+                  Action
                 </TableCell>
               </TableRow>
             </TableHeader>
-
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.map((kendaraanData) => (
-                <TableRow key={kendaraanData.id}>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.qrCode}
+              {filteredData.length === 0 && !loading && (
+                <TableRow>
+                  <TableCell>
+                    <td colSpan={3} className="text-center">
+                      Data tidak ditemukan
+                    </td>
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-start">
+                </TableRow>
+              )}
+
+              {filteredData.map((item) => (
+                <TableRow key={item.id_kendaraan}>
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.qrcode}
+                  </TableCell>
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     <img
-                      src={kendaraanData.gambar}
-                      alt="Gambar Kendaraan"
-                      className="w-16 h-12 object-cover rounded"
+                      src={item.gambar}
+                      alt={`Gambar ${item.merek}`}
+                      className="w-16 h-16 object-cover rounded-md"
                     />
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.merek}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.merek}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.nomorPolisi}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.no_polisi}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.nomorMesin}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.no_mesin}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.nomorRangka}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.no_rangka}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.warna}
+                  <TableCell className="px-harga_pembelian py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.warna}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {`Rp ${kendaraanData.hargaPembelian.toLocaleString(
-                      "id-ID"
-                    )}`}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    Rp {item.harga_pembelian.toLocaleString("id-ID")}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.tahunPembuatan}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.tahun_pembuatan}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.kategori}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.kategori}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {new Date(kendaraanData.pajak).toLocaleDateString("id-ID")}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.pajak
+                      ? new Date(item.pajak).toLocaleDateString("id-ID")
+                      : "-"}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.pemegang}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.pemegang}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.nik}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.nik}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {kendaraanData.penggunaan}
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.penggunaan}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${
-                        kendaraanData.kondisi === "Baik"
-                          ? "bg-green-100 text-green-700"
-                          : kendaraanData.kondisi === "Perlu Servis"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {kendaraanData.kondisi}
-                    </span>
+                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    {item.kondisi}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <ServiceButton
-                        onClick={() =>
-                          navigate(`/service-kendaraan/${kendaraanData.id}`)
-                        }
-                      />
-                      <EditButton
-                        onClick={() => console.log("Edit", kendaraanData.id)}
-                      />
-                      <DeleteButton
-                        onClick={() => console.log("Delete", kendaraanData.id)}
-                      />
-                    </div>
+                  <TableCell className="px-5 py-3 text-center text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                    <ServiceButton
+                      onClick={() =>
+                        navigate(`/service-kendaraan/${item.id_kendaraan}`)
+                      }
+                    />
+                    <EditButton onClick={() => handleEdit(item.id_kendaraan)} />
+                    <DeleteButton
+                      onClick={() => handleDelete(item.id_kendaraan)}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

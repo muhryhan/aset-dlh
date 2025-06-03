@@ -8,7 +8,7 @@ export interface AcData {
   ukuran: string;
   ruangan: string;
   asal: string;
-  tahunPembelian: string;
+  tahunPembelian: number;
   hargaPembelian: number;
   kondisi: string;
   keterangan: string;
@@ -25,7 +25,7 @@ export const acData: AcData[] = [
     ukuran: "1 PK",
     ruangan: "Ruang Server",
     asal: "Pembelian",
-    tahunPembelian: "2020",
+    tahunPembelian: 2020,
     hargaPembelian: 3500000,
     kondisi: "Baik",
     keterangan: "-",
@@ -40,7 +40,7 @@ export const acData: AcData[] = [
     ukuran: "1.5 PK",
     ruangan: "Ruang Kepala",
     asal: "Hibah",
-    tahunPembelian: "2023",
+    tahunPembelian: 2023,
     hargaPembelian: 4000000,
     kondisi: "Baik Sekali",
     keterangan: "AC baru diganti",
@@ -55,7 +55,7 @@ export const acData: AcData[] = [
     ukuran: "2 PK",
     ruangan: "Ruang Rapat",
     asal: "Pembelian",
-    tahunPembelian: "2021",
+    tahunPembelian: 2021,
     hargaPembelian: 5000000,
     kondisi: "Baik",
     keterangan: "-",

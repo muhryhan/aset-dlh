@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL_BASE,
+  baseURL: import.meta.env.VITE_API_URL_BASE,
   headers: {
     "ngrok-skip-browser-warning": "69420",
   },
@@ -31,7 +31,7 @@ api.interceptors.response.use(
       Cookies.remove("username");
       Cookies.remove("token");
 
-      window.location.href = "/";
+      // window.location.href = "/";
     }
     return Promise.reject(error);
   }

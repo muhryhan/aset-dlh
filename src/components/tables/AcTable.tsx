@@ -11,6 +11,10 @@ import {
   DeleteButton,
 } from "../ui/button/ActionBtn";
 import { useState, useEffect } from "react";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import AddButton from "../ui/button/AddBtn";
 import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
@@ -18,55 +22,146 @@ import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import AcFormInputModal from "../../pages/Modals/AcInputModal";
-import { acData, AcData } from "../../dataDummy/acData";
+import api from "../../../services/api";
 
-const tableData: AcData[] = acData;
+type AcData = {
+  id_ac: number;
+  qrcode: string;
+  gambar: string;
+  merek: string;
+  no_registrasi: string;
+  no_serial: string;
+  ukuran: string;
+  ruangan: string;
+  asal: string;
+  tahun_pembelian: number;
+  harga_pembelian: number;
+  kondisi: string;
+  keterangan: string;
+};
 
-export default function Ac() {
+export default function TableAc() {
   const [acData, setAcData] = useState<AcData[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  //  fetch dari API
-    // useEffect(() => {
-    //   const fetchAc = async () => {
-    //     try {
-    //       const response = await api.get("/api/ac"); // sesuaikan endpoint backend-mu
-    //       setAcData(response.data);
-    //     } catch (error) {
-    //       console.error("Gagal ambil data ac", error);
-    //     }
-    //   };
-  
-    //   fetchAc();
-    // }, []);
-  
-  
-    useEffect(() => {
-    // Simulasi fetch data dari backend
-    const dummyData: AcData[] = acData;
-  
-    setAcData(dummyData);
-  }, [acData]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/api/ac"); // url sementara
+        setAcData(response.data);
+      } catch (err) {
+        console.error("Gagal mengambil data ac:", err);
+        setError("Gagal mengambil data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
-  const filteredData = tableData
-    .filter((item) =>
-      item.merek.toLowerCase().includes(search.toLowerCase())
-    )
+  const filteredData = acData
+    .filter((item) => item.merek.toLowerCase().includes(search.toLowerCase()))
     .slice(0, rows);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleExportExcel = () => console.log("Export ke Excel");
-  const handleExportPDF = () => console.log("Export ke PDF");
+  const handleEdit = (id_ac: number) => {
+    navigate(`/edit-ac/${id_ac}`);
+  };
 
-  const navigate = useNavigate();
+  const handleDelete = async (id_ac: number) => {
+    if (confirm("Yakin ingin menghapus ac ini?")) {
+      try {
+        await api.delete(`/api/ac/${id_ac}`);
+        setAcData((prev) => prev.filter((item) => item.id_ac !== id_ac));
+      } catch (err) {
+        console.error("Gagal menghapus data:", err);
+      }
+    }
+  };
+
+  const handleExportExcel = () => {
+    const data = filteredData.map((item) => ({
+      "QR Code": item.qrcode,
+      Gambar: item.gambar,
+      Merek: item.merek,
+      "No. Registrasi": item.no_registrasi,
+      "No. Serial": item.no_serial,
+      Ukuran: item.ukuran,
+      Ruangan: item.ruangan,
+      Asal: item.asal,
+      "Tahun Pembelian": item.tahun_pembelian,
+      "Harga Pembelian": item.harga_pembelian,
+      Kondisi: item.kondisi,
+      Keterangan: item.keterangan,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Ac");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const fileData = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(fileData, "data-ac.xlsx");
+  };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    const tableColumn = [
+      "QR Code",
+      "Merek",
+      "No. Registrasi",
+      "No. Serial",
+      "Ukuran",
+      "Ruangan",
+      "Asal",
+      "Tahun Pembelian",
+      "Harga Pembelian",
+      "Kondisi",
+      "Keterangan",
+    ];
+
+    const tableRows = filteredData.map((item) => [
+      item.qrcode,
+      item.merek,
+      item.no_registrasi,
+      item.no_serial,
+      item.ukuran,
+      item.ruangan,
+      item.asal,
+      item.tahun_pembelian,
+      `Rp ${item.harga_pembelian.toLocaleString("id_ac-ID")}`,
+      item.kondisi,
+      item.keterangan,
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      styles: { fontSize: 8 },
+    });
+
+    doc.save("data-ac.pdf");
+  };
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
+        {loading && <p className="p-4 text-gray-500">Loading data...</p>}
+        {error && <p className="p-4 text-red-500">{error}</p>}
         <div className="flex gap-2 items-center">
           <AddButton onClick={openModal} />
           {isModalOpen && <AcFormInputModal onClose={closeModal} />}
@@ -167,26 +262,33 @@ export default function Ac() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+              {filteredData.length === 0 && !loading && (
+                <TableRow>
+                  <TableCell className="text-center">
+                    Data tidak ditemukan
+                  </TableCell>
+                </TableRow>
+              )}
               {filteredData.map((acData) => (
-                <TableRow key={acData.id}>
+                <TableRow key={acData.id_ac}>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.qrCode}
+                    {acData.qrcode}
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <img
+                      className="w-14 h-14 object-cover rounded"
                       src={acData.gambar}
-                      alt={`Gambar ${acData.merek}`}
-                      className="w-16 h-16 object-cover rounded"
+                      alt={acData.merek}
                     />
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     {acData.merek}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.noRegistrasi}
+                    {acData.no_registrasi}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.noSerial}
+                    {acData.no_serial}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     {acData.ukuran}
@@ -198,10 +300,10 @@ export default function Ac() {
                     {acData.asal}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {acData.tahunPembelian}
+                    {acData.tahun_pembelian}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {acData.hargaPembelian.toLocaleString("id-ID")}
+                    Rp {acData.harga_pembelian.toLocaleString("id_ac-ID")}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     {acData.kondisi}
@@ -212,11 +314,11 @@ export default function Ac() {
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <div className="flex items-center gap-2">
                       <ServiceButton
-                        onClick={() => navigate(`/service-ac/${acData.id}`)}
+                        onClick={() => navigate(`/service-ac/${acData.id_ac}`)}
                       />
-                      <EditButton onClick={() => console.log("Edit", acData.id)} />
+                      <EditButton onClick={() => handleEdit(acData.id_ac)} />
                       <DeleteButton
-                        onClick={() => console.log("Delete", acData.id)}
+                        onClick={() => handleDelete(acData.id_ac)}
                       />
                     </div>
                   </TableCell>

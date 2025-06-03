@@ -11,6 +11,10 @@ import {
   DeleteButton,
 } from "../ui/button/ActionBtn";
 import { useState, useEffect } from "react";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import AddButton from "../ui/button/AddBtn";
 import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
@@ -18,55 +22,155 @@ import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import AlatBeratFormInputModal from "../../pages/Modals/AlatBeratInputModal";
-import { alatBeratData, AlatBeratData } from "../../dataDummy/alatBeratData";
+import api from "../../../services/api";
 
-const tableData: AlatBeratData[] = alatBeratData;
+type AlatBeratData = {
+  id_alatberat: number;
+  qrcode: string;
+  gambar: string;
+  merek: string;
+  no_registrasi: string;
+  no_mesin: string;
+  no_rangka: string;
+  warna: string;
+  harga_pembelian: number;
+  tahun_pembuatan: number;
+  kategori: string;
+  pajak: string;
+  penggunaan: string;
+  kondisi: string;
+};
 
-export default function AlatBerat() {
+export default function TableAlatBerat() {
   const [alatBeratData, setAlatBeratData] = useState<AlatBeratData[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  //  fetch dari API
-    // useEffect(() => {
-    //   const fetchAlatBerat = async () => {
-    //     try {
-    //       const response = await api.get("/api/alat-berat");
-    //       setAlatBeratData(response.data);
-    //     } catch (error) {
-    //       console.error("Gagal ambil data alat berat", error);
-    //     }
-    //   };
-  
-    //   fetchAlatBerat();
-    // }, []);
-  
-  
-    useEffect(() => {
-    // Simulasi fetch data dari backend
-    const dummyData: AlatBeratData[] = alatBeratData;
-  
-    setAlatBeratData(dummyData);
-  }, [alatBeratData]);
+  const navigate = useNavigate();
 
-  const filteredData = tableData
-    .filter((item) =>
-      item.merek.toLowerCase().includes(search.toLowerCase())
-    )
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/api/alat-berat"); // url sementara
+        setAlatBeratData(response.data);
+      } catch (err) {
+        console.error("Gagal mengambil data alat berat:", err);
+        setError("Gagal mengambil data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const filteredData = alatBeratData
+    .filter((item) => item.merek.toLowerCase().includes(search.toLowerCase()))
     .slice(0, rows);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleExportExcel = () => console.log("Export ke Excel");
-  const handleExportPDF = () => console.log("Export ke PDF");
+  const handleEdit = (id_alatberat: number) => {
+    navigate(`/edit-alat-berat/${id_alatberat}`);
+  };
 
-  const navigate = useNavigate();
+  const handleDelete = async (id_alatberat: number) => {
+    if (confirm("Yakin ingin menghapus alat berat ini?")) {
+      try {
+        await api.delete(`/api/alat-berat/${id_alatberat}`);
+        setAlatBeratData((prev) =>
+          prev.filter((item) => item.id_alatberat !== id_alatberat)
+        );
+      } catch (err) {
+        console.error("Gagal menghapus data:", err);
+      }
+    }
+  };
+
+  const handleExportExcel = () => {
+    const data = filteredData.map((item) => ({
+      "QR Code": item.qrcode,
+      Gambar: item.gambar,
+      Merek: item.merek,
+      "No. Registrasi": item.no_registrasi,
+      "No. Mesin": item.no_mesin,
+      "No. Rangka": item.no_rangka,
+      Warna: item.warna,
+      "Harga Pembelian": item.harga_pembelian,
+      "Tahun Pembuatan": item.tahun_pembuatan,
+      Kategori: item.kategori,
+      Pajak: item.pajak,
+      Penggunaan: item.penggunaan,
+      Kondisi: item.kondisi,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Alat Berat");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const fileData = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(fileData, "data-alatberat.xlsx");
+  };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    const tableColumn = [
+      "QR Code",
+      "Merek",
+      "No. Registrasi",
+      "No. Mesin",
+      "No. Rangka",
+      "Warna",
+      "Harga Pembelian",
+      "Tahun Pembuatan",
+      "Kategori",
+      "Pajak",
+      "Penggunaan",
+      "Kondisi",
+    ];
+
+    const tableRows = filteredData.map((item) => [
+      item.qrcode,
+      item.merek,
+      item.no_registrasi,
+      item.no_mesin,
+      item.no_rangka,
+      item.warna,
+      `Rp ${item.harga_pembelian.toLocaleString("id_alatberat-ID")}`,
+      item.tahun_pembuatan,
+      item.kategori,
+      item.pajak
+        ? new Date(item.pajak).toLocaleDateString("id_alatberat-ID")
+        : "-",
+      item.penggunaan,
+      item.kondisi,
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      styles: { fontSize: 8 },
+    });
+
+    doc.save("data-alatberat.pdf");
+  };
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
+        {loading && <p className="p-4 text-gray-500">Loading data...</p>}
+        {error && <p className="p-4 text-red-500">{error}</p>}
         <div className="flex gap-2 items-center">
           <AddButton onClick={openModal} />
           {isModalOpen && <AlatBeratFormInputModal onClose={closeModal} />}
@@ -174,17 +278,24 @@ export default function AlatBerat() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+              {filteredData.length === 0 && !loading && (
+                <TableRow>
+                  <TableCell className="text-center">
+                    Data tidak ditemukan
+                  </TableCell>
+                </TableRow>
+              )}
               {filteredData.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow key={item.id_alatberat}>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.qrCode}
+                    {item.qrcode}
                   </TableCell>
 
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <img
+                      className="w-14 h-14 object-cover rounded"
                       src={item.gambar}
-                      alt={`Gambar ${item.merek}`}
-                      className="h-10 w-10 object-cover rounded"
+                      alt={item.merek}
                     />
                   </TableCell>
 
@@ -193,15 +304,15 @@ export default function AlatBerat() {
                   </TableCell>
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.noRegistrasi}
+                    {item.no_registrasi}
                   </TableCell>
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.noMesin}
+                    {item.no_mesin}
                   </TableCell>
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.noRangka}
+                    {item.no_rangka}
                   </TableCell>
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -209,11 +320,11 @@ export default function AlatBerat() {
                   </TableCell>
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {item.hargaPembelian.toLocaleString("id-ID")}
+                    Rp {item.harga_pembelian.toLocaleString("id-ID")}
                   </TableCell>
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.tahunPembuatan}
+                    {item.tahun_pembuatan}
                   </TableCell>
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -238,14 +349,14 @@ export default function AlatBerat() {
                     <div className="flex items-center gap-2">
                       <ServiceButton
                         onClick={() =>
-                          navigate(`/service-alat-berat/${item.id}`)
+                          navigate(`/service-alat-berat/${item.id_alatberat}`)
                         }
                       />
                       <EditButton
-                        onClick={() => console.log("Edit", item.id)}
+                        onClick={() => handleEdit(item.id_alatberat)}
                       />
                       <DeleteButton
-                        onClick={() => console.log("Delete", item.id)}
+                        onClick={() => handleDelete(item.id_alatberat)}
                       />
                     </div>
                   </TableCell>

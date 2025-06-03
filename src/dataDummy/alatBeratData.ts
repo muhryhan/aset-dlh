@@ -8,7 +8,7 @@ export interface AlatBeratData {
   noRangka: string;
   warna: string;
   hargaPembelian: number;
-  tahunPembuatan: string;
+  tahunPembuatan: number;
   kategori: string;
   pajak: string;
   penggunaan: string;
@@ -27,7 +27,7 @@ export const alatBeratData: AlatBeratData[] = [
     noRangka: "CHS-001-CAT",
     warna: "Kuning",
     hargaPembelian: 2500000000,
-    tahunPembuatan: "2018",
+    tahunPembuatan: 2018,
     kategori: "Bulldozer",
     pajak: "2025-05-01",
     penggunaan: "Proyek Jalan Raya",
@@ -43,7 +43,7 @@ export const alatBeratData: AlatBeratData[] = [
     noRangka: "CHS-002-KMT",
     warna: "Kuning",
     hargaPembelian: 1800000000,
-    tahunPembuatan: "2020",
+    tahunPembuatan: 2020,
     kategori: "Excavator",
     pajak: "2025-07-10",
     penggunaan: "Galian Pondasi",
@@ -59,7 +59,7 @@ export const alatBeratData: AlatBeratData[] = [
     noRangka: "CHS-003-HTC",
     warna: "Oranye",
     hargaPembelian: 1750000000,
-    tahunPembuatan: "2019",
+    tahunPembuatan: 2019,
     kategori: "Excavator",
     pajak: "2024-12-15",
     penggunaan: "Konstruksi Gedung",
@@ -75,7 +75,7 @@ export const alatBeratData: AlatBeratData[] = [
     noRangka: "CHS-004-LBH",
     warna: "Putih",
     hargaPembelian: 3200000000,
-    tahunPembuatan: "2021",
+    tahunPembuatan: 2021,
     kategori: "Crane",
     pajak: "2025-09-20",
     penggunaan: "Angkat Material Berat",
@@ -91,7 +91,7 @@ export const alatBeratData: AlatBeratData[] = [
     noRangka: "CHS-005-VLV",
     warna: "Kuning",
     hargaPembelian: 2000000000,
-    tahunPembuatan: "2017",
+    tahunPembuatan: 2017,
     kategori: "Dump Truck",
     pajak: "2025-03-01",
     penggunaan: "Angkut Material",
@@ -107,7 +107,7 @@ export const alatBeratData: AlatBeratData[] = [
     noRangka: "CHS-006-SNY",
     warna: "Merah",
     hargaPembelian: 2300000000,
-    tahunPembuatan: "2019",
+    tahunPembuatan: 2019,
     kategori: "Crane",
     pajak: "2025-06-30",
     penggunaan: "Konstruksi Jalan Layang",

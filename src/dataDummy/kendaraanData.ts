@@ -8,11 +8,11 @@ export interface KendaraanData {
   nomorRangka: string;
   warna: string;
   hargaPembelian: number;
-  tahunPembuatan: string;
+  tahunPembuatan: number;
   kategori: string;
   pajak: string;
   pemegang: string;
-  nik: string;
+  nik: number;
   penggunaan: string;
   kondisi: string;
 }
@@ -28,11 +28,11 @@ export const kendaraanData: KendaraanData[] = [
     nomorRangka: "MHKTN12AVZ001",
     warna: "Hitam",
     hargaPembelian: 230000000,
-    tahunPembuatan: "2022",
+    tahunPembuatan: 2022,
     kategori: "R4",
     pajak: "2025-06-15",
     pemegang: "Andi Pratama",
-    nik: "3174091001900001",
+    nik: 3174091001900001,
     penggunaan: "Operasional",
     kondisi: "Baik",
   },
@@ -46,11 +46,11 @@ export const kendaraanData: KendaraanData[] = [
     nomorRangka: "MH34MAY1234NMX",
     warna: "Putih",
     hargaPembelian: 32000000,
-    tahunPembuatan: "2021",
+    tahunPembuatan: 2021,
     kategori: "R2",
     pajak: "2024-11-01",
     pemegang: "Budi Setiawan",
-    nik: "3205051502870002",
+    nik: 3205051502870002,
     penggunaan: "Pribadi",
     kondisi: "Baik",
   },
@@ -64,11 +64,11 @@ export const kendaraanData: KendaraanData[] = [
     nomorRangka: "MH4GIGA9087XYZ",
     warna: "Kuning",
     hargaPembelian: 580000000,
-    tahunPembuatan: "2020",
+    tahunPembuatan: 2020,
     kategori: "R6",
     pajak: "2025-01-20",
     pemegang: "Samsul Huda",
-    nik: "3271062103740003",
+    nik: 3271062103740003,
     penggunaan: "Distribusi",
     kondisi: "Perlu Servis",
   },
@@ -82,11 +82,11 @@ export const kendaraanData: KendaraanData[] = [
     nomorRangka: "MH4COLT9876RNG",
     warna: "Kuning",
     hargaPembelian: 350000000,
-    tahunPembuatan: "2019",
+    tahunPembuatan: 2019,
     kategori: "R4",
     pajak: "2024-08-05",
     pemegang: "Dewi Sartika",
-    nik: "3210120405840004",
+    nik: 3210120405840004,
     penggunaan: "Distribusi",
     kondisi: "Kurang Baik",
   },
@@ -100,11 +100,11 @@ export const kendaraanData: KendaraanData[] = [
     nomorRangka: "MH4BEAT0987JKL",
     warna: "Merah",
     hargaPembelian: 17000000,
-    tahunPembuatan: "2023",
+    tahunPembuatan: 2023,
     kategori: "R2",
     pajak: "2026-02-28",
     pemegang: "Lia Amalia",
-    nik: "3208032201970005",
+    nik: 3208032201970005,
     penggunaan: "Operasional",
     kondisi: "Baik",
   },
@@ -118,11 +118,11 @@ export const kendaraanData: KendaraanData[] = [
     nomorRangka: "MHKTN89FRT0099",
     warna: "Putih",
     hargaPembelian: 550000000,
-    tahunPembuatan: "2021",
+    tahunPembuatan: 2021,
     kategori: "R4",
     pajak: "2025-12-10",
     pemegang: "Rudi Hartono",
-    nik: "3273071603770006",
+    nik: 3273071603770006,
     penggunaan: "Pimpinan",
     kondisi: "Baik",
   },

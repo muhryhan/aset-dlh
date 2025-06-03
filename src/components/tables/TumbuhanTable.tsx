@@ -11,66 +11,130 @@ import {
   DeleteButton,
 } from "../ui/button/ActionBtn";
 import { useState, useEffect } from "react";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import AddButton from "../ui/button/AddBtn";
 import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
-import TumbuhanFormInputModal from "../../pages/Modals/TumbuhanInputModal";
-// import api from "../../../services/api";
-import { tumbuhanData, TumbuhanData } from "../../dataDummy/tumbuhanData";
+import TanamanFormInputModal from "../../pages/Modals/TumbuhanInputModal";
+import api from "../../../services/api";
 
-const tableData: TumbuhanData[] = tumbuhanData;
+type TanamanData = {
+  id_tanaman: number;
+  gambar: string;
+  nama: string;
+  jenis: string;
+  stok: number;
+  keterangan: string;
+};
 
 export default function Tumbuhan() {
-  const [tumbuhanData, setTumbuhanData] = useState<TumbuhanData[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tanamanData, setTanamanData] = useState<TanamanData[]>([]);
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  //  fetch dari API
-    // useEffect(() => {
-    //   const fetchTumbuhan = async () => {
-    //     try {
-    //       const response = await api.get("/api/tumbuhan");
-    //       setTumbuhanData(response.data);
-    //     } catch (error) {
-    //       console.error("Gagal ambil data tumbuhan", error);
-    //     }
-    //   };
-  
-    //   fetchTumbuhan();
-    // }, []);
-  
-  
-    useEffect(() => {
-    // Simulasi fetch data dari backend
-    const dummyData: TumbuhanData[] = tumbuhanData;
-  
-    setTumbuhanData(dummyData);
-  }, [tumbuhanData]);
+  const navigate = useNavigate();
 
-  const filteredData = tableData
-    .filter((item) =>
-      item.nama.toLowerCase().includes(search.toLowerCase())
-    )
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/api/tanaman"); // url sementara
+        setTanamanData(response.data);
+      } catch (err) {
+        console.error("Gagal mengambil data tanaman:", err);
+        setError("Gagal mengambil data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const filteredData = tanamanData
+    .filter((item) => item.nama.toLowerCase().includes(search.toLowerCase()))
     .slice(0, rows);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleExportExcel = () => console.log("Export ke Excel");
-  const handleExportPDF = () => console.log("Export ke PDF");
+  const handleEdit = (id_tanaman: number) => {
+    navigate(`/edit-tanaman/${id_tanaman}`);
+  };
 
-  const navigate = useNavigate();
+  const handleDelete = async (id_tanaman: number) => {
+    if (confirm("Yakin ingin menghapus tanaman ini?")) {
+      try {
+        await api.delete(`/api/tanaman/${id_tanaman}`);
+        setTanamanData((prev) =>
+          prev.filter((item) => item.id_tanaman !== id_tanaman)
+        );
+      } catch (err) {
+        console.error("Gagal menghapus data:", err);
+      }
+    }
+  };
+
+  const handleExportExcel = () => {
+    const data = filteredData.map((item) => ({
+      Gambar: item.gambar,
+      Nama: item.nama,
+      Jenis: item.jenis,
+      Stok: item.stok,
+      Keterangan: item.keterangan,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tanaman");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const fileData = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(fileData, "data-tanaman.xlsx");
+  };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    const tableColumn = ["Nama", "Jenis", "Stok", "Keterangan"];
+
+    const tableRows = filteredData.map((item) => [
+      item.nama,
+      item.jenis,
+      item.stok,
+      item.keterangan,
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      styles: { fontSize: 8 },
+    });
+
+    doc.save("data-tanaman.pdf");
+  };
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
+        {loading && <p className="p-4 text-gray-500">Loading data...</p>}
+        {error && <p className="p-4 text-red-500">{error}</p>}
         <div className="flex gap-2 items-center">
           <AddButton onClick={openModal} />
-          {isModalOpen && <TumbuhanFormInputModal onClose={closeModal} />}
+          {isModalOpen && <TanamanFormInputModal onClose={closeModal} />}
           <RowsSelector value={rows} onChange={setRows} />
         </div>
         <div className="flex gap-2 items-center">
@@ -127,13 +191,20 @@ export default function Tumbuhan() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+              {filteredData.length === 0 && !loading && (
+                <TableRow>
+                  <TableCell className="text-center">
+                    Data tidak ditemukan
+                  </TableCell>
+                </TableRow>
+              )}
               {filteredData.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow key={item.id_tanaman}>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <img
+                      className="w-14 h-14 object-cover rounded"
                       src={item.gambar}
-                      alt={`Gambar ${item.nama}`}
-                      className="h-10 w-10 object-cover rounded"
+                      alt={item.nama}
                     />
                   </TableCell>
 
@@ -157,15 +228,13 @@ export default function Tumbuhan() {
                     <div className="flex items-center gap-2">
                       <DistributionButton
                         onClick={() =>
-                          navigate(`/distribusi-tumbuhan/${item.id}`)
+                          navigate(`/distribusi-tumbuhan/${item.id_tanaman}`)
                         }
                       />
-                      <EditButton
-                        onClick={() => console.log("Edit", item.id)}
-                      />
-                      <DeleteButton
-                        onClick={() => console.log("Delete", item.id)}
-                      />
+                      <EditButton onClick={() => handleEdit(item.id_tanaman)} />
+                    <DeleteButton
+                      onClick={() => handleDelete(item.id_tanaman)}
+                    />
                     </div>
                   </TableCell>
                 </TableRow>

@@ -4,8 +4,27 @@ import Input from "../form/input/InputField";
 import FileInput from "../form/input/FileInput";
 import Select from "../form/Select";
 import Button from "../ui/button/Button";
+import { useState } from "react";
+import api from "../../../services/api";
 
 export default function KendaraanFormInput() {
+  const [formData, setFormData] = useState({
+    merek: "",
+    nomorPolisi: "",
+    nomorMesin: "",
+    nomorRangka: "",
+    warna: "",
+    hargaPembelian: "",
+    tahunPembuatan: "",
+    kategori: "",
+    pajak: "",
+    pemegang: "",
+    nik: "",
+    penggunaan: "",
+    kondisi: "",
+    gambar: null as File | null,
+  });
+
   const kategori = [
     { value: "r2", label: "Roda 2" },
     { value: "r4", label: "Roda 4" },
@@ -17,14 +36,36 @@ export default function KendaraanFormInput() {
     { value: "rb", label: "Rusak berat" },
   ];
 
-  const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
+  const handleSelectChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      console.log("Selected file:", file.name);
+    const file = event.target.files?.[0] || null;
+    setFormData((prev) => ({ ...prev, gambar: file }));
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async () => {
+    // const url = "/api/kendaraan"; // url sementara
+
+    const data = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null) data.append(key, value as string | Blob);
+    });
+
+    try {
+      console.log(data);
+      const response = await api.post("/api/kendaraan", data);
+      if (response.status != 200) throw new Error("Gagal menyimpan data");
+      alert("Data berhasil dikirim!");
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat mengirim data.");
     }
   };
 
@@ -38,7 +79,13 @@ export default function KendaraanFormInput() {
 
         <div>
           <Label htmlFor="merek">Merek</Label>
-          <Input type="text" id="merek" className="w-full" />
+          <Input
+            type="text"
+            id="merek"
+            value={formData.merek}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
@@ -93,7 +140,7 @@ export default function KendaraanFormInput() {
           <Select
             options={kategori}
             placeholder="Kategori kendaraan"
-            onChange={handleSelectChange}
+            onChange={(value) => handleSelectChange("kategori", value)}
             className="w-full dark:bg-dark-900"
           />
         </div>
@@ -129,12 +176,12 @@ export default function KendaraanFormInput() {
           <Select
             options={kondisi}
             placeholder="Kondisi kendaraan"
-            onChange={handleSelectChange}
+            onChange={(value) => handleSelectChange("kondisi", value)}
             className="w-full dark:bg-dark-900"
           />
         </div>
         <div className="flex justify-end space-x-4">
-          <Button size="md" variant="primary" onClick={() => alert("Clicked!")}>
+          <Button size="md" variant="primary" onClick={handleSubmit}>
             Submit
           </Button>
           <Button
