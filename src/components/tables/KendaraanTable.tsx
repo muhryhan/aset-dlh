@@ -23,6 +23,7 @@ import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
 import KendaraanFormInputModal from "../../pages/Modals/KendaraanInputModal";
 import api from "../../../services/api";
+import { Link } from "react-router-dom";
 
 type KendaraanData = {
   id_kendaraan: number;
@@ -58,7 +59,7 @@ export default function TableKendaraan() {
       try {
         const response = await api.get("/api/kendaraan"); // url sementara
         console.log(response.data);
-        setKendaraanData(response.data);
+        setKendaraanData(response.data.data);
       } catch (err) {
         console.error("Gagal mengambil data kendaraan:", err);
         setError("Gagal mengambil data");
@@ -307,14 +308,18 @@ export default function TableKendaraan() {
               {filteredData.map((item) => (
                 <TableRow key={item.id_kendaraan}>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.qrcode}
+                    <Link
+                      to={`http://localhost:5000/uploads/kendaraan/qrcode/${item.qrcode}`}
+                    >
+                      Lihat
+                    </Link>
                   </TableCell>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <img
-                      src={item.gambar}
-                      alt={`Gambar ${item.merek}`}
-                      className="w-16 h-16 object-cover rounded-md"
-                    />
+                    <Link
+                      to={`http://localhost:5000/uploads/kendaraan/${item.gambar}`}
+                    >
+                      Lihat
+                    </Link>
                   </TableCell>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     {item.merek}

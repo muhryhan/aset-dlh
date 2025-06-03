@@ -6,23 +6,25 @@ import Select from "../form/Select";
 import Button from "../ui/button/Button";
 import { useState } from "react";
 import api from "../../../services/api";
+import Alert from "../alert/Alert";
 
 export default function KendaraanFormInput() {
   const [formData, setFormData] = useState({
+    qrcode: "",
+    gambar: null as File | null,
     merek: "",
-    nomorPolisi: "",
-    nomorMesin: "",
-    nomorRangka: "",
+    no_polisi: "",
+    no_mesin: "",
+    no_rangka: "",
     warna: "",
-    hargaPembelian: "",
-    tahunPembuatan: "",
+    harga_pembelian: "",
+    tahun_pembuatan: "",
     kategori: "",
     pajak: "",
     pemegang: "",
     nik: "",
     penggunaan: "",
     kondisi: "",
-    gambar: null as File | null,
   });
 
   const kategori = [
@@ -31,9 +33,9 @@ export default function KendaraanFormInput() {
     { value: "r6", label: "Roda 6" },
   ];
   const kondisi = [
-    { value: "b", label: "Baik" },
-    { value: "rr", label: "Rusak ringan" },
-    { value: "rb", label: "Rusak berat" },
+    { value: "Baik", label: "Baik" },
+    { value: "Rusak Ringan", label: "Rusak ringan" },
+    { value: "Rusak Berat", label: "Rusak berat" },
   ];
 
   const handleSelectChange = (field: string, value: string) => {
@@ -51,21 +53,31 @@ export default function KendaraanFormInput() {
   };
 
   const handleSubmit = async () => {
-    // const url = "/api/kendaraan"; // url sementara
-
     const data = new FormData();
+
+    // Append semua field dari formData ke FormData
     Object.entries(formData).forEach(([key, value]) => {
-      if (value !== null) data.append(key, value as string | Blob);
+      if (value !== null && value !== "") {
+        // Kalau gambar, append sebagai file
+        if (key === "gambar" && value instanceof File) {
+          data.append(key, value);
+        } else if (typeof value === "string") {
+          data.append(key, value);
+        }
+      }
     });
 
     try {
-      console.log(data);
-      const response = await api.post("/api/kendaraan", data);
-      if (response.status != 200) throw new Error("Gagal menyimpan data");
-      alert("Data berhasil dikirim!");
+      // console.log(data);
+      const response = await api.post("/api/kendaraan", data, {
+        // Jangan set Content-Type, biarkan Axios atur otomatis
+      });
+      console.log(response);
+      if (response.status != 201) throw new Error("Gagal menyimpan data");
+      <Alert message="Data berhasil disimpan." />;
     } catch (err) {
-      console.error(err);
-      alert("Terjadi kesalahan saat mengirim data.");
+      console.error("Error saat submit:", err);
+      <Alert message="Gagal menyimpan data." />;
     }
   };
 
@@ -74,7 +86,11 @@ export default function KendaraanFormInput() {
       <div className="space-y-6 w-full">
         <div>
           <Label htmlFor="gambar">Upload file</Label>
-          <FileInput onChange={handleFileChange} className="w-full" />
+          <FileInput
+            id_file="gambar"
+            onChange={handleFileChange}
+            className="w-full"
+          />
         </div>
 
         <div>
@@ -90,22 +106,46 @@ export default function KendaraanFormInput() {
 
         <div>
           <Label htmlFor="no_polisi">Nomor Polisi</Label>
-          <Input type="text" id="nopol" className="w-full" />
+          <Input
+            type="text"
+            id="no_polisi"
+            value={formData.no_polisi}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="no_mesin">Nomor Mesin</Label>
-          <Input type="text" id="nomesin" className="w-full" />
+          <Input
+            type="text"
+            id="no_mesin"
+            value={formData.no_mesin}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="no_rangka">Nomor Rangka</Label>
-          <Input type="text" id="norangka" className="w-full" />
+          <Input
+            type="text"
+            id="no_rangka"
+            value={formData.no_rangka}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="warna">Warna</Label>
-          <Input type="text" id="warna" className="w-full" />
+          <Input
+            type="text"
+            id="warna"
+            value={formData.warna}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
@@ -116,7 +156,9 @@ export default function KendaraanFormInput() {
             </span>
             <Input
               type="number"
-              id="harga"
+              id="harga_pembelian"
+              value={formData.harga_pembelian}
+              onChange={handleInputChange}
               inputMode="numeric"
               pattern="[0-9]*"
               className="pl-10 w-full"
@@ -128,7 +170,9 @@ export default function KendaraanFormInput() {
           <Label htmlFor="tahun_pembuatan">Tahun Pembuatan</Label>
           <Input
             type="number"
-            id="tahun"
+            id="tahun_pembuatan"
+            value={formData.tahun_pembuatan}
+            onChange={handleInputChange}
             inputMode="numeric"
             pattern="[0-9]*"
             className="w-full"
@@ -138,6 +182,7 @@ export default function KendaraanFormInput() {
         <div>
           <Label htmlFor="kategori">Kategori</Label>
           <Select
+            value={formData.kategori}
             options={kategori}
             placeholder="Kategori kendaraan"
             onChange={(value) => handleSelectChange("kategori", value)}
@@ -147,12 +192,24 @@ export default function KendaraanFormInput() {
 
         <div>
           <Label htmlFor="pajak">Pajak</Label>
-          <Input type="date" id="pajak" className="w-full" />
+          <Input
+            type="date"
+            id="pajak"
+            value={formData.pajak}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="pemegang">Pemegang</Label>
-          <Input type="text" id="pemegang" className="w-full" />
+          <Input
+            type="text"
+            id="pemegang"
+            value={formData.pemegang}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
@@ -160,6 +217,8 @@ export default function KendaraanFormInput() {
           <Input
             type="number"
             id="nik"
+            value={formData.nik}
+            onChange={handleInputChange}
             inputMode="numeric"
             pattern="[0-9]*"
             className="w-full"
@@ -168,18 +227,26 @@ export default function KendaraanFormInput() {
 
         <div>
           <Label htmlFor="penggunaan">Penggunaan</Label>
-          <Input type="text" id="penggunaan" className="w-full" />
+          <Input
+            type="text"
+            id="penggunaan"
+            value={formData.penggunaan}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
 
         <div>
           <Label htmlFor="kondisi">Kondisi</Label>
           <Select
+            value={formData.kondisi}
             options={kondisi}
             placeholder="Kondisi kendaraan"
             onChange={(value) => handleSelectChange("kondisi", value)}
             className="w-full dark:bg-dark-900"
           />
         </div>
+
         <div className="flex justify-end space-x-4">
           <Button size="md" variant="primary" onClick={handleSubmit}>
             Submit
@@ -187,7 +254,25 @@ export default function KendaraanFormInput() {
           <Button
             size="md"
             variant="outline"
-            onClick={() => console.log("Outline small clicked")}
+            onClick={() =>
+              setFormData({
+                qrcode: "",
+                gambar: null,
+                merek: "",
+                no_polisi: "",
+                no_mesin: "",
+                no_rangka: "",
+                warna: "",
+                harga_pembelian: "",
+                tahun_pembuatan: "",
+                kategori: "",
+                pajak: "",
+                pemegang: "",
+                nik: "",
+                penggunaan: "",
+                kondisi: "",
+              })
+            }
           >
             Reset
           </Button>

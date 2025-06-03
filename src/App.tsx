@@ -1,6 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignIn from "./pages/AuthPages/SignIn";
-
 import NotFound from "./pages/OtherPage/NotFound";
 import UserProfiles from "./pages/UserList";
 import Images from "./pages/UiElements/Images";
@@ -11,6 +10,7 @@ import Calendar from "./pages/Calendar";
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
+import ProtectedRoute from "./protectedRoute";
 import Home from "./pages/Dashboard/Home";
 import Kendaraan from "./pages/Assets/Kendaraan";
 import AlatBerat from "./pages/Assets/AlatBerat";
@@ -31,78 +31,71 @@ import TPUKota from "./pages/Assets/TPU";
 
 export default function App() {
   return (
-    <>
-      <Router>
-        <ScrollToTop />
-        <Routes>
-          {/* Dashboard Layout */}
-          <Route element={<AppLayout />}>
-            {/* Home page */}
-            <Route path="/home" element={<Home />} />
+    <Router>
+      <ScrollToTop />
+      <Routes>
+        {/* Auth Page (Login) */}
+        <Route path="/" element={<SignIn />} />
 
-            {/* Others Page */}
-            <Route path="/user-list" element={<UserProfiles />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/blank" element={<Blank />} />
+        {/* Protected Pages with Layout */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          {/* Dashboard & Home */}
+          <Route path="/home" element={<Home />} />
 
-            {/* Aset DLH Page */}
-            <Route path="/kendaraan" element={<Kendaraan />} />
-            <Route path="/alat-berat" element={<AlatBerat />} />
-            <Route path="/alat-kerja" element={<AlatKerja />} />
-            <Route path="/ac" element={<Ac />} />
-            <Route path="/taman-kota" element={<TamanKota />} />
-            <Route path="/tpu" element={<TPUKota />} />
+          {/* User and Calendar */}
+          <Route path="/user-list" element={<UserProfiles />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/blank" element={<Blank />} />
 
-            {/* Plants Page */}
-            <Route path="/tumbuhan" element={<Tumbuhan />} />
+          {/* Aset DLH Pages */}
+          <Route path="/kendaraan" element={<Kendaraan />} />
+          <Route path="/alat-berat" element={<AlatBerat />} />
+          <Route path="/alat-kerja" element={<AlatKerja />} />
+          <Route path="/ac" element={<Ac />} />
+          <Route path="/taman-kota" element={<TamanKota />} />
+          <Route path="/tpu" element={<TPUKota />} />
 
-            {/* Plants Distribution Page */}
-            <Route
-              path="/distribusi-tumbuhan/:id"
-              element={<DistribusiTumbuhan />}
-            />
+          {/* Tumbuhan */}
+          <Route path="/tumbuhan" element={<Tumbuhan />} />
+          <Route
+            path="/distribusi-tumbuhan/:id"
+            element={<DistribusiTumbuhan />}
+          />
 
-            {/* Service Page */}
-            <Route
-              path="/service-kendaraan/:id"
-              element={<ServiceKendaraan />}
-            />
-            <Route
-              path="/service-alat-berat/:id"
-              element={<ServiceAlatBerat />}
-            />
-            <Route
-              path="/service-alat-kerja/:id"
-              element={<ServiceAlatKerja />}
-            />
-            <Route path="/service-ac/:id" element={<ServiceAc />} />
+          {/* Service Pages */}
+          <Route path="/service-kendaraan/:id" element={<ServiceKendaraan />} />
+          <Route
+            path="/service-alat-berat/:id"
+            element={<ServiceAlatBerat />}
+          />
+          <Route
+            path="/service-alat-kerja/:id"
+            element={<ServiceAlatKerja />}
+          />
+          <Route path="/service-ac/:id" element={<ServiceAc />} />
 
-            {/* Periodic Service Page */}
-            <Route path="/periodic-kendaraan" element={<PeriodicKendaraan />} />
-            <Route
-              path="/periodic-alat-berat"
-              element={<PeriodicAlatBerat />}
-            />
-            <Route
-              path="/periodic-alat-kerja"
-              element={<PeriodicAlatKerja />}
-            />
-            <Route path="/periodic-ac" element={<PeriodicAc />} />
+          {/* Periodic Services */}
+          <Route path="/periodic-kendaraan" element={<PeriodicKendaraan />} />
+          <Route path="/periodic-alat-berat" element={<PeriodicAlatBerat />} />
+          <Route path="/periodic-alat-kerja" element={<PeriodicAlatKerja />} />
+          <Route path="/periodic-ac" element={<PeriodicAc />} />
 
-            {/* Ui Elements */}
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-          </Route>
+          {/* UI Elements */}
+          <Route path="/alerts" element={<Alerts />} />
+          <Route path="/badge" element={<Badges />} />
+          <Route path="/buttons" element={<Buttons />} />
+          <Route path="/images" element={<Images />} />
+        </Route>
 
-          {/* Auth Layout */}
-          <Route path="/" element={<SignIn />} />
-
-          {/* Fallback Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-    </>
+        {/* Fallback */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 }
