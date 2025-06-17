@@ -1,3 +1,10 @@
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 import {
   Table,
   TableBody,
@@ -5,25 +12,21 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+
 import {
   ServiceButton,
   EditButton,
   DeleteButton,
 } from "../ui/button/ActionBtn";
-import { useEffect, useState } from "react";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+
 import AddButton from "../ui/button/AddBtn";
 import ExcelButton from "../ui/button/ExcelBtn";
 import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
-import { useNavigate } from "react-router-dom";
+
 import KendaraanFormInputModal from "../../pages/Modals/KendaraanInputModal";
 import api from "../../../services/api";
-import { Link } from "react-router-dom";
 
 type KendaraanData = {
   id_kendaraan: number;
@@ -55,7 +58,7 @@ export default function TableKendaraan() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/api/kendaraan"); // url sementara
+      const response = await api.get("/api/kendaraan");
       setKendaraanData(response.data.data);
     } catch (err) {
       console.error("Gagal mengambil data kendaraan:", err);
@@ -63,6 +66,7 @@ export default function TableKendaraan() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -124,8 +128,7 @@ export default function TableKendaraan() {
 
   const handleExportPDF = () => {
     const doc = new jsPDF();
-
-    const tableColumn = [
+    const headers = [
       "QR Code",
       "Merek",
       "No. Polisi",
@@ -142,14 +145,14 @@ export default function TableKendaraan() {
       "Kondisi",
     ];
 
-    const tableRows = filteredData.map((item) => [
+    const rows = filteredData.map((item) => [
       item.qrcode,
       item.merek,
       item.no_polisi,
       item.no_mesin,
       item.no_rangka,
       item.warna,
-      `Rp ${item.harga_pembelian.toLocaleString("id_kendaraan-ID")}`,
+      `Rp ${item.harga_pembelian.toLocaleString("id-ID")}`,
       item.tahun_pembuatan,
       item.kategori,
       item.pajak ? new Date(item.pajak).toLocaleDateString("id-ID") : "-",
@@ -160,8 +163,8 @@ export default function TableKendaraan() {
     ]);
 
     autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
+      head: [headers],
+      body: rows,
       styles: { fontSize: 8 },
     });
 
@@ -356,17 +359,19 @@ export default function TableKendaraan() {
                       {item.kondisi}
                     </TableCell>
                     <TableCell className="px-5 py-3 text-center text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                      <ServiceButton
-                        onClick={() =>
-                          navigate(`/service-kendaraan/${item.id_kendaraan}`)
-                        }
-                      />
-                      <EditButton
-                        onClick={() => handleEdit(item.id_kendaraan)}
-                      />
-                      <DeleteButton
-                        onClick={() => handleDelete(item.id_kendaraan)}
-                      />
+                      <div className="flex items-center gap-2">
+                        <ServiceButton
+                          onClick={() =>
+                            navigate(`/service-kendaraan/${item.id_kendaraan}`)
+                          }
+                        />
+                        <EditButton
+                          onClick={() => handleEdit(item.id_kendaraan)}
+                        />
+                        <DeleteButton
+                          onClick={() => handleDelete(item.id_kendaraan)}
+                        />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))

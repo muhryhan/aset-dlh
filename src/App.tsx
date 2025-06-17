@@ -70,7 +70,7 @@ export default function App() {
           />
 
           {/* Service Pages */}
-          <Route path="/service-kendaraan/:id" element={<ServiceKendaraan />} />
+          <Route path="/service-kendaraan/:id_kendaraan" element={<ServiceKendaraan />} />
           <Route
             path="/service-alat-berat/:id"
             element={<ServiceAlatBerat />}

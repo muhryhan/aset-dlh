@@ -3,20 +3,20 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 type ServisKendaraan = {
-  id: number;
-  qrCode: string;
+  id_kendaraan: number;
+  qrcode: string;
   gambar: string;
   merek: string;
-  nomorPolisi: string;
-  nomorMesin: string;
-  nomorRangka: string;
+  no_polisi: string;
+  no_mesin: string;
+  no_rangka: string;
   warna: string;
-  hargaPembelian: number;
-  tahunPembuatan: string;
+  harga_pembelian: number;
+  tahun_pembuatan: number;
   kategori: string;
   pajak: string;
   pemegang: string;
-  nik: string;
+  nik: number;
   penggunaan: string;
   kondisi: string;
 };
@@ -49,19 +49,22 @@ const FormDisableKendaraan: React.FC = () => {
     <div className="w-full mx-auto p-6 bg-white rounded shadow">
       <form className="flex flex-col gap-6 w-full">
         <InputField label="Merek" value={servis?.merek} />
-        <InputField label="Nomor Polisi" value={servis?.nomorPolisi} />
-        <InputField label="Nomor Mesin" value={servis?.nomorMesin} />
-        <InputField label="Nomor Rangka" value={servis?.nomorRangka} />
+        <InputField label="Nomor Polisi" value={servis?.no_polisi} />
+        <InputField label="Nomor Mesin" value={servis?.no_mesin} />
+        <InputField label="Nomor Rangka" value={servis?.no_rangka} />
         <InputField label="Warna" value={servis?.warna} />
         <InputField
           label="Harga Pembelian"
-          value={servis?.hargaPembelian?.toString()}
+          value={servis?.harga_pembelian?.toString()}
         />
-        <InputField label="Tahun Pembuatan" value={servis?.tahunPembuatan} />
+        <InputField
+          label="Tahun Pembuatan"
+          value={servis?.tahun_pembuatan?.toString()?? "-"}
+        />
         <InputField label="Kategori" value={servis?.kategori} />
         <InputField label="Pajak" value={servis?.pajak} />
         <InputField label="Pemegang" value={servis?.pemegang} />
-        <InputField label="NIK" value={servis?.nik} />
+        <InputField label="NIK" value={servis?.nik?.toString()?? "-"} />
         <InputField label="Penggunaan" value={servis?.penggunaan} />
         <InputField label="Kondisi" value={servis?.kondisi} />
       </form>
