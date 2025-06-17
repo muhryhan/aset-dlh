@@ -1,18 +1,29 @@
+import { useState } from "react";
+import "flatpickr/dist/themes/material_blue.css";
+
 import ComponentCard from "../common/ComponentCard";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import FileInput from "../form/input/FileInput";
 import Select from "../form/Select";
 import Button from "../ui/button/Button";
-import { useState } from "react";
+import Alert from "../ui/alert/Alert";
+
 import api from "../../../services/api";
-import Alert from "../alert/Alert";
 
 type Props = {
   onSuccess?: () => void;
 };
 
 export default function AlatKerjaFormInput({ onSuccess }: Props) {
+  // --- Alert Message State
+  const [alertMessage, setAlertMessage] = useState<{
+    variant: "success" | "warning" | "error" | "info";
+    title?: string;
+    message: string;
+  } | null>(null);
+
+  // --- Form State
   const [formData, setFormData] = useState({
     qrcode: "",
     gambar: null as File | null,
@@ -26,14 +37,14 @@ export default function AlatKerjaFormInput({ onSuccess }: Props) {
     keterangan: "",
   });
 
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
-
+  // --- Static Options
   const kondisi = [
     { value: "Baik", label: "Baik" },
     { value: "Rusak Ringan", label: "Rusak ringan" },
     { value: "Rusak Berat", label: "Rusak berat" },
   ];
 
+  // --- Input Handlers
   const handleSelectChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -45,7 +56,11 @@ export default function AlatKerjaFormInput({ onSuccess }: Props) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    const upperCaseFields = ["no_registrasi", "no_serial"];
+    setFormData((prev) => ({
+      ...prev,
+      [id]: upperCaseFields.includes(id) ? value.toUpperCase() : value,
+    }));
   };
 
   const resetForm = () => {
@@ -63,10 +78,41 @@ export default function AlatKerjaFormInput({ onSuccess }: Props) {
     });
   };
 
+  // --- Submit Handler
   const handleSubmit = async () => {
-    const data = new FormData();
+    setAlertMessage(null);
+    const requiredFields = [
+      "merek",
+      "no_registrasi",
+      "no_serial",
+      "asal",
+      "tahun_pembelian",
+      "harga_pembelian",
+      "kondisi",
+      "keterangan",
+    ];
 
-    // Append semua field dari formData ke FormData
+    for (const field of requiredFields) {
+      if (!formData[field as keyof typeof formData]?.toString().trim()) {
+        setAlertMessage({
+          variant: "warning",
+          title: "Validasi Gagal",
+          message: `Field ${field.replace("_", " ")} tidak boleh kosong`,
+        });
+        return;
+      }
+    }
+
+    if (!formData.gambar) {
+      setAlertMessage({
+        variant: "warning",
+        title: "Validasi Gagal",
+        message: "Gambar alat kerja wajib diunggah.",
+      });
+      return;
+    }
+
+    const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== null && value !== "") {
         if (key === "gambar" && value instanceof File) {
@@ -79,23 +125,43 @@ export default function AlatKerjaFormInput({ onSuccess }: Props) {
 
     try {
       const response = await api.post("/api/alatkerja", data);
-      console.log(response);
-      if (response.status != 201) throw new Error("Gagal menyimpan data");
-      setAlertMessage(response.data.message);
+      if (response.status !== 201) throw new Error("Gagal menyimpan data");
 
-      if (onSuccess) onSuccess();
+      setAlertMessage({
+        variant: "success",
+        title: "Berhasil",
+        message: response.data.message || "Data berhasil disimpan.",
+      });
 
-      resetForm();
+      setTimeout(() => {
+        resetForm();
+        onSuccess?.();
+      }, 1000);
     } catch (err) {
       console.error("Error saat submit:", err);
-      setAlertMessage("Gagal menyimpan data");
+      setAlertMessage({
+        variant: "error",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menyimpan data.",
+      });
     }
   };
 
   return (
     <ComponentCard title="Masukkan Data Alat Kerja">
       <div className="space-y-6 w-full">
-        {alertMessage && <Alert message={alertMessage} />}
+        {alertMessage && (
+          <div className="mb-4">
+            <Alert
+              variant={alertMessage.variant}
+              title={alertMessage.title}
+              message={alertMessage.message}
+              autoClose
+              duration={3000}
+              onClose={() => setAlertMessage(null)}
+            />
+          </div>
+        )}
         <div>
           <Label htmlFor="gambar">Upload file</Label>
           <FileInput
@@ -185,7 +251,7 @@ export default function AlatKerjaFormInput({ onSuccess }: Props) {
           <Select
             value={formData.kondisi}
             options={kondisi}
-            placeholder="Kondisi kendaraan"
+            placeholder="Kondisi alat kerja"
             onChange={(value) => handleSelectChange("kondisi", value)}
             className="w-full dark:bg-dark-900"
           />

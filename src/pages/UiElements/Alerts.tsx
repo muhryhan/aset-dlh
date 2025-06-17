@@ -15,6 +15,13 @@ export default function Alerts() {
         <ComponentCard title="Success Alert">
           <Alert
             variant="success"
+            title="Berhasil!"
+            message="Data telah disimpan."
+            autoClose={true}
+            duration={3000}
+          />
+          <Alert
+            variant="success"
             title="Success Message"
             message="Be cautious when performing this action."
             showLink={true}

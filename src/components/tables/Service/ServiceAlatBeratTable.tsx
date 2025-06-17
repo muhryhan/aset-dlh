@@ -12,7 +12,7 @@ import ExcelButton from "../../ui/button/ExcelBtn";
 import PDFButton from "../../ui/button/PdfBtn";
 import SearchInput from "../../ui/search/Search";
 import RowsSelector from "../../ui/rowsSelector/rowsSelector";
-import ServisKendaraanFormInputModal from "../../../pages/Modals/ServisAlatBeratInputModal";
+import ServisAlatBeratFormInputModal from "../../../pages/Modals/ServisAlatBeratInputModal";
 
 interface ServisData {
   id: number;
@@ -111,7 +111,7 @@ export default function ServisAlatBerat() {
         <div className="flex gap-2 items-center">
           <AddButton onClick={openModal} />
           {isModalOpen && (
-            <ServisKendaraanFormInputModal onClose={closeModal} />
+            <ServisAlatBeratFormInputModal onClose={closeModal} />
           )}
           <RowsSelector value={rows} onChange={setRows} />
         </div>

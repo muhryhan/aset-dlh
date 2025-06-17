@@ -28,6 +28,7 @@ import PeriodicAlatKerja from "./pages/PeriodicService/SerberAlatKerja";
 import PeriodicAc from "./pages/PeriodicService/SerberAc";
 import TamanKota from "./pages/Assets/TamanKota";
 import TPUKota from "./pages/Assets/TPU";
+import ScanPage from "./pages/scan/ScanPage";
 
 export default function App() {
   return (
@@ -91,7 +92,11 @@ export default function App() {
           <Route path="/badge" element={<Badges />} />
           <Route path="/buttons" element={<Buttons />} />
           <Route path="/images" element={<Images />} />
+
+          {/* Scan */}
         </Route>
+
+        <Route path="/scan" element={<ScanPage />} />
 
         {/* Fallback */}
         <Route path="*" element={<NotFound />} />

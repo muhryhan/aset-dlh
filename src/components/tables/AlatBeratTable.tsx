@@ -70,13 +70,13 @@ export default function TableAlatBerat() {
     .slice(0, rows);
 
   const handleEdit = (id_alatberat: number) => {
-    navigate(`/edit-alat-berat/${id_alatberat}`);
+    navigate(`/edit-alatberat/${id_alatberat}`);
   };
 
   const handleDelete = async (id_alatberat: number) => {
     if (confirm("Yakin ingin menghapus alat berat ini?")) {
       try {
-        await api.delete(`/api/alat-berat/${id_alatberat}`);
+        await api.delete(`/api/alatberat/${id_alatberat}`);
         setAlatBeratData((prev) =>
           prev.filter((item) => item.id_alatberat !== id_alatberat)
         );
@@ -283,85 +283,86 @@ export default function TableAlatBerat() {
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {filteredData.length > 0 ? (
                 filteredData.map((item) => (
-                <TableRow key={item.id_alatberat}>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <Link
-                      to={`http://localhost:5000/uploads/alat-berat/qrcode/${item.qrcode}`}
-                    >
-                      Lihat
-                    </Link>
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <Link
-                      to={`http://localhost:5000/uploads/alat-berat/${item.gambar}`}
-                    >
-                      Lihat
-                    </Link>
-                  </TableCell>
+                  <TableRow key={item.id_alatberat}>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:5000/uploads/alat-berat/qrcode/${item.qrcode}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:5000/uploads/alat-berat/${item.gambar}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.merek}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.merek}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.no_registrasi}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.no_registrasi}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.no_mesin}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.no_mesin}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.no_rangka}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.no_rangka}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.warna}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.warna}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {item.harga_pembelian.toLocaleString("id-ID")}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      Rp {item.harga_pembelian.toLocaleString("id-ID")}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.tahun_pembuatan}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.tahun_pembuatan}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.kategori}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.kategori}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.pajak
-                      ? new Date(item.pajak).toLocaleDateString("id-ID")
-                      : "-"}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.pajak
+                        ? new Date(item.pajak).toLocaleDateString("id-ID")
+                        : "-"}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.penggunaan}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.penggunaan}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.kondisi}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.kondisi}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <ServiceButton
-                        onClick={() =>
-                          navigate(`/service-alat-berat/${item.id_alatberat}`)
-                        }
-                      />
-                      <EditButton
-                        onClick={() => handleEdit(item.id_alatberat)}
-                      />
-                      <DeleteButton
-                        onClick={() => handleDelete(item.id_alatberat)}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))) : (
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <ServiceButton
+                          onClick={() =>
+                            navigate(`/service-alat-berat/${item.id_alatberat}`)
+                          }
+                        />
+                        <EditButton
+                          onClick={() => handleEdit(item.id_alatberat)}
+                        />
+                        <DeleteButton
+                          onClick={() => handleDelete(item.id_alatberat)}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
                   <TableCell className="text-center py-5 text-gray-500">
                     Tidak ada data yang ditemukan.

@@ -1,12 +1,16 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 interface AlertProps {
   variant: "success" | "error" | "warning" | "info"; // Alert type
-  title: string; // Title of the alert
+  title?: string; // Title of the alert
   message: string; // Message of the alert
   showLink?: boolean; // Whether to show the "Learn More" link
   linkHref?: string; // Link URL
   linkText?: string; // Link text
+  autoClose?: boolean;
+  duration?: number; // dalam ms
+  onClose?: () => void;
 }
 
 const Alert: React.FC<AlertProps> = ({
@@ -16,7 +20,21 @@ const Alert: React.FC<AlertProps> = ({
   showLink = false,
   linkHref = "#",
   linkText = "Learn more",
+  autoClose = false,
+  duration = 3000,
 }) => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (autoClose) {
+      timer = setTimeout(() => setVisible(false), duration);
+    }
+    return () => clearTimeout(timer);
+  }, [autoClose, duration]);
+
+  if (!visible) return null;
+
   // Tailwind classes for each variant
   const variantClasses = {
     success: {

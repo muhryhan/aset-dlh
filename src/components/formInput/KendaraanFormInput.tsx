@@ -1,18 +1,28 @@
+import { useState } from "react";
+
 import ComponentCard from "../common/ComponentCard";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import FileInput from "../form/input/FileInput";
 import Select from "../form/Select";
 import Button from "../ui/button/Button";
-import { useState } from "react";
+import Alert from "../ui/alert/Alert";
+
 import api from "../../../services/api";
-import Alert from "../alert/Alert";
 
 type Props = {
   onSuccess?: () => void;
 };
 
 export default function KendaraanFormInput({ onSuccess }: Props) {
+  // --- Alert Message State
+  const [alertMessage, setAlertMessage] = useState<{
+    variant: "success" | "warning" | "error" | "info";
+    title?: string;
+    message: string;
+  } | null>(null);
+
+  // --- Form State
   const [formData, setFormData] = useState({
     qrcode: "",
     gambar: null as File | null,
@@ -31,8 +41,7 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
     kondisi: "",
   });
 
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
-
+  // --- Static Options
   const kategori = [
     { value: "Roda 2", label: "Roda 2" },
     { value: "Roda 4", label: "Roda 4" },
@@ -44,6 +53,7 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
     { value: "Rusak Berat", label: "Rusak berat" },
   ];
 
+  // --- Input Handlers
   const handleSelectChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -55,7 +65,11 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    const upperCaseFields = ["no_polisi", "no_mesin", "no_rangka"];
+    setFormData((prev) => ({
+      ...prev,
+      [id]: upperCaseFields.includes(id) ? value.toUpperCase() : value,
+    }));
   };
 
   const resetForm = () => {
@@ -78,39 +92,97 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
     });
   };
 
+  // --- Submit Handler
   const handleSubmit = async () => {
-    const data = new FormData();
+    setAlertMessage(null);
+    const requiredFields = [
+      "merek",
+      "no_polisi",
+      "no_mesin",
+      "no_rangka",
+      "warna",
+      "harga_pembelian",
+      "tahun_pembuatan",
+      "kategori",
+      "pajak",
+      "pemegang",
+      "nik",
+      "penggunaan",
+      "kondisi",
+    ];
 
-    // Append semua field dari formData ke FormData
+    for (const field of requiredFields) {
+      if (!formData[field as keyof typeof formData]?.toString().trim()) {
+        setAlertMessage({
+          variant: "warning",
+          title: "Validasi Gagal",
+          message: `Field ${field.replace("_", " ")} tidak boleh kosong`,
+        });
+        return;
+      }
+    }
+
+    if (!formData.gambar) {
+      setAlertMessage({
+        variant: "warning",
+        title: "Validasi Gagal",
+        message: `Gambar kendaraan wajib diunggah.`,
+      });
+      return;
+    }
+
+    const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== null && value !== "") {
         if (key === "gambar" && value instanceof File) {
           data.append(key, value);
-        } else if (typeof value === "string") {
-          data.append(key, value);
+        } else {
+          data.append(key, value as string);
         }
       }
     });
 
     try {
       const response = await api.post("/api/kendaraan", data);
-      console.log(response);
-      if (response.status != 201) throw new Error("Gagal menyimpan data");
-      setAlertMessage(response.data.message);
+      if (response.status !== 201) throw new Error("Gagal menyimpan data");
 
-      if (onSuccess) onSuccess();
+      setAlertMessage({
+        variant: "success",
+        title: "Berhasil",
+        message: response.data.message || "Data berhasil disimpan.",
+      });
 
-      resetForm();
+      setTimeout(() => {
+        resetForm();
+        onSuccess?.();
+        setAlertMessage(null);
+      }, 3000);
     } catch (err) {
       console.error("Error saat submit:", err);
-      setAlertMessage("Gagal menyimpan data");
+      setAlertMessage({
+        variant: "error",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menyimpan data.",
+      });
     }
   };
 
+  // --- Render
   return (
     <ComponentCard title="Masukkan Data Kendaraan">
       <div className="space-y-6 w-full">
-        {alertMessage && <Alert message={alertMessage} />}
+        {alertMessage && (
+          <div className="mb-4">
+            <Alert
+              variant={alertMessage.variant}
+              title={alertMessage.title}
+              message={alertMessage.message}
+              autoClose
+              duration={3000}
+              onClose={() => setAlertMessage(null)}
+            />
+          </div>
+        )}
         <div>
           <Label htmlFor="gambar">Upload file</Label>
           <FileInput
@@ -270,7 +342,15 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
             options={kondisi}
             placeholder="Kondisi kendaraan"
             onChange={(value) => handleSelectChange("kondisi", value)}
-            className="w-full dark:bg-dark-900"
+            className={`w-full dark:bg-dark-900 ${
+              formData.kondisi === "Baik"
+                ? "text-green-600"
+                : formData.kondisi === "Rusak Ringan"
+                ? "text-yellow-600"
+                : formData.kondisi === "Rusak Berat"
+                ? "text-red-600"
+                : ""
+            }`}
           />
         </div>
 

@@ -299,75 +299,78 @@ export default function TableKendaraan() {
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {filteredData.length > 0 ? (
                 filteredData.map((item) => (
-                <TableRow key={item.id_kendaraan}>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <Link
-                      to={`http://localhost:5000/uploads/kendaraan/qrcode/${item.qrcode}`}
-                    >
-                      Lihat
-                    </Link>
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <Link
-                      to={`http://localhost:5000/uploads/kendaraan/${item.gambar}`}
-                    >
-                      Lihat
-                    </Link>
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.merek}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.no_polisi}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.no_mesin}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.no_rangka}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.warna}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    Rp {item.harga_pembelian.toLocaleString("id-ID")}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.tahun_pembuatan}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.kategori}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.pajak
-                      ? new Date(item.pajak).toLocaleDateString("id-ID")
-                      : "-"}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.pemegang}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.nik}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.penggunaan}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    {item.kondisi}
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-center text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <ServiceButton
-                      onClick={() =>
-                        navigate(`/service-kendaraan/${item.id_kendaraan}`)
-                      }
-                    />
-                    <EditButton onClick={() => handleEdit(item.id_kendaraan)} />
-                    <DeleteButton
-                      onClick={() => handleDelete(item.id_kendaraan)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))) : (
+                  <TableRow key={item.id_kendaraan}>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:5000/uploads/kendaraan/qrcode/${item.qrcode}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:5000/uploads/kendaraan/${item.gambar}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.merek}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.no_polisi}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.no_mesin}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.no_rangka}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.warna}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      Rp {item.harga_pembelian.toLocaleString("id-ID")}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.tahun_pembuatan}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.kategori}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.pajak
+                        ? new Date(item.pajak).toLocaleDateString("id-ID")
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.pemegang}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.nik}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.penggunaan}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      {item.kondisi}
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-center text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <ServiceButton
+                        onClick={() =>
+                          navigate(`/service-kendaraan/${item.id_kendaraan}`)
+                        }
+                      />
+                      <EditButton
+                        onClick={() => handleEdit(item.id_kendaraan)}
+                      />
+                      <DeleteButton
+                        onClick={() => handleDelete(item.id_kendaraan)}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
                   <TableCell className="text-center py-5 text-gray-500">
                     Tidak ada data yang ditemukan.

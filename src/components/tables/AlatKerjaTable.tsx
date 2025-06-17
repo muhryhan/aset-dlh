@@ -71,7 +71,7 @@ export default function AlatKerja() {
   };
 
   const handleDelete = async (id_alatkerja: number) => {
-    if (confirm("Yakin ingin menghapus kendaraan ini?")) {
+    if (confirm("Yakin ingin menghapus alat kerja ini?")) {
       try {
         await api.delete(`/api/alatkerja/${id_alatkerja}`);
         setAlatKerjaData((prev) =>
@@ -133,7 +133,7 @@ export default function AlatKerja() {
       item.no_registrasi,
       item.no_serial,
       item.asal,
-      `Rp ${item.harga_pembelian.toLocaleString("id_kendaraan-ID")}`,
+      `Rp ${item.harga_pembelian.toLocaleString("id-ID")}`,
       item.harga_pembelian,
       item.kondisi,
       item.keterangan,

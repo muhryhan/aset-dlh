@@ -1,17 +1,27 @@
+import { useState } from "react";
+import "flatpickr/dist/themes/material_blue.css";
+
 import ComponentCard from "../common/ComponentCard";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import FileInput from "../form/input/FileInput";
 import Button from "../ui/button/Button";
-import { useState } from "react";
+import Alert from "../ui/alert/Alert";
+
 import api from "../../../services/api";
-import Alert from "../alert/Alert";
 
 type Props = {
   onSuccess?: () => void;
 };
 
 export default function TumbuhanFormInput({ onSuccess }: Props) {
+  // --- Alert Message State
+  const [alertMessage, setAlertMessage] = useState<{
+    variant: "success" | "warning" | "error" | "info";
+    title?: string;
+    message: string;
+  } | null>(null);
+
   const [formData, setFormData] = useState({
     gambar: null as File | null,
     nama: "",
@@ -20,8 +30,7 @@ export default function TumbuhanFormInput({ onSuccess }: Props) {
     keterangan: "",
   });
 
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
-
+  // --- Input Handlers
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setFormData((prev) => ({ ...prev, gambar: file }));
@@ -43,9 +52,30 @@ export default function TumbuhanFormInput({ onSuccess }: Props) {
   };
 
   const handleSubmit = async () => {
-    const data = new FormData();
+    setAlertMessage(null);
+    const requiredFields = ["nama", "jenis", "stok", "keterangan"];
 
-    // Append semua field dari formData ke FormData
+    for (const field of requiredFields) {
+      if (!formData[field as keyof typeof formData]?.toString().trim()) {
+        setAlertMessage({
+          variant: "warning",
+          title: "Validasi Gagal",
+          message: `Field ${field.replace("_", " ")} tidak boleh kosong`,
+        });
+        return;
+      }
+    }
+
+    if (!formData.gambar) {
+      setAlertMessage({
+        variant: "warning",
+        title: "Validasi Gagal",
+        message: "Gambar tumbuhan wajib diunggah.",
+      });
+      return;
+    }
+
+    const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== null && value !== "") {
         if (key === "gambar" && value instanceof File) {
@@ -58,23 +88,44 @@ export default function TumbuhanFormInput({ onSuccess }: Props) {
 
     try {
       const response = await api.post("/api/tanaman", data);
-      console.log(response);
-      if (response.status != 201) throw new Error("Gagal menyimpan data");
-      setAlertMessage(response.data.message);
+      if (response.status !== 201) throw new Error("Gagal menyimpan data");
 
-      if (onSuccess) onSuccess();
+      setAlertMessage({
+        variant: "success",
+        title: "Berhasil",
+        message: response.data.message || "Data berhasil disimpan.",
+      });
 
-      resetForm();
+      setTimeout(() => {
+        resetForm();
+        onSuccess?.();
+        setAlertMessage(null);
+      }, 3000);
     } catch (err) {
       console.error("Error saat submit:", err);
-      setAlertMessage("Gagal menyimpan data");
+      setAlertMessage({
+        variant: "error",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menyimpan data.",
+      });
     }
   };
 
   return (
     <ComponentCard title="Masukkan Data Tumbuhan">
       <div className="space-y-6 w-full">
-        {alertMessage && <Alert message={alertMessage} />}
+        {alertMessage && (
+          <div className="mb-4">
+            <Alert
+              variant={alertMessage.variant}
+              title={alertMessage.title}
+              message={alertMessage.message}
+              autoClose
+              duration={3000}
+              onClose={() => setAlertMessage(null)}
+            />
+          </div>
+        )}
         <div>
           <Label htmlFor="gambar">Upload file</Label>
           <FileInput
