@@ -4,10 +4,12 @@ import { FaTimes } from "react-icons/fa";
 
 interface ServisKendaraanInputModalProps {
   onClose: () => void;
+  no_polisi?: string;
 }
 
 export default function ServisKendaraanInputModal({
   onClose,
+  no_polisi,
 }: ServisKendaraanInputModalProps) {
   return (
     <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/60 p-4">
@@ -26,7 +28,7 @@ export default function ServisKendaraanInputModal({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6">
-          <ServisKendaraanFormInput />
+          <ServisKendaraanFormInput no_polisi={no_polisi} />
         </div>
       </div>
     </div>

@@ -362,7 +362,11 @@ export default function TableKendaraan() {
                       <div className="flex items-center gap-2">
                         <ServiceButton
                           onClick={() =>
-                            navigate(`/service-kendaraan/${item.id_kendaraan}`)
+                            navigate(
+                              `/servis/nounik/${encodeURIComponent(
+                                item.no_polisi
+                              )}`
+                            )
                           }
                         />
                         <EditButton

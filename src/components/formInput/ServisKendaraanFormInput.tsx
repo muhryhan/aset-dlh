@@ -1,12 +1,51 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
 import ComponentCard from "../common/ComponentCard";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
+import FileInput from "../form/input/FileInput";
 import Button from "../ui/button/Button";
+import Alert from "../ui/alert/Alert";
 import Checkbox from "../form/input/Checkbox";
 
-export default function ServisKendaraanFormInput() {
-  const [selectedItems, setSelectedItems] = useState<Record<string, boolean>>({
+import api from "../../../services/api";
+
+interface OnderdilItem {
+  nama_onderdil: string;
+  jumlah: string;
+  harga: string;
+}
+
+interface SelectedItemState {
+  [key: string]: boolean;
+}
+
+type Props = {
+  onSuccess?: () => void;
+  no_polisi?: string;
+};
+
+function formatNumberWithDots(value: string): string {
+  const raw = value.replace(/\D/g, "");
+  return raw.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+export default function ServisKendaraanFormInput({
+  onSuccess,
+  no_polisi,
+}: Props) {
+  const [formData, setFormData] = useState({
+    no_polisi: no_polisi,
+    tanggal: "",
+    nama_bengkel: "",
+    biaya_servis: "",
+    nota_pembayaran: null as File | null,
+    dokumentasi: null as File | null,
+  });
+
+  const [onderdilList, setOnderdilList] = useState<OnderdilItem[]>([]);
+
+  const [selectedItems, setSelectedItems] = useState<SelectedItemState>({
     oliMesin: false,
     filterOliMesin: false,
     oliGardan: false,
@@ -15,86 +54,215 @@ export default function ServisKendaraanFormInput() {
     tambahOnderdil: false,
   });
 
-  const [nomorPolisi, setNomorPolisi] = useState("");
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/kendaraan/123");
-      const data = await res.json();
-      setNomorPolisi(data.nomorPolisi);
-    };
+  const [alertMessage, setAlertMessage] = useState<{
+    variant: "success" | "warning" | "error" | "info";
+    title?: string;
+    message: string;
+  } | null>(null);
 
-    fetchData();
-  }, []);
-
-  const handleCheckboxChange = (item: string) => {
-    setSelectedItems((prev) => ({
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [item]: !prev[item],
+      [id]: id === "biaya_servis" ? value.replace(/\D/g, "") : value,
     }));
   };
 
-  const handleOnlyNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    e.target.value = value;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id } = e.target;
+    const file = e.target.files?.[0] || null;
+    setFormData((prev) => ({ ...prev, [id]: file }));
   };
 
-  const handleSubmit = () => {
-    const result = Object.entries(selectedItems)
-      .filter(([, selected]) => selected)
-      .map(([key]) => ({
-        item: key,
-      }));
-    console.log(result);
+  const handleCheckboxChange = (key: string) => {
+    const newSelected = !selectedItems[key];
+    setSelectedItems((prev) => ({ ...prev, [key]: newSelected }));
+
+    const formattedName = key.replace(/([A-Z])/g, " $1").trim();
+    if (newSelected) {
+      setOnderdilList((prev) => [
+        ...prev,
+        { nama_onderdil: formattedName, jumlah: "", harga: "" },
+      ]);
+    } else {
+      setOnderdilList((prev) =>
+        prev.filter((item) => item.nama_onderdil !== formattedName)
+      );
+    }
+  };
+
+  const handleOnderdilChange = (
+    index: number,
+    field: keyof OnderdilItem,
+    value: string
+  ) => {
+    const rawValue = value.replace(/\D/g, "");
+    setOnderdilList((prev) => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        [field]: field === "harga" || field === "jumlah" ? rawValue : value,
+      };
+      return updated;
+    });
+  };
+
+  const resetForm = () => {
+    setFormData({
+      no_polisi: "",
+      tanggal: "",
+      nama_bengkel: "",
+      biaya_servis: "",
+      nota_pembayaran: null,
+      dokumentasi: null,
+    });
+    setOnderdilList([]);
+    setSelectedItems({
+      oliMesin: false,
+      filterOliMesin: false,
+      oliGardan: false,
+      oliTransmisi: false,
+      ban: false,
+      tambahOnderdil: false,
+    });
+  };
+
+  const handleSubmit = async () => {
+    setAlertMessage(null);
+    const requiredFields = ["tanggal", "nama_bengkel", "biaya_servis"];
+    for (const field of requiredFields) {
+      if (!formData[field as keyof typeof formData]) {
+        return setAlertMessage({
+          variant: "warning",
+          title: "Validasi Gagal",
+          message: `Field ${field.replace("_", " ")} tidak boleh kosong`,
+        });
+      }
+    }
+
+    if (!formData.nota_pembayaran || !formData.dokumentasi) {
+      return setAlertMessage({
+        variant: "warning",
+        title: "Validasi Gagal",
+        message: "Nota pembayaran dan dokumentasi harus diunggah.",
+      });
+    }
+
+    const payload = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value) payload.append(key, value);
+    });
+    payload.append(
+      "onderdil",
+      JSON.stringify(
+        onderdilList.map((item) => ({
+          ...item,
+          jumlah: parseInt(item.jumlah || "0"),
+          harga: parseInt(item.harga || "0"),
+        }))
+      )
+    );
+
+    try {
+      const res = await api.post("/api/servis", payload);
+      if (res.status !== 201) throw new Error("Gagal menyimpan data servis");
+
+      setAlertMessage({
+        variant: "success",
+        title: "Berhasil",
+        message: res.data.message || "Data servis berhasil disimpan.",
+      });
+
+      setTimeout(() => {
+        resetForm();
+        onSuccess?.();
+        setAlertMessage(null);
+      }, 3000);
+    } catch (err) {
+      console.error("Error submit servis:", err);
+      setAlertMessage({
+        variant: "error",
+        title: "Gagal",
+        message: "Terjadi kesalahan saat menyimpan data servis.",
+      });
+    }
   };
 
   return (
-    <ComponentCard title="Masukkan Data Servis Kendaraan">
+    <ComponentCard title="Form Input Servis Kendaraan">
+      {alertMessage && (
+        <Alert
+          variant={alertMessage.variant}
+          title={alertMessage.title}
+          message={alertMessage.message}
+          onClose={() => setAlertMessage(null)}
+        />
+      )}
       <div className="space-y-6 w-full">
         <div>
           <Label htmlFor="no_polisi">Nomor Polisi</Label>
           <Input
-            type="text"
             id="no_polisi"
+            value={formData.no_polisi}
             className="w-full"
-            value={nomorPolisi}
             disabled
           />
         </div>
         <div>
-          <Label htmlFor="kategori">Kategori</Label>
+          <Label htmlFor="tanggal">Tanggal Servis</Label>
           <Input
-            type="text"
-            id="kategori"
+            type="date"
+            id="tanggal"
+            value={formData.tanggal}
+            onChange={handleInputChange}
             className="w-full"
-            value={nomorPolisi}
-            disabled
           />
-        </div>
-        <div>
-          <Label htmlFor="tanggal">Tanggal</Label>
-          <Input type="date" id="tanggal" className="w-full" />
         </div>
         <div>
           <Label htmlFor="nama_bengkel">Nama Bengkel</Label>
-          <Input type="text" id="nama_bengkel" className="w-full" />
+          <Input
+            type="text"
+            id="nama_bengkel"
+            value={formData.nama_bengkel}
+            onChange={handleInputChange}
+            className="w-full"
+          />
         </div>
         <div>
-          <Label htmlFor="biaya_servis">Biaya Servis</Label>
+          <Label htmlFor="biaya_servis">Biaya Servis (Rp)</Label>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-500">
               Rp
             </span>
             <Input
-              type="text"
+              type="number"
               id="biaya_servis"
-              className="pl-10 w-full" // tambahkan padding-left agar teks tidak menimpa Rp
+              value={formatNumberWithDots(formData.biaya_servis)}
               inputMode="numeric"
               pattern="[0-9]*"
-              onInput={handleOnlyNumber}
+              onChange={handleInputChange}
+              className="pl-10 w-full"
             />
           </div>
         </div>
+        <div>
+          <Label htmlFor="nota_pembayaran">Nota Pembayaran</Label>
+          <FileInput
+            id_file="nota_pembayaran"
+            onChange={handleFileChange}
+            className="w-full"
+          />
+        </div>
+        <div>
+          <Label htmlFor="dokumentasi">Dokumentasi</Label>
+          <FileInput
+            id_file="dokumentasi"
+            onChange={handleFileChange}
+            className="w-full"
+          />
+        </div>
 
+        <Label>Checklist Onderdil</Label>
         {[
           { label: "Oli Mesin", key: "oliMesin" },
           { label: "Filter Oli Mesin", key: "filterOliMesin" },
@@ -103,50 +271,64 @@ export default function ServisKendaraanFormInput() {
           { label: "Ban", key: "ban" },
           { label: "Tambah Onderdil", key: "tambahOnderdil" },
         ].map((item) => (
-          <div key={item.key}>
-            <Checkbox
-              id={item.key}
-              label={item.label}
-              checked={selectedItems[item.key]}
-              onChange={() => handleCheckboxChange(item.key)}
-            />
-            {selectedItems[item.key] && (
-              <div className="ml-6 mt-2 space-y-2">
-                <div>
-                  <Label htmlFor={`${item.key}-nama`}>Nama</Label>
-                  <Input
-                    type="text"
-                    id={`${item.key}-nama`}
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor={`${item.key}-jumlah`}>Jumlah</Label>
-                  <Input
-                    type="number"
-                    id={`${item.key}-jumlah`}
-                    className="w-full"
-                    min="1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor={`${item.key}-harga`}>Harga</Label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                      Rp
-                    </span>
-                    <Input
-                      type="text"
-                      id={`${item.key}-harga`}
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      className="pl-10 w-full"
-                      onInput={handleOnlyNumber}
-                    />
-                  </div>
-                </div>
+          <Checkbox
+            key={item.key}
+            id={item.key}
+            label={item.label}
+            checked={selectedItems[item.key]}
+            onChange={() => handleCheckboxChange(item.key)}
+          />
+        ))}
+
+        {onderdilList.map((item, index) => (
+          <div key={index} className="border p-3 rounded mb-4">
+            <Label>Onderdil {index + 1}</Label>
+            <div className="space-y-2">
+              <div>
+                <Label> Nama Onderdil </Label>
+                <Input
+                  type="text"
+                  placeholder="Nama Onderdil"
+                  onFocus={(e) => e.target.select()}
+                  value={item.nama_onderdil}
+                  onChange={(e) =>
+                    handleOnderdilChange(index, "nama_onderdil", e.target.value)
+                  }
+                  className="w-full"
+                />
               </div>
-            )}
+              <div>
+                <Label>Jumlah</Label>
+                <Input
+                  type="number"
+                  placeholder="Jumlah"
+                  min="0"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={item.jumlah}
+                  onFocus={(e) => e.target.select()}
+                  onChange={(e) =>
+                    handleOnderdilChange(index, "jumlah", e.target.value)
+                  }
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <Label>Harga</Label>
+                <Input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="Harga"
+                  value={formatNumberWithDots(item.harga)}
+                  onFocus={(e) => e.target.select()}
+                  onChange={(e) =>
+                    handleOnderdilChange(index, "harga", e.target.value)
+                  }
+                  className="w-full"
+                />
+              </div>
+            </div>
           </div>
         ))}
 
@@ -154,11 +336,7 @@ export default function ServisKendaraanFormInput() {
           <Button size="md" variant="primary" onClick={handleSubmit}>
             Submit
           </Button>
-          <Button
-            size="md"
-            variant="outline"
-            onClick={() => console.log("Reset clicked")}
-          >
+          <Button size="md" variant="outline" onClick={resetForm}>
             Reset
           </Button>
         </div>

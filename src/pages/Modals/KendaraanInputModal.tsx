@@ -6,10 +6,12 @@ type KendaraanInputModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-}
+};
 
 export default function KendaraanInputModal({
-  isOpen, onClose, onSuccess
+  isOpen,
+  onClose,
+  onSuccess,
 }: KendaraanInputModalProps) {
   if (!isOpen) return null;
   return (
