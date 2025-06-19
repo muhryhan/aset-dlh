@@ -35,8 +35,8 @@ export default function ServisKendaraanFormInput({
   no_polisi,
 }: Props) {
   const [formData, setFormData] = useState({
-    no_polisi: no_polisi,
     tanggal: "",
+    no_unik: no_polisi,
     nama_bengkel: "",
     biaya_servis: "",
     nota_pembayaran: null as File | null,
@@ -109,7 +109,7 @@ export default function ServisKendaraanFormInput({
 
   const resetForm = () => {
     setFormData({
-      no_polisi: "",
+      no_unik: "",
       tanggal: "",
       nama_bengkel: "",
       biaya_servis: "",
@@ -148,11 +148,11 @@ export default function ServisKendaraanFormInput({
       });
     }
 
-    const payload = new FormData();
+    const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      if (value) payload.append(key, value);
+      if (value) data.append(key, value);
     });
-    payload.append(
+    data.append(
       "onderdil",
       JSON.stringify(
         onderdilList.map((item) => ({
@@ -164,13 +164,14 @@ export default function ServisKendaraanFormInput({
     );
 
     try {
-      const res = await api.post("/api/servis", payload);
-      if (res.status !== 201) throw new Error("Gagal menyimpan data servis");
+      const response = await api.post("/api/servis", data);
+      if (response.status !== 200)
+        throw new Error("Gagal menyimpan data servis");
 
       setAlertMessage({
         variant: "success",
         title: "Berhasil",
-        message: res.data.message || "Data servis berhasil disimpan.",
+        message: response.data.message || "Data servis berhasil disimpan.",
       });
 
       setTimeout(() => {
@@ -200,10 +201,10 @@ export default function ServisKendaraanFormInput({
       )}
       <div className="space-y-6 w-full">
         <div>
-          <Label htmlFor="no_polisi">Nomor Polisi</Label>
+          <Label htmlFor="no_unik">Nomor Polisi</Label>
           <Input
-            id="no_polisi"
-            value={formData.no_polisi}
+            id="no_unik"
+            value={formData.no_unik}
             className="w-full"
             disabled
           />
@@ -285,9 +286,10 @@ export default function ServisKendaraanFormInput({
             <Label>Onderdil {index + 1}</Label>
             <div className="space-y-2">
               <div>
-                <Label> Nama Onderdil </Label>
+                <Label htmlFor="nama_onderdil"> Nama Onderdil </Label>
                 <Input
                   type="text"
+                  id="nama_onderdil"
                   placeholder="Nama Onderdil"
                   onFocus={(e) => e.target.select()}
                   value={item.nama_onderdil}
@@ -298,9 +300,10 @@ export default function ServisKendaraanFormInput({
                 />
               </div>
               <div>
-                <Label>Jumlah</Label>
+                <Label htmlFor="jumlah">Jumlah</Label>
                 <Input
                   type="number"
+                  id="jumlah"
                   placeholder="Jumlah"
                   min="0"
                   inputMode="numeric"
@@ -314,9 +317,10 @@ export default function ServisKendaraanFormInput({
                 />
               </div>
               <div>
-                <Label>Harga</Label>
+                <Label htmlFor="harga">Harga</Label>
                 <Input
                   type="text"
+                  id="harga"
                   inputMode="numeric"
                   pattern="[0-9]*"
                   placeholder="Harga"
