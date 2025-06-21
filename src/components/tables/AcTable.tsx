@@ -273,14 +273,14 @@ export default function TableAc() {
                 <TableRow key={item.id_ac}>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     <Link
-                      to={`http://localhost:5000/uploads/ac/qrcode/${item.qrcode}`}
+                      to={`http://localhost:3000/static/uploads/ac/qrcode/${item.qrcode}`}
                     >
                       Lihat
                     </Link>
                   </TableCell>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     <Link
-                      to={`http://localhost:5000/uploads/ac/${item.gambar}`}
+                      to={`http://localhost:3000/static/uploads/ac/${item.gambar}`}
                     >
                       Lihat
                     </Link>

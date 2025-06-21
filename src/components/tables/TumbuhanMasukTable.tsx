@@ -1,139 +1,139 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import {
-  EditButton,
-  DeleteButton,
-} from "../ui/button/ActionBtn";
-import { useState, useEffect } from "react";
-import AddButton from "../ui/button/AddBtn";
-import ExcelButton from "../ui/button/ExcelBtn";
-import PDFButton from "../ui/button/PdfBtn";
-import SearchInput from "../ui/search/Search";
-import RowsSelector from "../ui/rowsSelector/rowsSelector";
-import { tumbuhanMasukData, TumbuhanMasukData } from "../../dataDummy/tumbuhanMasukData";
+// import {
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableHeader,
+//   TableRow,
+// } from "../ui/table";
+// import {
+//   EditButton,
+//   DeleteButton,
+// } from "../ui/button/ActionBtn";
+// import { useState, useEffect } from "react";
+// import AddButton from "../ui/button/AddBtn";
+// import ExcelButton from "../ui/button/ExcelBtn";
+// import PDFButton from "../ui/button/PdfBtn";
+// import SearchInput from "../ui/search/Search";
+// import RowsSelector from "../ui/rowsSelector/rowsSelector";
+// import { tumbuhanMasukData, TumbuhanMasukData } from "../../dataDummy/tumbuhanMasukData";
 
-const tableData: TumbuhanMasukData[] = tumbuhanMasukData;
+// const tableData: TumbuhanMasukData[] = tumbuhanMasukData;
 
-export default function TumbuhanMasuk() {
-  const [tumbuhanMasukData, setTumbuhanMasukData] = useState<TumbuhanMasukData[]>([]); 
-  const [search, setSearch] = useState("");
-  const [rows, setRows] = useState(5);
+// export default function TumbuhanMasuk() {
+//   const [tumbuhanMasukData, setTumbuhanMasukData] = useState<TumbuhanMasukData[]>([]); 
+//   const [search, setSearch] = useState("");
+//   const [rows, setRows] = useState(5);
 
-  //  fetch dari API
-      // useEffect(() => {
-      //   const fetchTumbuhanMasuk = async () => {
-      //     try {
-      //       const response = await api.get("/api/tumbuhan-masuk");
-      //       setTumbuhanData(response.data);
-      //     } catch (error) {
-      //       console.error("Gagal ambil data tumbuhan masuk", error);
-      //     }
-      //   };
+//   //  fetch dari API
+//       // useEffect(() => {
+//       //   const fetchTumbuhanMasuk = async () => {
+//       //     try {
+//       //       const response = await api.get("/api/tumbuhan-masuk");
+//       //       setTumbuhanData(response.data);
+//       //     } catch (error) {
+//       //       console.error("Gagal ambil data tumbuhan masuk", error);
+//       //     }
+//       //   };
     
-      //   fetchTumbuhanMasuk();
-      // }, []);
+//       //   fetchTumbuhanMasuk();
+//       // }, []);
     
     
-      useEffect(() => {
-      // Simulasi fetch data dari backend
-      const dummyData: TumbuhanMasukData[] = tumbuhanMasukData;
+//       useEffect(() => {
+//       // Simulasi fetch data dari backend
+//       const dummyData: TumbuhanMasukData[] = tumbuhanMasukData;
     
-      setTumbuhanMasukData(dummyData);
-    }, [tumbuhanMasukData]);
+//       setTumbuhanMasukData(dummyData);
+//     }, [tumbuhanMasukData]);
 
-  const filteredData = tableData
-    .filter((item) =>
-      item.tanggal.toLowerCase().includes(search.toLowerCase())
-    )
-    .slice(0, rows);
+//   const filteredData = tableData
+//     .filter((item) =>
+//       item.tanggal.toLowerCase().includes(search.toLowerCase())
+//     )
+//     .slice(0, rows);
 
-  const handleAddData = () => console.log("Tambah Data");
-  const handleExportExcel = () => console.log("Export ke Excel");
-  const handleExportPDF = () => console.log("Export ke PDF");
+//   const handleAddData = () => console.log("Tambah Data");
+//   const handleExportExcel = () => console.log("Export ke Excel");
+//   const handleExportPDF = () => console.log("Export ke PDF");
 
-  return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
-        <div className="flex gap-2 items-center">
-          <AddButton onClick={handleAddData} />
-          <RowsSelector value={rows} onChange={setRows} />
-        </div>
-        <div className="flex gap-2 items-center">
-          <SearchInput value={search} onChange={setSearch} />
-          <ExcelButton onClick={handleExportExcel} />
-          <PDFButton onClick={handleExportPDF} />
-        </div>
-      </div>
+//   return (
+//     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+//       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
+//         <div className="flex gap-2 items-center">
+//           <AddButton onClick={handleAddData} />
+//           <RowsSelector value={rows} onChange={setRows} />
+//         </div>
+//         <div className="flex gap-2 items-center">
+//           <SearchInput value={search} onChange={setSearch} />
+//           <ExcelButton onClick={handleExportExcel} />
+//           <PDFButton onClick={handleExportPDF} />
+//         </div>
+//       </div>
 
-      <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1102px]">
-          <Table>
-            {/* Table Header */}
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Tanggal
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Jumlah
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Keterangan
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Aksi
-                </TableCell>
-              </TableRow>
-            </TableHeader>
+//       <div className="max-w-full overflow-x-auto">
+//         <div className="min-w-[1102px]">
+//           <Table>
+//             {/* Table Header */}
+//             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+//               <TableRow>
+//                 <TableCell
+//                   isHeader
+//                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+//                 >
+//                   Tanggal
+//                 </TableCell>
+//                 <TableCell
+//                   isHeader
+//                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+//                 >
+//                   Jumlah
+//                 </TableCell>
+//                 <TableCell
+//                   isHeader
+//                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+//                 >
+//                   Keterangan
+//                 </TableCell>
+//                 <TableCell
+//                   isHeader
+//                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+//                 >
+//                   Aksi
+//                 </TableCell>
+//               </TableRow>
+//             </TableHeader>
 
-            {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                      {item.tanggal}
-                    </span>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.jumlah}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.keterangan}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex items-center gap-2">
-                    <EditButton
-                      onClick={() => console.log("Edit", item.id)}
-                    />
-                    <DeleteButton
-                      onClick={() => console.log("Delete", item.id)}
-                    />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
-    </div>
-  );
-}
+//             {/* Table Body */}
+//             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+//               {filteredData.map((item) => (
+//                 <TableRow key={item.id}>
+//                   <TableCell className="px-5 py-4 sm:px-6 text-start">
+//                     <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+//                       {item.tanggal}
+//                     </span>
+//                   </TableCell>
+//                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+//                     {item.jumlah}
+//                   </TableCell>
+//                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+//                     {item.keterangan}
+//                   </TableCell>
+//                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+//                     <div className="flex items-center gap-2">
+//                     <EditButton
+//                       onClick={() => console.log("Edit", item.id)}
+//                     />
+//                     <DeleteButton
+//                       onClick={() => console.log("Delete", item.id)}
+//                     />
+//                     </div>
+//                   </TableCell>
+//                 </TableRow>
+//               ))}
+//             </TableBody>
+//           </Table>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

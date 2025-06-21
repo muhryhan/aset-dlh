@@ -62,7 +62,7 @@ const FormDisableKendaraan: React.FC = () => {
 
   return (
     <div className="w-full mx-auto p-6 bg-white rounded shadow">
-      <form className="flex flex-col gap-6 w-full">
+      <form className="flex flex-col gap-6 w-full text-theme-xs font-medium text-gray-600 dark:text-gray-400">
         <InputField label="Merek" value={kendaraan.merek} />
         <InputField label="Nomor Polisi" value={kendaraan.no_polisi} />
         <InputField label="Nomor Mesin" value={kendaraan.no_mesin} />

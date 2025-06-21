@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import ComponentCard from "../common/ComponentCard";
 import Label from "../form/Label";
@@ -8,19 +8,28 @@ import Select from "../form/Select";
 import Button from "../ui/button/Button";
 import Alert from "../ui/alert/Alert";
 
+import { KendaraanData } from "../../components/tables/KendaraanTable";
 import api from "../../../services/api";
 
 type Props = {
   onSuccess?: () => void;
+  initialData?: Partial<KendaraanData>;
 };
 
-export default function KendaraanFormInput({ onSuccess }: Props) {
+function formatNumberWithDots(value: string): string {
+  const raw = value.replace(/\D/g, "");
+  return raw.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
   // --- Alert Message State
   const [alertMessage, setAlertMessage] = useState<{
     variant: "success" | "warning" | "error" | "info";
     title?: string;
     message: string;
   } | null>(null);
+
+  const isEdit = !!initialData?.id_kendaraan;
 
   // --- Form State
   const [formData, setFormData] = useState({
@@ -49,9 +58,25 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
   ];
   const kondisi = [
     { value: "Baik", label: "Baik" },
-    { value: "Rusak Ringan", label: "Rusak ringan" },
-    { value: "Rusak Berat", label: "Rusak berat" },
+    { value: "Rusak Ringan", label: "Rusak Ringan" },
+    { value: "Rusak Berat", label: "Rusak Berat" },
   ];
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData,
+        harga_pembelian: initialData.harga_pembelian?.toString() ?? "",
+        tahun_pembuatan: initialData.tahun_pembuatan?.toString() ?? "",
+        pajak: initialData?.pajak
+          ? new Date(initialData.pajak).toISOString().split("T")[0]
+          : "",
+        nik: initialData.nik?.toString() ?? "",
+        gambar: null,
+      }));
+    }
+  }, [initialData]);
 
   // --- Input Handlers
   const handleSelectChange = (field: string, value: string) => {
@@ -66,9 +91,19 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     const upperCaseFields = ["no_polisi", "no_mesin", "no_rangka"];
+    const numberFields = ["harga_pembelian"];
+
+    let newValue: string = value;
+
+    if (numberFields.includes(id)) {
+      newValue = value.replace(/\D/g, ""); // hanya angka
+    } else if (upperCaseFields.includes(id)) {
+      newValue = value.toUpperCase();
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [id]: upperCaseFields.includes(id) ? value.toUpperCase() : value,
+      [id]: newValue,
     }));
   };
 
@@ -131,20 +166,26 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
       return;
     }
 
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value !== null && value !== "") {
-        if (key === "gambar" && value instanceof File) {
-          data.append(key, value);
-        } else {
-          data.append(key, value as string);
-        }
-      }
-    });
-
     try {
-      const response = await api.post("/api/kendaraan", data);
-      if (response.status !== 201) throw new Error("Gagal menyimpan data");
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== null && value !== "") {
+          if (key === "gambar" && value instanceof File) {
+            data.append(key, value);
+          } else {
+            data.append(key, value as string);
+          }
+        }
+      });
+
+      const isEdit = !!initialData?.id_kendaraan;
+
+      const response = isEdit
+        ? await api.put(`/api/kendaraan/${initialData.id_kendaraan}`, data)
+        : await api.post("/api/kendaraan", data);
+
+      if (![200, 201].includes(response.status))
+        throw new Error("Gagal menyimpan data");
 
       setAlertMessage({
         variant: "success",
@@ -156,7 +197,7 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
         resetForm();
         onSuccess?.();
         setAlertMessage(null);
-      }, 3000);
+      }, 2000);
     } catch (err) {
       console.error("Error saat submit:", err);
       setAlertMessage({
@@ -172,13 +213,13 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
     <ComponentCard title="Masukkan Data Kendaraan">
       <div className="space-y-6 w-full">
         {alertMessage && (
-          <div className="mb-4">
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-1/2 z-99">
             <Alert
               variant={alertMessage.variant}
               title={alertMessage.title}
               message={alertMessage.message}
               autoClose
-              duration={3000}
+              duration={2000}
               onClose={() => setAlertMessage(null)}
             />
           </div>
@@ -254,9 +295,9 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
               Rp
             </span>
             <Input
-              type="number"
+              type="text"
               id="harga_pembelian"
-              value={formData.harga_pembelian}
+              value={formatNumberWithDots(formData.harga_pembelian)}
               onChange={handleInputChange}
               inputMode="numeric"
               pattern="[0-9]*"
@@ -342,22 +383,18 @@ export default function KendaraanFormInput({ onSuccess }: Props) {
             options={kondisi}
             placeholder="Kondisi kendaraan"
             onChange={(value) => handleSelectChange("kondisi", value)}
-            className={`w-full dark:bg-dark-900 ${
-              formData.kondisi === "Baik"
-                ? "text-green-600"
-                : formData.kondisi === "Rusak Ringan"
-                ? "text-yellow-600"
-                : formData.kondisi === "Rusak Berat"
-                ? "text-red-600"
-                : ""
-            }`}
           />
         </div>
 
         <div className="flex justify-end space-x-4">
-          <Button size="md" variant="primary" onClick={handleSubmit}>
-            Submit
+          <Button
+            size="md"
+            variant={isEdit ? "warning" : "primary"}
+            onClick={handleSubmit}
+          >
+            {isEdit ? "Update" : "Submit"}
           </Button>
+
           <Button size="md" variant="outline" onClick={resetForm}>
             Reset
           </Button>

@@ -236,7 +236,7 @@ export default function ServisKendaraanFormInput({
               Rp
             </span>
             <Input
-              type="number"
+              type="text"
               id="biaya_servis"
               value={formatNumberWithDots(formData.biaya_servis)}
               inputMode="numeric"

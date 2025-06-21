@@ -57,8 +57,6 @@ export default function ServisKendaraan() {
         const response = await api.get(`/api/servis/nounik/${no_polisi}`);
         const data = response?.data?.data;
 
-        console.log("Servis Data", data);
-
         if (data) {
           setServisData(data);
         } else {
@@ -66,7 +64,6 @@ export default function ServisKendaraan() {
         }
       } catch (err) {
         console.error("Gagal mengambil data servis kendaraan:", err);
-        setError("Terjadi kesalahan saat mengambil data.");
       } finally {
         setLoading(false);
       }
@@ -90,10 +87,6 @@ export default function ServisKendaraan() {
   const handleExportExcel = () => console.log("Export ke Excel Servis");
   const handleExportPDF = () => console.log("Export ke PDF Servis");
 
-  // Render conditions
-  if (loading) return <p>Memuat data...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
-
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
@@ -115,264 +108,273 @@ export default function ServisKendaraan() {
       </div>
 
       <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1102px]">
-          <Table>
-            {/* Table Header */}
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Nomor Polisi
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Tanggal
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Nama Bengkel
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Biaya Servis
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Nota Pembayaran
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Dokumentasi
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Onderdil
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Jumlah
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Harga
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Total Harga
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Aksi
-                </TableCell>
-              </TableRow>
-            </TableHeader>
-
-            {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.length === 0 ? (
+        {loading ? (
+          <p className="p-4 text-gray-500">Memuat data...</p>
+        ) : error ? (
+          <p className="p-4 text-red-500">{error}</p>
+        ) : (
+          <div className="min-w-[1102px]">
+            <Table>
+              {/* Table Header */}
+              <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                 <TableRow>
                   <TableCell
-                    colSpan={11}
-                    className="px-5 py-3 text-center text-gray-400 italic text-theme-xs dark:text-gray-500"
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                   >
-                    Tidak ada data
+                    Nomor Polisi
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Tanggal
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Nama Bengkel
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Biaya Servis
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Nota Pembayaran
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Dokumentasi
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Onderdil
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Jumlah
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Harga
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Total Harga
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Aksi
                   </TableCell>
                 </TableRow>
-              ) : (
-                filteredData.map((item) => {
-                  const hasOnderdil = item.onderdil && item.onderdil.length > 0;
-                  const rowSpan = hasOnderdil ? item.onderdil.length : 1;
+              </TableHeader>
 
-                  // console.log(rowSpan);
+              {/* Table Body */}
+              <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                {filteredData.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={11}
+                      className="px-5 py-3 text-center text-gray-400 italic text-theme-xs dark:text-gray-500"
+                    >
+                      Tidak ada data
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredData.map((item) => {
+                    const hasOnderdil =
+                      item.onderdil && item.onderdil.length > 0;
+                    const rowSpan = hasOnderdil ? item.onderdil.length : 1;
 
-                  return hasOnderdil ? (
-                    item.onderdil.map((onderdil, index) => (
-                      <TableRow
-                        key={`${item.id_servis}-${onderdil.id_onderdil}`}
-                      >
-                        {index === 0 && (
-                          <>
-                            <TableCell
-                              rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                            >
-                              {item.no_unik}
-                            </TableCell>
-                            <TableCell
-                              rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                            >
-                              {item.tanggal}
-                            </TableCell>
-                            <TableCell
-                              rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                            >
-                              {item.nama_bengkel}
-                            </TableCell>
-                            <TableCell
-                              rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                            >
-                              Rp {item.biaya_servis.toLocaleString("id-ID")}
-                            </TableCell>
-                            <TableCell
-                              rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                            >
-                              <a
-                                href={item.nota_pembayaran}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-500 underline"
+                    // console.log(rowSpan);
+
+                    return hasOnderdil ? (
+                      item.onderdil.map((onderdil, index) => (
+                        <TableRow
+                          key={`${item.id_servis}-${onderdil.id_onderdil}`}
+                        >
+                          {index === 0 && (
+                            <>
+                              <TableCell
+                                rowSpan={rowSpan}
+                                className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
                               >
-                                Lihat Nota
-                              </a>
-                            </TableCell>
-                            <TableCell
-                              rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                            >
-                              <a
-                                href={item.dokumentasi}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-500 underline"
+                                {item.no_unik}
+                              </TableCell>
+                              <TableCell
+                                rowSpan={rowSpan}
+                                className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
                               >
-                                Lihat Foto
-                              </a>
-                            </TableCell>
-                          </>
-                        )}
+                                {item.tanggal}
+                              </TableCell>
+                              <TableCell
+                                rowSpan={rowSpan}
+                                className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                              >
+                                {item.nama_bengkel}
+                              </TableCell>
+                              <TableCell
+                                rowSpan={rowSpan}
+                                className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                              >
+                                Rp {item.biaya_servis.toLocaleString("id-ID")}
+                              </TableCell>
+                              <TableCell
+                                rowSpan={rowSpan}
+                                className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                              >
+                                <a
+                                  href={item.nota_pembayaran}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-500 underline"
+                                >
+                                  Lihat Nota
+                                </a>
+                              </TableCell>
+                              <TableCell
+                                rowSpan={rowSpan}
+                                className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                              >
+                                <a
+                                  href={item.dokumentasi}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-500 underline"
+                                >
+                                  Lihat Foto
+                                </a>
+                              </TableCell>
+                            </>
+                          )}
 
-                        {/* Kolom onderdil (satu baris per onderdil) */}
-                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                          {onderdil.nama_onderdil}
-                        </TableCell>
-                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                          {onderdil.jumlah}
-                        </TableCell>
-                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                          Rp {onderdil.harga.toLocaleString("id-ID")}
-                        </TableCell>
+                          {/* Kolom onderdil (satu baris per onderdil) */}
+                          <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                            {onderdil.nama_onderdil}
+                          </TableCell>
+                          <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                            {onderdil.jumlah}
+                          </TableCell>
+                          <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                            Rp {onderdil.harga.toLocaleString("id-ID")}
+                          </TableCell>
 
-                        {index === 0 && (
-                          <>
-                            <TableCell
-                              rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                            >
-                              Rp{" "}
-                              {(
-                                item.biaya_servis +
-                                item.onderdil.reduce(
-                                  (sum, od) => sum + od.jumlah * od.harga,
-                                  0
-                                )
-                              ).toLocaleString("id-ID")}
-                            </TableCell>
-                            <TableCell
-                              rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-theme-xs dark:text-gray-400"
-                            >
-                              <div className="flex items-center gap-2">
-                                <EditButton
-                                  onClick={() =>
-                                    console.log("Edit", item.id_servis)
-                                  }
-                                />
-                                <DeleteButton
-                                  onClick={() =>
-                                    console.log("Delete", item.id_servis)
-                                  }
-                                />
-                              </div>
-                            </TableCell>
-                          </>
-                        )}
+                          {index === 0 && (
+                            <>
+                              <TableCell
+                                rowSpan={rowSpan}
+                                className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                              >
+                                Rp{" "}
+                                {(
+                                  item.biaya_servis +
+                                  item.onderdil.reduce(
+                                    (sum, od) => sum + od.jumlah * od.harga,
+                                    0
+                                  )
+                                ).toLocaleString("id-ID")}
+                              </TableCell>
+                              <TableCell
+                                rowSpan={rowSpan}
+                                className="px-5 py-3 text-gray-500 text-theme-xs dark:text-gray-400"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <EditButton
+                                    onClick={() =>
+                                      console.log("Edit", item.id_servis)
+                                    }
+                                  />
+                                  <DeleteButton
+                                    onClick={() =>
+                                      console.log("Delete", item.id_servis)
+                                    }
+                                  />
+                                </div>
+                              </TableCell>
+                            </>
+                          )}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow key={item.id_servis}>
+                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                          {item.no_unik}
+                        </TableCell>
+                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                          {item.tanggal}
+                        </TableCell>
+                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                          {item.nama_bengkel}
+                        </TableCell>
+                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                          Rp {item.biaya_servis.toLocaleString("id-ID")}
+                        </TableCell>
+                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                          <a
+                            href={item.nota_pembayaran}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 underline"
+                          >
+                            Lihat Nota
+                          </a>
+                        </TableCell>
+                        <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                          <a
+                            href={item.dokumentasi}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 underline"
+                          >
+                            Lihat Foto
+                          </a>
+                        </TableCell>
+                        <TableCell
+                          colSpan={4}
+                          className="px-5 py-3 text-center text-gray-400 italic text-theme-xs dark:text-gray-500"
+                        >
+                          Tidak ada onderdil
+                        </TableCell>
+                        <TableCell className="px-5 py-3 text-gray-500 text-theme-xs dark:text-gray-400">
+                          <div className="flex items-center gap-2">
+                            <EditButton
+                              onClick={() =>
+                                console.log("Edit", item.id_servis)
+                              }
+                            />
+                            <DeleteButton
+                              onClick={() =>
+                                console.log("Delete", item.id_servis)
+                              }
+                            />
+                          </div>
+                        </TableCell>
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow key={item.id_servis}>
-                      <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                        {item.no_unik}
-                      </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                        {item.tanggal}
-                      </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                        {item.nama_bengkel}
-                      </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                        Rp {item.biaya_servis.toLocaleString("id-ID")}
-                      </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                        <a
-                          href={item.nota_pembayaran}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-500 underline"
-                        >
-                          Lihat Nota
-                        </a>
-                      </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                        <a
-                          href={item.dokumentasi}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-500 underline"
-                        >
-                          Lihat Foto
-                        </a>
-                      </TableCell>
-                      <TableCell
-                        colSpan={4}
-                        className="px-5 py-3 text-center text-gray-400 italic text-theme-xs dark:text-gray-500"
-                      >
-                        Tidak ada onderdil
-                      </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-500 text-theme-xs dark:text-gray-400">
-                        <div className="flex items-center gap-2">
-                          <EditButton
-                            onClick={() => console.log("Edit", item.id_servis)}
-                          />
-                          <DeleteButton
-                            onClick={() =>
-                              console.log("Delete", item.id_servis)
-                            }
-                          />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                    );
+                  })
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
     </div>
   );

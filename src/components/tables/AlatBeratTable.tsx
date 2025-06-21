@@ -286,14 +286,14 @@ export default function TableAlatBerat() {
                   <TableRow key={item.id_alatberat}>
                     <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                       <Link
-                        to={`http://localhost:5000/uploads/alat-berat/qrcode/${item.qrcode}`}
+                        to={`http://localhost:3000/static/uploads/alat-berat/qrcode/${item.qrcode}`}
                       >
                         Lihat
                       </Link>
                     </TableCell>
                     <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                       <Link
-                        to={`http://localhost:5000/uploads/alat-berat/${item.gambar}`}
+                        to={`http://localhost:3000/static/uploads/alat-berat/${item.gambar}`}
                       >
                         Lihat
                       </Link>

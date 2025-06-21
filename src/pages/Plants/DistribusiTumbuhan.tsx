@@ -1,8 +1,8 @@
 import ComponentCard from "../../components/common/ComponentCard"
 import PageBreadcrumb from "../../components/common/PageBreadCrumb"
 import PageMeta from "../../components/common/PageMeta"
-import TumbuhanMasuk from "../../components/tables/TumbuhanMasukTable"
-import TumbuhanKeluar from "../../components/tables/TumbuhanKeluarTable"
+// import TumbuhanMasuk from "../../components/tables/TumbuhanMasukTable"
+// import TumbuhanKeluar from "../../components/tables/TumbuhanKeluarTable"
 import FormDisableTumbuhan from "../../components/formDisable/Tumbuhan"
 
 export default function PlantsDistribution () {
@@ -17,12 +17,12 @@ export default function PlantsDistribution () {
         <ComponentCard title="Data Tumbuhan">
           <FormDisableTumbuhan />
         </ComponentCard>
-        <ComponentCard title="Tabel Tumbuhan Masuk">
+        {/* <ComponentCard title="Tabel Tumbuhan Masuk">
           <TumbuhanMasuk />
         </ComponentCard>
         <ComponentCard title="Tabel Tumbuhan keluar">
           <TumbuhanKeluar />
-        </ComponentCard>
+        </ComponentCard> */}
       </div>
     </>
     )

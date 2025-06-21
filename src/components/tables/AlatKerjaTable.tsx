@@ -254,14 +254,14 @@ export default function AlatKerja() {
                   <TableRow key={item.id_alatkerja}>
                     <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                       <Link
-                        to={`http://localhost:5000/uploads/alat-kerja/qrcode/${item.qrcode}`}
+                        to={`http://localhost:3000/static/uploads/alat-kerja/qrcode/${item.qrcode}`}
                       >
                         Lihat
                       </Link>
                     </TableCell>
                     <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                       <Link
-                        to={`http://localhost:5000/uploads/alat-kerja/${item.gambar}`}
+                        to={`http://localhost:3000/static/uploads/alat-kerja/${item.gambar}`}
                       >
                         Lihat
                       </Link>

@@ -1,10 +1,12 @@
-import { Link } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 interface BreadcrumbProps {
   pageTitle: string;
 }
 
 const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
       <h2
@@ -16,11 +18,12 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
       <nav>
         <ol className="flex items-center gap-1.5">
           <li>
-            <Link
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
               className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
-              to="/home"
             >
-              Home
+              Kembali
               <svg
                 className="stroke-current"
                 width="17"
@@ -37,7 +40,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
                   strokeLinejoin="round"
                 />
               </svg>
-            </Link>
+            </button>
           </li>
           <li className="text-sm text-gray-800 dark:text-white/90">
             {pageTitle}

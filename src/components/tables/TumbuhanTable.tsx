@@ -200,7 +200,7 @@ export default function Tumbuhan() {
                 <TableRow key={item.id_tanaman}>
                   <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
                     <Link
-                      to={`http://localhost:5000/uploads/tanaman/${item.gambar}`}
+                      to={`http://localhost:3000/uploads/tanaman/${item.gambar}`}
                     >
                       Lihat
                     </Link>

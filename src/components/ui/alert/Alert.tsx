@@ -21,7 +21,7 @@ const Alert: React.FC<AlertProps> = ({
   linkHref = "#",
   linkText = "Learn more",
   autoClose = false,
-  duration = 3000,
+  duration = 2000,
 }) => {
   const [visible, setVisible] = useState(true);
 
