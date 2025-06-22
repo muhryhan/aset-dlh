@@ -195,8 +195,43 @@
 .flatpickr-wrapper {
   @apply w-full;
 }
+/* Warna kalender Flatpickr saat tema terang dan gelap */
 .flatpickr-calendar {
   @apply mt-2 !bg-white !rounded-xl !p-5 !border !border-gray-200 !text-gray-500 dark:!bg-gray-dark dark:!text-gray-400 dark:!shadow-theme-xl 2xsm:!w-auto;
+}
+
+/* Hari dalam kalender */
+.flatpickr-day {
+  @apply !bg-white !text-gray-700 dark:!bg-gray-900 dark:!text-white;
+}
+
+/* Hari aktif dan range */
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  @apply !bg-brand-500 !text-white dark:!bg-brand-600 dark:!text-white;
+}
+
+/* Navigation (bulan dan tahun) */
+.flatpickr-current-month,
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  @apply !text-gray-800 dark:!text-white;
+}
+
+.flatpickr-months {
+  @apply !text-gray-800 dark:!text-white;
+}
+
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  @apply !text-gray-500 dark:!text-white;
+}
+
+/* Tombol panah kiri/kanan */
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+  fill: currentColor !important;
 }
 
 .flatpickr-months .flatpickr-prev-month:hover svg,
@@ -222,19 +257,20 @@
 }
 
 .flatpickr-weekdays {
-  @apply h-auto mt-6 mb-4 !bg-transparent;
+  @apply h-auto mt-6 mb-4 !bg-transparent dark:!bg-transparent;
 }
 
 .flatpickr-weekday {
-  @apply !text-theme-sm !font-medium !text-gray-500 dark:!text-gray-400 !bg-transparent;
+  @apply !text-theme-sm !font-medium !text-gray-600 dark:!text-gray-300 text-sm !bg-transparent;
 }
 
 .flatpickr-day {
   @apply !flex !items-center !text-theme-sm !font-medium !text-gray-800 dark:!text-white/90 dark:hover:!border-gray-300 dark:hover:!bg-gray-900;
 }
+.flatpickr-day.flatpickr-disabled,
 .flatpickr-day.nextMonthDay,
 .flatpickr-day.prevMonthDay {
-  @apply !text-gray-400;
+  @apply bg-white !text-gray-400 dark:bg-gray-900 dark:!text-gray-500; ;
 }
 
 .flatpickr-months > .flatpickr-month {
@@ -272,7 +308,7 @@ span.flatpickr-weekday,
   @apply dark:!fill-white dark:!text-white !bg-none;
 }
 .flatpickr-innerContainer {
-  @apply !border-b-0;
+  @apply !border-b-0 dark:!bg-gray-900;
 }
 .flatpickr-months .flatpickr-month {
   @apply !bg-none;

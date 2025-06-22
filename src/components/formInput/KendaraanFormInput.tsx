@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 
 import ComponentCard from "../common/ComponentCard";
 import Label from "../form/Label";
@@ -7,6 +9,7 @@ import FileInput from "../form/input/FileInput";
 import Select from "../form/Select";
 import Button from "../ui/button/Button";
 import Alert from "../ui/alert/Alert";
+import { CalenderIcon } from "../../icons";
 
 import { KendaraanData } from "../../components/tables/KendaraanTable";
 import api from "../../../services/api";
@@ -22,6 +25,25 @@ function formatNumberWithDots(value: string): string {
 }
 
 export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
+
+  const isEdit = !!initialData?.id_kendaraan;
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData,
+        harga_pembelian: initialData.harga_pembelian?.toString() ?? "",
+        tahun_pembuatan: initialData.tahun_pembuatan?.toString() ?? "",
+        pajak: initialData?.pajak
+          ? new Date(initialData.pajak).toISOString().split("T")[0]
+          : "",
+        nik: initialData.nik?.toString() ?? "",
+        gambar: null,
+      }));
+    }
+  }, [initialData]);
+
   // --- Alert Message State
   const [alertMessage, setAlertMessage] = useState<{
     variant: "success" | "warning" | "error" | "info";
@@ -29,7 +51,17 @@ export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
     message: string;
   } | null>(null);
 
-  const isEdit = !!initialData?.id_kendaraan;
+  // --- Static Options
+  const kategori = [
+    { value: "Roda 2", label: "Roda 2" },
+    { value: "Roda 4", label: "Roda 4" },
+    { value: "Roda 6", label: "Roda 6" },
+  ];
+  const kondisi = [
+    { value: "Baik", label: "Baik" },
+    { value: "Rusak Ringan", label: "Rusak Ringan" },
+    { value: "Rusak Berat", label: "Rusak Berat" },
+  ];
 
   // --- Form State
   const [formData, setFormData] = useState({
@@ -48,35 +80,18 @@ export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
     nik: "",
     penggunaan: "",
     kondisi: "",
-  });
+  });  
 
-  // --- Static Options
-  const kategori = [
-    { value: "Roda 2", label: "Roda 2" },
-    { value: "Roda 4", label: "Roda 4" },
-    { value: "Roda 6", label: "Roda 6" },
-  ];
-  const kondisi = [
-    { value: "Baik", label: "Baik" },
-    { value: "Rusak Ringan", label: "Rusak Ringan" },
-    { value: "Rusak Berat", label: "Rusak Berat" },
-  ];
-
-  useEffect(() => {
-    if (initialData) {
+  const handleDateChange = (selectedDates: Date[]) => {
+    const selectedDate = selectedDates[0];
+    if (selectedDate) {
+      const formatted = selectedDate.toLocaleDateString("sv-SE"); // "YYYY-MM-DD"
       setFormData((prev) => ({
         ...prev,
-        ...initialData,
-        harga_pembelian: initialData.harga_pembelian?.toString() ?? "",
-        tahun_pembuatan: initialData.tahun_pembuatan?.toString() ?? "",
-        pajak: initialData?.pajak
-          ? new Date(initialData.pajak).toISOString().split("T")[0]
-          : "",
-        nik: initialData.nik?.toString() ?? "",
-        gambar: null,
+        pajak: formatted,
       }));
     }
-  }, [initialData]);
+  };
 
   // --- Input Handlers
   const handleSelectChange = (field: string, value: string) => {
@@ -105,26 +120,6 @@ export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
       ...prev,
       [id]: newValue,
     }));
-  };
-
-  const resetForm = () => {
-    setFormData({
-      qrcode: "",
-      gambar: null,
-      merek: "",
-      no_polisi: "",
-      no_mesin: "",
-      no_rangka: "",
-      warna: "",
-      harga_pembelian: "",
-      tahun_pembuatan: "",
-      kategori: "",
-      pajak: "",
-      pemegang: "",
-      nik: "",
-      penggunaan: "",
-      kondisi: "",
-    });
   };
 
   // --- Submit Handler
@@ -206,6 +201,26 @@ export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
         message: "Terjadi kesalahan saat menyimpan data.",
       });
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      qrcode: "",
+      gambar: null,
+      merek: "",
+      no_polisi: "",
+      no_mesin: "",
+      no_rangka: "",
+      warna: "",
+      harga_pembelian: "",
+      tahun_pembuatan: "",
+      kategori: "",
+      pajak: "",
+      pemegang: "",
+      nik: "",
+      penggunaan: "",
+      kondisi: "",
+    });
   };
 
   // --- Render
@@ -291,7 +306,7 @@ export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
         <div>
           <Label htmlFor="harga_pembelian">Harga Pembelian</Label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-white bg-transparent z-10">
               Rp
             </span>
             <Input
@@ -329,16 +344,28 @@ export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
             className="w-full dark:bg-dark-900"
           />
         </div>
-
         <div>
           <Label htmlFor="pajak">Pajak</Label>
-          <Input
-            type="date"
-            id="pajak"
-            value={formData.pajak}
-            onChange={handleInputChange}
-            className="w-full"
-          />
+          <div className="relative w-full flatpickr-wrapper">
+            <Flatpickr
+              value={formData.pajak}
+              onChange={handleDateChange} // Handle the date change
+              options={{
+                dateFormat: "Y-m-d",
+                appendTo:
+                  typeof document !== "undefined" ? document.body : undefined, // Set the date format
+              }}
+              placeholder="Pilih tanggal"
+              className="h-11 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs
+              bg-white text-gray-800 placeholder:text-gray-400 border-gray-300
+              focus:border-brand-300 focus:ring-brand-500/20
+              dark:bg-gray-900 dark:text-white dark:placeholder:text-white/40
+              dark:border-gray-700 dark:focus:border-brand-800"
+            />
+            <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-white">
+              <CalenderIcon className="size-6" />
+            </span>
+          </div>
         </div>
 
         <div>

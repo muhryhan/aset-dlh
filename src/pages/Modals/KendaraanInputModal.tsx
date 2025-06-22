@@ -3,7 +3,7 @@ import PageMeta from "../../components/common/PageMeta";
 import { FaTimes } from "react-icons/fa";
 import { KendaraanData } from "../../components/tables/KendaraanTable";
 
-type KendaraanInputModalProps = {
+interface KendaraanInputModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
@@ -18,7 +18,7 @@ export default function KendaraanInputModal({
 }: KendaraanInputModalProps) {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/60 p-4 ">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 p-4 ">
       <PageMeta
         title="Input Data Kendaraan"
         description="Halaman Input Data Kendaraan"

@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 
 import ComponentCard from "../common/ComponentCard";
 import Label from "../form/Label";
@@ -7,7 +9,9 @@ import FileInput from "../form/input/FileInput";
 import Button from "../ui/button/Button";
 import Alert from "../ui/alert/Alert";
 import Checkbox from "../form/input/Checkbox";
+import { CalenderIcon } from "../../icons";
 
+import { ServisKendaraanData } from "../../components/tables/Service/ServiceKendaraanTable";
 import api from "../../../services/api";
 
 interface OnderdilItem {
@@ -23,6 +27,7 @@ interface SelectedItemState {
 type Props = {
   onSuccess?: () => void;
   no_polisi?: string;
+  initialData?: Partial<ServisKendaraanData>;
 };
 
 function formatNumberWithDots(value: string): string {
@@ -32,18 +37,57 @@ function formatNumberWithDots(value: string): string {
 
 export default function ServisKendaraanFormInput({
   onSuccess,
-  no_polisi,
+  initialData,
 }: Props) {
-  const [formData, setFormData] = useState({
+  const isEdit = !!initialData?.id_servis;
+
+  const [alertMessage, setAlertMessage] = useState<{
+    variant: "success" | "warning" | "error" | "info";
+    title?: string;
+    message: string;
+  } | null>(null);
+
+  const [formData, setFormData] = useState<{
+    tanggal: string;
+    no_unik: string;
+    nama_bengkel: string;
+    biaya_servis: string;
+    nota_pembayaran: File | null;
+    dokumentasi: File | null;
+  }>({
     tanggal: "",
-    no_unik: no_polisi,
+    no_unik: "",
     nama_bengkel: "",
     biaya_servis: "",
-    nota_pembayaran: null as File | null,
-    dokumentasi: null as File | null,
+    nota_pembayaran: null,
+    dokumentasi: null,
   });
 
-  const [onderdilList, setOnderdilList] = useState<OnderdilItem[]>([]);
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        tanggal: initialData?.tanggal
+          ? new Date(initialData.tanggal).toISOString().split("T")[0]
+          : "",
+        no_unik: initialData?.no_unik ?? "",
+        nama_bengkel: initialData?.nama_bengkel ?? "",
+        biaya_servis: initialData?.biaya_servis?.toString() ?? "",
+        nota_pembayaran: null,
+        dokumentasi: null,
+      });
+    }
+  }, [initialData]);
+
+  const handleDateChange = (selectedDates: Date[]) => {
+    const selectedDate = selectedDates[0];
+    if (selectedDate) {
+      const formatted = selectedDate.toLocaleDateString("sv-SE"); // "YYYY-MM-DD"
+      setFormData((prev) => ({
+        ...prev,
+        pajak: formatted,
+      }));
+    }
+  };
 
   const [selectedItems, setSelectedItems] = useState<SelectedItemState>({
     oliMesin: false,
@@ -54,17 +98,34 @@ export default function ServisKendaraanFormInput({
     tambahOnderdil: false,
   });
 
-  const [alertMessage, setAlertMessage] = useState<{
-    variant: "success" | "warning" | "error" | "info";
-    title?: string;
-    message: string;
-  } | null>(null);
+  const [onderdilList, setOnderdilList] = useState<OnderdilItem[]>([]);
+
+  const handleOnderdilChange = (
+    index: number,
+    field: keyof OnderdilItem,
+    value: string
+  ) => {
+    const rawValue = value.replace(/\D/g, "");
+    setOnderdilList((prev) => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        [field]: field === "harga" || field === "jumlah" ? rawValue : value,
+      };
+      return updated;
+    });
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
+    const numberFields = ["biaya_servis"];
+    const newValue = numberFields.includes(id)
+      ? value.replace(/\D/g, "")
+      : value;
+
     setFormData((prev) => ({
       ...prev,
-      [id]: id === "biaya_servis" ? value.replace(/\D/g, "") : value,
+      [id]: newValue,
     }));
   };
 
@@ -91,82 +152,57 @@ export default function ServisKendaraanFormInput({
     }
   };
 
-  const handleOnderdilChange = (
-    index: number,
-    field: keyof OnderdilItem,
-    value: string
-  ) => {
-    const rawValue = value.replace(/\D/g, "");
-    setOnderdilList((prev) => {
-      const updated = [...prev];
-      updated[index] = {
-        ...updated[index],
-        [field]: field === "harga" || field === "jumlah" ? rawValue : value,
-      };
-      return updated;
-    });
-  };
-
-  const resetForm = () => {
-    setFormData({
-      no_unik: "",
-      tanggal: "",
-      nama_bengkel: "",
-      biaya_servis: "",
-      nota_pembayaran: null,
-      dokumentasi: null,
-    });
-    setOnderdilList([]);
-    setSelectedItems({
-      oliMesin: false,
-      filterOliMesin: false,
-      oliGardan: false,
-      oliTransmisi: false,
-      ban: false,
-      tambahOnderdil: false,
-    });
-  };
-
   const handleSubmit = async () => {
     setAlertMessage(null);
     const requiredFields = ["tanggal", "nama_bengkel", "biaya_servis"];
     for (const field of requiredFields) {
-      if (!formData[field as keyof typeof formData]) {
-        return setAlertMessage({
+      if (!formData[field as keyof typeof formData]?.toString().trim()) {
+        setAlertMessage({
           variant: "warning",
           title: "Validasi Gagal",
           message: `Field ${field.replace("_", " ")} tidak boleh kosong`,
         });
+        return;
       }
     }
 
     if (!formData.nota_pembayaran || !formData.dokumentasi) {
-      return setAlertMessage({
+      setAlertMessage({
         variant: "warning",
         title: "Validasi Gagal",
         message: "Nota pembayaran dan dokumentasi harus diunggah.",
       });
+      return;
     }
 
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) data.append(key, value);
-    });
-    data.append(
-      "onderdil",
-      JSON.stringify(
-        onderdilList.map((item) => ({
-          ...item,
-          jumlah: parseInt(item.jumlah || "0"),
-          harga: parseInt(item.harga || "0"),
-        }))
-      )
-    );
-
     try {
-      const response = await api.post("/api/servis", data);
-      if (response.status !== 200)
-        throw new Error("Gagal menyimpan data servis");
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== null && value !== "") {
+          if (key === "gambar" && value instanceof File) {
+            data.append(key, value);
+          } else {
+            data.append(key, value as string);
+          }
+        }
+        data.append(
+          "onderdil",
+          JSON.stringify(
+            onderdilList.map((item) => ({
+              ...item,
+              jumlah: parseInt(item.jumlah || "0"),
+              harga: parseInt(item.harga || "0"),
+            }))
+          )
+        );
+      });
+
+      const response = isEdit
+        ? await api.put(`/api/servis/${initialData.id_servis}`, data)
+        : await api.post("/api/servis", data);
+
+      if (![200, 201].includes(response.status))
+        throw new Error("Gagal menyimpan data");
 
       setAlertMessage({
         variant: "success",
@@ -189,6 +225,26 @@ export default function ServisKendaraanFormInput({
     }
   };
 
+  const resetForm = () => {
+    setFormData({
+      tanggal: "",
+      no_unik: "",
+      nama_bengkel: "",
+      biaya_servis: "",
+      nota_pembayaran: null,
+      dokumentasi: null,
+    });
+    setOnderdilList([]);
+    setSelectedItems({
+      oliMesin: false,
+      filterOliMesin: false,
+      oliGardan: false,
+      oliTransmisi: false,
+      ban: false,
+      tambahOnderdil: false,
+    });
+  };
+
   return (
     <ComponentCard title="Form Input Servis Kendaraan">
       {alertMessage && (
@@ -196,6 +252,8 @@ export default function ServisKendaraanFormInput({
           variant={alertMessage.variant}
           title={alertMessage.title}
           message={alertMessage.message}
+          autoClose
+          duration={2000}
           onClose={() => setAlertMessage(null)}
         />
       )}
@@ -211,13 +269,26 @@ export default function ServisKendaraanFormInput({
         </div>
         <div>
           <Label htmlFor="tanggal">Tanggal Servis</Label>
-          <Input
-            type="date"
-            id="tanggal"
-            value={formData.tanggal}
-            onChange={handleInputChange}
-            className="w-full"
-          />
+          <div className="relative w-full flatpickr-wrapper">
+            <Flatpickr
+              value={formData.tanggal}
+              onChange={handleDateChange}
+              options={{
+                dateFormat: "Y-m-d",
+                appendTo:
+                  typeof document !== "undefined" ? document.body : undefined,
+              }}
+              placeholder="Pilih tanggal"
+              className="h-11 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs
+            bg-white text-gray-800 placeholder:text-gray-400 border-gray-300
+            focus:border-brand-300 focus:ring-brand-500/20
+            dark:bg-gray-900 dark:text-white dark:placeholder:text-white/40
+            dark:border-gray-700 dark:focus:border-brand-800"
+            />
+            <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-white">
+              <CalenderIcon className="size-6" />
+            </span>
+          </div>
         </div>
         <div>
           <Label htmlFor="nama_bengkel">Nama Bengkel</Label>
@@ -337,8 +408,12 @@ export default function ServisKendaraanFormInput({
         ))}
 
         <div className="flex justify-end space-x-4">
-          <Button size="md" variant="primary" onClick={handleSubmit}>
-            Submit
+          <Button
+            size="md"
+            variant={isEdit ? "warning" : "primary"}
+            onClick={handleSubmit}
+          >
+            {isEdit ? "Update" : "Submit"}
           </Button>
           <Button size="md" variant="outline" onClick={resetForm}>
             Reset

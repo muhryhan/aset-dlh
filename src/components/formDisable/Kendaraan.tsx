@@ -61,8 +61,8 @@ const FormDisableKendaraan: React.FC = () => {
   if (!kendaraan) return <p>Data kendaraan tidak tersedia.</p>;
 
   return (
-    <div className="w-full mx-auto p-6 bg-white rounded shadow">
-      <form className="flex flex-col gap-6 w-full text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+    <div className="w-full mx-auto p-6 bg-white rounded shadow bg-white dark:bg-white/[0.03]">
+      <form className="flex flex-col gap-6 w-full text-theme-xs font-medium text-gray-600 dark:text-gray-300">
         <InputField label="Merek" value={kendaraan.merek} />
         <InputField label="Nomor Polisi" value={kendaraan.no_polisi} />
         <InputField label="Nomor Mesin" value={kendaraan.no_mesin} />
@@ -70,14 +70,25 @@ const FormDisableKendaraan: React.FC = () => {
         <InputField label="Warna" value={kendaraan.warna} />
         <InputField
           label="Harga Pembelian"
-          value={kendaraan.harga_pembelian?.toLocaleString("id-ID")}
+          value={"Rp " + kendaraan.harga_pembelian?.toLocaleString("id-ID")}
         />
         <InputField
           label="Tahun Pembuatan"
           value={kendaraan.tahun_pembuatan?.toString() ?? "-"}
         />
         <InputField label="Kategori" value={kendaraan.kategori} />
-        <InputField label="Pajak" value={kendaraan.pajak || "-"} />
+        <InputField
+          label="Pajak"
+          value={
+            kendaraan.pajak
+              ? new Date(kendaraan.pajak).toLocaleDateString("id-ID", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })
+              : "-"
+          }
+        />
         <InputField label="Pemegang" value={kendaraan.pemegang} />
         <InputField
           label="NIK"
@@ -100,14 +111,14 @@ type InputFieldProps = {
 
 const InputField: React.FC<InputFieldProps> = ({ label, value }) => (
   <div className="w-full">
-    <label className="block text-sm font-medium text-gray-700 mb-1">
+    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
       {label}
     </label>
     <input
       type="text"
       value={value || "-"}
       disabled
-      className="w-full border border-gray-300 rounded-md shadow-sm bg-gray-100 p-2"
+      className="w-full border border-gray-300 rounded-md shadow-sm bg-gray-100 dark:bg-gray-800 p-2"
     />
   </div>
 );

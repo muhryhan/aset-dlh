@@ -351,6 +351,7 @@ export default function TableKendaraan() {
                       href={`http://localhost:3000/static/uploads/kendaraan/qrcode/${item.qrcode}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="text-blue-500 underline"
                     >
                       Lihat
                     </a>
@@ -360,6 +361,7 @@ export default function TableKendaraan() {
                       href={`http://localhost:3000/static/uploads/kendaraan/${item.gambar}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="text-blue-500 underline"
                     >
                       Lihat
                     </a>
@@ -430,7 +432,6 @@ export default function TableKendaraan() {
             >
               &lt;
             </button>
-
             {/* Nomor halaman */}
             <div className="flex space-x-1">
               {getPageNumbers().map((page) => (
@@ -447,7 +448,6 @@ export default function TableKendaraan() {
                 </button>
               ))}
             </div>
-
             {/* Tombol kanan */}
             <button
               onClick={() =>
