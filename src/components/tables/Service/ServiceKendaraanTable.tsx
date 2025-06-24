@@ -70,6 +70,18 @@ export default function ServisKendaraan() {
     return pages;
   };
 
+  const formatTanggal = (value: string | Date | null | undefined): string => {
+    if (!value) return "-";
+    const date = typeof value === "string" ? new Date(value) : value;
+    if (isNaN(date.getTime())) return "-";
+
+    return date.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+    });
+  };
+
   // Fetch data
   const fetchData = useCallback(async () => {
     if (!no_polisi) return;
@@ -98,6 +110,7 @@ export default function ServisKendaraan() {
       month: "numeric",
       year: "numeric",
     });
+
     return (
       formattedDate.toLowerCase().includes(searchLower) ||
       item.nama_bengkel.toLowerCase().includes(searchLower)
@@ -111,26 +124,28 @@ export default function ServisKendaraan() {
     currentPage * itemsPerPage
   );
 
-  const handleEdit = async (no_unik: string) => {
-    try {
-      const response = await api.get(`/api/servis/nounik/${no_unik}`);
-      setSelectedServis(response.data.data);
-      setIsModalOpen(true);
-    } catch (err) {
-      console.error("Gagal fetch data untuk edit:", err);
+  const handleDelete = async (id_servis: number | null) => {
+    if (!id_servis) {
+      console.warn("ID servis tidak valid, tidak bisa menghapus.");
+      return;
     }
-  };
 
-  const handleDelete = async (no_unik: string) => {
-    if (confirm("Yakin ingin menghapus kendaraan ini?")) {
-      try {
-        await api.delete(`/api/servis/nounik/${no_polisi}`);
+    const confirmDelete = confirm("Yakin ingin menghapus servis ini?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await api.delete(`/api/servis/${id_servis}`);
+      if (response.status === 200) {
+        // Perbarui state lokal
         setServisData((prev) =>
-          prev.filter((item) => item.no_unik !== no_unik)
+          prev.filter((item) => item.id_servis !== id_servis)
         );
-      } catch (err) {
-        console.error("Gagal menghapus data:", err);
+        console.log("Berhasil menghapus servis dengan ID:", id_servis);
+      } else {
+        console.warn("Respons tidak sukses saat menghapus:", response.status);
       }
+    } catch (err) {
+      console.error("Gagal menghapus data servis:", err);
     }
   };
 
@@ -229,67 +244,67 @@ export default function ServisKendaraan() {
               <TableRow>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Nomor Polisi
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Tanggal
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Nama Bengkel
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Biaya Servis
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Nota Pembayaran
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Dokumentasi
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Onderdil
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Jumlah
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Harga
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Total Harga
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Aksi
                 </TableCell>
@@ -302,7 +317,7 @@ export default function ServisKendaraan() {
                 <TableRow>
                   <TableCell
                     colSpan={11}
-                    className="px-5 py-3 text-center text-gray-400 italic text-theme-xs dark:text-gray-500"
+                    className="px-5 py-3 text-center text-gray-400 italic text-theme-sm dark:text-gray-500"
                   >
                     Tidak ada data
                   </TableCell>
@@ -320,41 +335,32 @@ export default function ServisKendaraan() {
                           <>
                             <TableCell
                               rowSpan={rowSpan}
-                              className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400"
+                              className="px-5 py-3 text-theme-sm align-top font-medium text-gray-600 dark:text-gray-400"
                             >
                               {item.no_unik}
                             </TableCell>
                             <TableCell
                               rowSpan={rowSpan}
-                              className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400"
+                              className="px-5 py-3 text-theme-sm align-top font-medium text-gray-600 dark:text-gray-400"
                             >
-                              {item.tanggal
-                                ? new Date(item.tanggal).toLocaleDateString(
-                                    "id-ID",
-                                    {
-                                      day: "numeric",
-                                      month: "numeric",
-                                      year: "numeric",
-                                    }
-                                  )
-                                : "-"}
+                              {formatTanggal(item.tanggal)}
                             </TableCell>
 
                             <TableCell
                               rowSpan={rowSpan}
-                              className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400"
+                              className="px-5 py-3 text-theme-sm align-top font-medium text-gray-600 dark:text-gray-400"
                             >
                               {item.nama_bengkel}
                             </TableCell>
                             <TableCell
                               rowSpan={rowSpan}
-                              className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400"
+                              className="px-5 py-3 text-theme-sm align-top font-medium text-gray-600 dark:text-gray-400"
                             >
                               Rp {item.biaya_servis.toLocaleString("id-ID")}
                             </TableCell>
                             <TableCell
                               rowSpan={rowSpan}
-                              className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400"
+                              className="px-5 py-3 text-theme-sm align-top font-medium text-gray-600 dark:text-gray-400"
                             >
                               <a
                                 href={`http://localhost:3000/static/uploads/servis/nota/${item.nota_pembayaran}`}
@@ -367,7 +373,7 @@ export default function ServisKendaraan() {
                             </TableCell>
                             <TableCell
                               rowSpan={rowSpan}
-                              className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400"
+                              className="px-5 py-3 text-theme-sm align-top font-medium text-gray-600 dark:text-gray-400"
                             >
                               <a
                                 href={`http://localhost:3000/static/uploads/servis/dokumentasi/${item.dokumentasi}`}
@@ -382,13 +388,13 @@ export default function ServisKendaraan() {
                         )}
 
                         {/* Kolom onderdil (satu baris per onderdil) */}
-                        <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                        <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                           {onderdil.nama_onderdil}
                         </TableCell>
-                        <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                        <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                           {onderdil.jumlah}
                         </TableCell>
-                        <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                        <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                           Rp {onderdil.harga.toLocaleString("id-ID")}
                         </TableCell>
 
@@ -396,7 +402,7 @@ export default function ServisKendaraan() {
                           <>
                             <TableCell
                               rowSpan={rowSpan}
-                              className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400"
+                              className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400"
                             >
                               Rp{" "}
                               {(
@@ -409,7 +415,7 @@ export default function ServisKendaraan() {
                             </TableCell>
                             <TableCell
                               rowSpan={rowSpan}
-                              className="px-5 py-3 text-gray-500 text-theme-xs dark:text-gray-400"
+                              className="px-5 py-3 text-gray-500 text-theme-sm dark:text-gray-400"
                             >
                               <div className="flex items-center gap-2">
                                 <EditButton
@@ -418,11 +424,8 @@ export default function ServisKendaraan() {
                                     setIsModalOpen(true);
                                   }}
                                 />
-
                                 <DeleteButton
-                                  onClick={() =>
-                                    console.log("Delete", item.id_servis)
-                                  }
+                                  onClick={() => handleDelete(item.id_servis)}
                                 />
                               </div>
                             </TableCell>
@@ -432,19 +435,19 @@ export default function ServisKendaraan() {
                     ))
                   ) : (
                     <TableRow key={item.id_servis}>
-                      <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                         {item.no_unik}
                       </TableCell>
-                      <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                        {item.tanggal}
+                      <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
+                        {formatTanggal(item.tanggal)}
                       </TableCell>
-                      <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                         {item.nama_bengkel}
                       </TableCell>
-                      <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                         Rp {item.biaya_servis.toLocaleString("id-ID")}
                       </TableCell>
-                      <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                         <a
                           href={item.nota_pembayaran}
                           target="_blank"
@@ -454,7 +457,7 @@ export default function ServisKendaraan() {
                           Lihat
                         </a>
                       </TableCell>
-                      <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                         <a
                           href={item.dokumentasi}
                           target="_blank"
@@ -466,17 +469,20 @@ export default function ServisKendaraan() {
                       </TableCell>
                       <TableCell
                         colSpan={4}
-                        className="px-5 py-3 text-center text-gray-400 italic text-theme-xs dark:text-gray-500"
+                        className="px-5 py-3 text-center text-gray-400 italic text-theme-sm dark:text-gray-500"
                       >
                         Tidak ada onderdil
                       </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-500 text-theme-xs dark:text-gray-400">
+                      <TableCell className="px-5 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                         <div className="flex items-center gap-2">
                           <EditButton
-                            onClick={() => handleEdit(item.no_unik)}
+                            onClick={() => {
+                              setSelectedServis(item);
+                              setIsModalOpen(true);
+                            }}
                           />
                           <DeleteButton
-                            onClick={() => handleDelete(item.no_unik)}
+                            onClick={() => handleDelete(item.id_servis)}
                           />
                         </div>
                       </TableCell>

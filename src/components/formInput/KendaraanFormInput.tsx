@@ -24,8 +24,14 @@ function formatNumberWithDots(value: string): string {
   return raw.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
+function localDate(dateStr: string | Date): string {
+  const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr;
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60000);
+  return localDate.toISOString().split("T")[0];
+}
 
+export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
   const isEdit = !!initialData?.id_kendaraan;
 
   useEffect(() => {
@@ -35,9 +41,7 @@ export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
         ...initialData,
         harga_pembelian: initialData.harga_pembelian?.toString() ?? "",
         tahun_pembuatan: initialData.tahun_pembuatan?.toString() ?? "",
-        pajak: initialData?.pajak
-          ? new Date(initialData.pajak).toISOString().split("T")[0]
-          : "",
+        pajak: initialData?.pajak ? localDate(initialData.pajak) : "",
         nik: initialData.nik?.toString() ?? "",
         gambar: null,
       }));
@@ -80,17 +84,14 @@ export default function KendaraanFormInput({ onSuccess, initialData }: Props) {
     nik: "",
     penggunaan: "",
     kondisi: "",
-  });  
+  });
 
-  const handleDateChange = (selectedDates: Date[]) => {
-    const selectedDate = selectedDates[0];
-    if (selectedDate) {
-      const formatted = selectedDate.toLocaleDateString("sv-SE"); // "YYYY-MM-DD"
-      setFormData((prev) => ({
-        ...prev,
-        pajak: formatted,
-      }));
-    }
+  const handleDateChange = (selectedDate: Date[]) => {
+    const formatted = localDate(selectedDate[0]);
+    setFormData((prev) => ({
+      ...prev,
+      pajak: formatted,
+    }));
   };
 
   // --- Input Handlers

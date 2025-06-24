@@ -265,88 +265,88 @@ export default function TableKendaraan() {
               <TableRow>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   QR Code
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Gambar
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Merek
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   No. Polisi
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Warna
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Harga Pembelian
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Tahun Pembuatan
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Kategori
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Pajak
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Pemegang
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Penggunaan
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-start text-theme-sm dark:text-gray-400"
                 >
                   Kondisi
                 </TableCell>
                 <TableCell
                   isHeader
-                  className="px-5 py-3 font-bold text-gray-700 text-center text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-bold text-gray-700 text-center text-theme-sm dark:text-gray-400"
                 >
-                  Action
+                  Aksi
                 </TableCell>
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {(search ? filteredData : paginatedData).map((item) => (
                 <TableRow key={item.id_kendaraan}>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     <a
                       href={`http://localhost:3000/static/uploads/kendaraan/qrcode/${item.qrcode}`}
                       target="_blank"
@@ -356,7 +356,7 @@ export default function TableKendaraan() {
                       Lihat
                     </a>
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     <a
                       href={`http://localhost:3000/static/uploads/kendaraan/${item.gambar}`}
                       target="_blank"
@@ -366,33 +366,33 @@ export default function TableKendaraan() {
                       Lihat
                     </a>
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     {item.merek}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     {item.no_polisi}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     {item.warna}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     Rp {item.harga_pembelian.toLocaleString("id-ID")}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     {item.tahun_pembuatan}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     {item.kategori}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     {item.pajak
                       ? new Date(item.pajak).toLocaleDateString("id-ID")
                       : "-"}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     {item.pemegang}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     {item.penggunaan}
                   </TableCell>
                   <TableCell
@@ -402,7 +402,7 @@ export default function TableKendaraan() {
                   >
                     {item.kondisi}
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-center text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                  <TableCell className="px-5 py-3 text-center text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                     <div className="flex items-center gap-2">
                       <ServiceButton
                         onClick={() =>
