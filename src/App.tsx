@@ -7,28 +7,28 @@ import Alerts from "./pages/UiElements/Alerts";
 import Badges from "./pages/UiElements/Badges";
 import Buttons from "./pages/UiElements/Buttons";
 import Calendar from "./pages/Calendar";
-import Blank from "./pages/Blank";
+import Blank from "./pages/OtherPage/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import ProtectedRoute from "./protectedRoute";
 import Home from "./pages/Dashboard/Home";
-import Kendaraan from "./pages/Assets/Kendaraan";
-import AlatBerat from "./pages/Assets/AlatBerat";
-import AlatKerja from "./pages/Assets/AlatKerja";
-import Ac from "./pages/Assets/Ac";
-import Tumbuhan from "./pages/Assets/Tumbuhan";
-import DistribusiTumbuhan from "./pages/Plants/DistribusiTumbuhan";
-import ServiceKendaraan from "./pages/Service/ServiceKendaraan";
+import Kendaraan from "./pages/Kendaraan";
+import AlatBerat from "./pages/AlatBerat";
+import AlatKerja from "./pages/AlatKerja";
+import Ac from "./pages/Ac";
+import Tumbuhan from "./pages/Tumbuhan";
+import DistribusiTumbuhan from "./pages/Tumbuhan/DistribusiTumbuhan";
+import ServiceKendaraan from "./pages/Service/ServisKendaraan";
 import ServiceAlatBerat from "./pages/Service/ServiceAlatBerat";
 import ServiceAlatKerja from "./pages/Service/ServiceAlatKerja";
 import ServiceAc from "./pages/Service/ServiceAc";
-import PeriodicKendaraan from "./pages/PeriodicService/SerberKendaraan";
-import PeriodicAlatBerat from "./pages/PeriodicService/SerberAlatBerat";
-import PeriodicAlatKerja from "./pages/PeriodicService/SerberAlatKerja";
-import PeriodicAc from "./pages/PeriodicService/SerberAc";
-import TamanKota from "./pages/Assets/TamanKota";
-import TPUKota from "./pages/Assets/TPU";
-import ScanPage from "./pages/scan/ScanPage";
+import PeriodicKendaraan from "./pages/ServiceBerkala/SerberKendaraan";
+import PeriodicAlatBerat from "./pages/ServiceBerkala/SerberAlatBerat";
+import PeriodicAlatKerja from "./pages/ServiceBerkala/SerberAlatKerja";
+import PeriodicAc from "./pages/ServiceBerkala/SerberAc";
+import TamanKota from "./pages/TamanKota";
+import TPUKota from "./pages/TPU";
+import ScanPage from "./pages/ScanPage";
 
 export default function App() {
   return (
@@ -54,7 +54,7 @@ export default function App() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/blank" element={<Blank />} />
 
-          {/* Aset DLH Pages */}
+          {/* Asset Pages */}
           <Route path="/kendaraan" element={<Kendaraan />} />
           <Route path="/alat-berat" element={<AlatBerat />} />
           <Route path="/alat-kerja" element={<AlatKerja />} />
@@ -70,7 +70,10 @@ export default function App() {
           />
 
           {/* Service Pages */}
-          <Route path="/servis/nounik/:no_polisi" element={<ServiceKendaraan />} />
+          <Route
+            path="/servis/nounik/:no_polisi"
+            element={<ServiceKendaraan />}
+          />
           <Route
             path="/service-alat-berat/:id"
             element={<ServiceAlatBerat />}

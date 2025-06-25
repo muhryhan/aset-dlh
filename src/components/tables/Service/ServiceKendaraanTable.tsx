@@ -20,8 +20,8 @@ import ExcelButton from "../../ui/button/ExcelBtn";
 import PDFButton from "../../ui/button/PdfBtn";
 import SearchInput from "../../ui/search/Search";
 
-import ServisKendaraanFormInputModal from "../../../pages/Modals/ServisKendaraanInputModal";
-import api from "../../../../services/api";
+import ServisKendaraanFormInputModal from "../../modals/ServisKendaraanInput";
+import api from "../../../services/api";
 
 interface Onderdil {
   id_onderdil: number;
@@ -41,7 +41,7 @@ export interface ServisKendaraanData {
   onderdil: Onderdil[];
 }
 
-export default function ServisKendaraan() {
+export default function ServiceKendaraanTable() {
   const { no_polisi } = useParams<{ no_polisi: string }>();
   const [servisData, setServisData] = useState<ServisKendaraanData[]>([]);
   const [search, setSearch] = useState("");

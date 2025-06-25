@@ -12,7 +12,7 @@ import ExcelButton from "../../ui/button/ExcelBtn";
 import PDFButton from "../../ui/button/PdfBtn";
 import SearchInput from "../../ui/search/Search";
 import RowsSelector from "../../ui/rowsSelector/rowsSelector";
-import ServisAlatBeratFormInputModal from "../../../pages/Modals/ServisAlatBeratInputModal";
+import ServisAlatBeratFormInputModal from "../../modals/ServisAlatBeratInputModal";
 
 interface ServisData {
   id: number;
@@ -222,7 +222,8 @@ export default function ServisAlatBerat() {
                   <TableCell className="px-5 py-3 text-gray-500 text-start text-theme-xs dark:text-gray-400">
                     Rp{" "}
                     {(
-                      ServisAlatBerat.biayaServis + ServisAlatBerat.jumlah * ServisAlatBerat.harga
+                      ServisAlatBerat.biayaServis +
+                      ServisAlatBerat.jumlah * ServisAlatBerat.harga
                     ).toLocaleString("id-ID")}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">

@@ -21,8 +21,8 @@ import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
-import AlatKerjaFormInputModal from "../../pages/Modals/AlatKerjaInputModal";
-import api from "../../../services/api";
+import AlatKerjaFormInputModal from "../modals/AlatKerjaInput";
+import api from "../../services/api";
 import { Link } from "react-router-dom";
 
 type AlatKerjaData = {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import Button from "../ui/button/Button";
-import api from "../../../services/api";
+import api from "../../services/api";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,15 +24,15 @@ export default function UserDropdown() {
   }
 
   function getCookieValue(name: string): string | null {
-  const cookies = document.cookie.split("; ");
-  for (const cookie of cookies) {
-    const [key, value] = cookie.split("=");
-    if (key === name) {
-      return decodeURIComponent(value);
+    const cookies = document.cookie.split("; ");
+    for (const cookie of cookies) {
+      const [key, value] = cookie.split("=");
+      if (key === name) {
+        return decodeURIComponent(value);
+      }
     }
+    return null;
   }
-  return null;
-}
 
   return (
     <div className="relative">

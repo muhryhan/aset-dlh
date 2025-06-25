@@ -1,5 +1,61 @@
 # Pendataan Aset Dinas Lingkungan Hidup Kota Palu
 
+ASET-DLH
+├── node_modules
+├── public
+│ └── images/
+├── src
+│ ├── components
+│ │ ├── auth/
+│ │ ├── cards/
+│ │ ├── common/
+│ │ ├── form/
+│ │ ├── formDisable/
+│ │ ├── formInput/
+│ │ ├── header/
+│ │ ├── loading/
+│ │ ├── modals/
+│ │ ├── scan/
+│ │ ├── tables/
+│ │ ├── ui/
+│ │ └── UserProfile/
+│ ├── config/
+│ ├── context/
+│ ├── handler/
+│ ├── hooks/
+│ ├── icons/
+│ ├── layout/
+│ │ ├── AppHeader.tsx
+│ │ ├── AppLayout.tsx
+│ │ ├── AppSidebar.tsx
+│ │ └── Backdrop.tsx
+│ ├── pages/
+│ ├── routes/
+│ ├── services/
+│ ├── types/
+│ ├── utils/
+│ ├── App.tsx
+│ ├── main.tsx
+│ ├── index.css
+│ ├── protectedRoute.tsx
+│ ├── svg.d.ts
+│ └── vite-env.d.ts
+├── .env
+├── .gitattributes
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── license.md
+├── package-lock.json
+├── package.json
+├── postcss.config.json
+├── README.md
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
@@ -40,7 +96,7 @@ Use the built-in continuous integration in GitLab.
 - [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
 - [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
-***
+---
 
 ## Overview
 
@@ -51,6 +107,7 @@ TailAdmin provides essential UI components and layouts for building feature-rich
 - Tailwind CSS
 
 ### Quick Links
+
 - [✨ Visit Website](https://tailadmin.com)
 - [📄 Documentation](https://tailadmin.com/docs)
 - [⬇️ Download](https://tailadmin.com/download)
@@ -58,19 +115,21 @@ TailAdmin provides essential UI components and layouts for building feature-rich
 - [⚡ Get PRO Version](https://tailadmin.com/pricing)
 
 ### Other Versions
+
 - [HTML Version](https://github.com/TailAdmin/tailadmin-free-tailwind-dashboard-template)
 - [Next.js Version](https://github.com/TailAdmin/free-nextjs-admin-dashboard)
 - [Vue.js Version](https://github.com/TailAdmin/vue-tailwind-admin-dashboard)
 
-
 ## Installation
 
 ### Prerequisites
+
 To get started with TailAdmin, ensure you have the following prerequisites installed and set up:
 
 - Node.js 18.x or later (recommended to use Node.js 20.x or later)
 
 ### Cloning the Repository
+
 Clone the repository using the following command:
 
 ```bash
@@ -80,21 +139,23 @@ git clone https://github.com/TailAdmin/free-react-tailwind-admin-dashboard.git
 > Windows Users: place the repository near the root of your drive if you face issues while cloning.
 
 1. Install dependencies:
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
-    > On `npm` some included packages can cause peer-deps issue with React 18 while installing.
-    >
-    > Use the `--legacy-peer-deps` flag, at the end of the installation command, as a workaround for that.
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+   > On `npm` some included packages can cause peer-deps issue with React 18 while installing.
+   >
+   > Use the `--legacy-peer-deps` flag, at the end of the installation command, as a workaround for that.
 
 2. Start the development server:
-    ```bash
-    npm run dev
-    # or
-    yarn dev
-    ```
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
 ## Components
 

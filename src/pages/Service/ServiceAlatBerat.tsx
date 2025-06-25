@@ -1,12 +1,12 @@
-import ComponentCard from "../../components/common/ComponentCard"
-import PageBreadcrumb from "../../components/common/PageBreadCrumb"
-import PageMeta from "../../components/common/PageMeta"
-import TableServiceAlatBerat from "../../components/tables/Service/ServiceAlatBeratTable"
-import FormAlatBerat from "../../components/formDisable/AlatBerat"
+import ComponentCard from "../../components/common/ComponentCard";
+import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import PageMeta from "../../components/common/PageMeta";
+import TableServiceAlatBerat from "../../components/tables/Service/ServiceAlatBeratTable";
+import FormAlatBerat from "../../components/form/form-disable/AlatBerat";
 
-export default function ServiceAlatBerat () {
-    return (
-        <>
+export default function ServiceAlatBerat() {
+  return (
+    <>
       <PageMeta
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
@@ -21,5 +21,5 @@ export default function ServiceAlatBerat () {
         </ComponentCard>
       </div>
     </>
-    )
+  );
 }

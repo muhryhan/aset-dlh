@@ -1,39 +1,43 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../../services/api"; // pastikan ini menunjuk ke file api.ts yang kamu buat
+import api from "../../services/api";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon, QRIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
-import Checkbox from "../form/input/Checkbox";
 import Button from "../ui/button/Button";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await api.post("/api/login", {
-        username,
-        password,
-      });
 
+    if (!username || !password) {
+      alert("Nama pengguna dan kata sandi wajib diisi.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await api.post("/api/login", { username, password });
       const { token, id_user } = response.data;
 
-      // Simpan ke cookie
-      document.cookie = `token=${token}`;
-      document.cookie = `id_user=${id_user}`;
-      document.cookie = `username=${username}`;
+      // Simpan token ke cookie dengan opsi dasar (NOTE: masih raw; pakai httpOnly dari server jika memungkinkan)
+      document.cookie = `token=${token}; path=/;`;
+      document.cookie = `id_user=${id_user}; path=/;`;
+      document.cookie = `username=${username}; path=/;`;
 
-      // Redirect ke home
       navigate("/home");
-    } catch (error) {
-      console.error("Login gagal:", error.response?.data || error.message);
-      alert("Login gagal. Silakan cek kembali username dan password.");
+    } catch (err) {
+      console.error("Login gagal:", err);
+      alert("Login gagal. Silakan cek kembali username dan kata sandi.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,6 +52,7 @@ export default function SignInForm() {
           Kembali ke beranda
         </Link>
       </div>
+
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
           <div className="flex justify-center mb-6">
@@ -74,9 +79,11 @@ export default function SignInForm() {
                 <Input
                   placeholder="Masukkan nama anda..."
                   value={username}
-                  onChange={(e: any) => setUsername(e.target.value)}
+                  onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
                 />
               </div>
+
               <div>
                 <Label>
                   Kata Sandi <span className="text-error-500">*</span>
@@ -86,11 +93,12 @@ export default function SignInForm() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Masukkan kata sandi anda..."
                     value={password}
-                    onChange={(e: any) => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
                   />
                   <span
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute z-99 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute z-10 -translate-y-1/2 cursor-pointer right-4 top-1/2"
                   >
                     {showPassword ? (
                       <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
@@ -100,17 +108,15 @@ export default function SignInForm() {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Checkbox checked={isChecked} onChange={setIsChecked} />
-                  <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
-                    Tetap masuk
-                  </span>
-                </div>
-              </div>
+
               <div>
-                <Button className="w-full" size="sm" type="submit">
-                  Masuk
+                <Button
+                  className="w-full"
+                  size="sm"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? "Memproses..." : "Masuk"}
                 </Button>
               </div>
             </div>

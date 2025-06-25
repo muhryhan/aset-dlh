@@ -21,8 +21,8 @@ import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
-import TanamanFormInputModal from "../../pages/Modals/TumbuhanInputModal";
-import api from "../../../services/api";
+import TanamanFormInputModal from "../modals/TumbuhanInput";
+import api from "../../services/api";
 import { Link } from "react-router-dom";
 
 type TanamanData = {
@@ -197,46 +197,49 @@ export default function Tumbuhan() {
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {filteredData.length > 0 ? (
                 filteredData.map((item) => (
-                <TableRow key={item.id_tanaman}>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <Link
-                      to={`http://localhost:3000/uploads/tanaman/${item.gambar}`}
-                    >
-                      Lihat
-                    </Link>
-                  </TableCell>
+                  <TableRow key={item.id_tanaman}>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:3000/uploads/tanaman/${item.gambar}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.nama}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.nama}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.jenis}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.jenis}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.stok}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.stok}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.keterangan}
-                  </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.keterangan}
+                    </TableCell>
 
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <DistributionButton
-                        onClick={() =>
-                          navigate(`/distribusi-tumbuhan/${item.id_tanaman}`)
-                        }
-                      />
-                      <EditButton onClick={() => handleEdit(item.id_tanaman)} />
-                      <DeleteButton
-                        onClick={() => handleDelete(item.id_tanaman)}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))) : (
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <DistributionButton
+                          onClick={() =>
+                            navigate(`/distribusi-tumbuhan/${item.id_tanaman}`)
+                          }
+                        />
+                        <EditButton
+                          onClick={() => handleEdit(item.id_tanaman)}
+                        />
+                        <DeleteButton
+                          onClick={() => handleDelete(item.id_tanaman)}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
                   <TableCell className="text-center py-5 text-gray-500">
                     Tidak ada data yang ditemukan.

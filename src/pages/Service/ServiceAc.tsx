@@ -1,12 +1,12 @@
-import ComponentCard from "../../components/common/ComponentCard"
-import PageBreadcrumb from "../../components/common/PageBreadCrumb"
-import PageMeta from "../../components/common/PageMeta"
-import TableServiceAc from "../../components/tables/Service/ServiceAcTable"
-import FormAc from "../../components/formDisable/Ac"
+import ComponentCard from "../../components/common/ComponentCard";
+import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import PageMeta from "../../components/common/PageMeta";
+import TableServiceAc from "../../components/tables/Service/ServiceAcTable";
+import FormAc from "../../components/form/form-disable/Ac";
 
-export default function ServiceAc () {
-    return (
-        <>
+export default function ServiceAc() {
+  return (
+    <>
       <PageMeta
         title="Riwayat Servis AC"
         description="Halaman Riwayat Servis AC"
@@ -21,5 +21,5 @@ export default function ServiceAc () {
         </ComponentCard>
       </div>
     </>
-    )
+  );
 }

@@ -6,6 +6,7 @@ interface ButtonProps {
   variant?: "primary" | "outline" | "warning" | "danger"; // Button variant
   startIcon?: ReactNode; // Icon before the text
   endIcon?: ReactNode; // Icon after the text
+  type?: "button" | "submit" | "reset";
   onClick?: () => void; // Click handler
   disabled?: boolean; // Disabled state
   className?: string; // Disabled state

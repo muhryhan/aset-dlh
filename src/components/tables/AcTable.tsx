@@ -21,8 +21,8 @@ import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";
-import AcFormInputModal from "../../pages/Modals/AcInputModal";
-import api from "../../../services/api";
+import AcFormInputModal from "../modals/AcInput";
+import api from "../../services/api";
 import { Link } from "react-router-dom";
 
 type AcData = {
@@ -50,18 +50,17 @@ export default function TableAc() {
 
   const navigate = useNavigate();
 
-  
-    const fetchData = async () => {
-      try {
-        const response = await api.get("/api/ac"); // url sementara
-        setAcData(response.data.data);
-      } catch (err) {
-        console.error("Gagal mengambil data ac:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await api.get("/api/ac"); // url sementara
+      setAcData(response.data.data);
+    } catch (err) {
+      console.error("Gagal mengambil data ac:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -161,15 +160,15 @@ export default function TableAc() {
         <div className="flex gap-2 items-center">
           <AddButton onClick={() => setIsModalOpen(true)} />
           {isModalOpen && (
-                      <AcFormInputModal
-                        isOpen={isModalOpen}
-                        onClose={() => setIsModalOpen(false)}
-                        onSuccess={() => {
-                          setIsModalOpen(false);
-                          fetchData();
-                        }}
-                      />
-                    )}
+            <AcFormInputModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onSuccess={() => {
+                setIsModalOpen(false);
+                fetchData();
+              }}
+            />
+          )}
           <RowsSelector value={rows} onChange={setRows} />
         </div>
         <div className="flex gap-2 items-center">
@@ -268,66 +267,67 @@ export default function TableAc() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {filteredData.length > 0 ? (
+              {filteredData.length > 0 ? (
                 filteredData.map((item) => (
-                <TableRow key={item.id_ac}>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <Link
-                      to={`http://localhost:3000/static/uploads/ac/qrcode/${item.qrcode}`}
-                    >
-                      Lihat
-                    </Link>
-                  </TableCell>
-                  <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                    <Link
-                      to={`http://localhost:3000/static/uploads/ac/${item.gambar}`}
-                    >
-                      Lihat
-                    </Link>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.merek}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.no_registrasi}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.no_serial}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.ukuran}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.ruangan}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.asal}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.tahun_pembelian}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    Rp {item.harga_pembelian.toLocaleString("id-ID")}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.kondisi}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {item.keterangan}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <ServiceButton
-                        onClick={() => navigate(`/service-ac/${item.id_ac}`)}
-                      />
-                      <EditButton onClick={() => handleEdit(item.id_ac)} />
-                      <DeleteButton
-                        onClick={() => handleDelete(item.id_ac)}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))) : (
+                  <TableRow key={item.id_ac}>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:3000/static/uploads/ac/qrcode/${item.qrcode}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
+                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
+                      <Link
+                        to={`http://localhost:3000/static/uploads/ac/${item.gambar}`}
+                      >
+                        Lihat
+                      </Link>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.merek}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.no_registrasi}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.no_serial}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.ukuran}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.ruangan}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.asal}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.tahun_pembelian}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      Rp {item.harga_pembelian.toLocaleString("id-ID")}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.kondisi}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {item.keterangan}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <ServiceButton
+                          onClick={() => navigate(`/service-ac/${item.id_ac}`)}
+                        />
+                        <EditButton onClick={() => handleEdit(item.id_ac)} />
+                        <DeleteButton
+                          onClick={() => handleDelete(item.id_ac)}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
                   <TableCell className="text-center py-5 text-gray-500">
                     Tidak ada data yang ditemukan.
