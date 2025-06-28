@@ -1,4 +1,4 @@
-import AcFormInput from "../form/form-input/AcFormInput";
+import AcFormInput from "../form/form-input/AcForm";
 import PageMeta from "../common/PageMeta";
 import { FaTimes } from "react-icons/fa";
 

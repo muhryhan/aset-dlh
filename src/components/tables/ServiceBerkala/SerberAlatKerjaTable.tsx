@@ -5,10 +5,10 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import { EditButton } from "../../ui/button/ActionBtn";
+import { EditButton,
+  ExcelButton,
+  PDFButton, } from "../../ui/button/ActionButton";
 import { useState } from "react";
-import ExcelButton from "../../ui/button/ExcelBtn";
-import PDFButton from "../../ui/button/PdfBtn";
 import SearchInput from "../../ui/search/Search";
 import RowsSelector from "../../ui/rowsSelector/rowsSelector";
 

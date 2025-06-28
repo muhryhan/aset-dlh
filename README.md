@@ -17,12 +17,19 @@ ASET-DLH
 │ │ ├── modals/
 │ │ ├── scan/
 │ │ ├── tables/
+│ │ │ └──service
+│ │ │  ├── ServiceKendaraanTable.tsx
+│ │ └── AssetTable (karena semua tabel fungsinya sama, maka diapakaikan ini)
 │ │ ├── ui/
 │ │ └── UserProfile/
 │ ├── config/
 │ ├── context/
 │ ├── handler/
+│ │ └── handleExportExcel
+│ │ └── handleExportPdf
 │ ├── hooks/
+│ │ └── usePagination
+│ │ └── useFetch
 │ ├── icons/
 │ ├── layout/
 │ │ ├── AppHeader.tsx
@@ -30,10 +37,13 @@ ASET-DLH
 │ │ ├── AppSidebar.tsx
 │ │ └── Backdrop.tsx
 │ ├── pages/
+│ │ └──service
+│ │  ├── ServiceKendaraan.tsx
 │ ├── routes/
 │ ├── services/
 │ ├── types/
 │ ├── utils/
+│ │ └── dateUtils
 │ ├── App.tsx
 │ ├── main.tsx
 │ ├── index.css

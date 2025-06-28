@@ -1,4 +1,4 @@
-import AlatKerjaFormInput from "../form/form-input/AlatKerjaFormInput";
+import AlatKerjaFormInput from "../form/form-input/AlatKerjaForm";
 import PageMeta from "../common/PageMeta";
 import { FaTimes } from "react-icons/fa";
 

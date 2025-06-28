@@ -5,10 +5,12 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import { EditButton } from "../../ui/button/ActionBtn";
+import {
+  EditButton,
+  ExcelButton,
+  PDFButton,
+} from "../../ui/button/ActionButton";
 import { useState } from "react";
-import ExcelButton from "../../ui/button/ExcelBtn";
-import PDFButton from "../../ui/button/PdfBtn";
 import SearchInput from "../../ui/search/Search";
 import RowsSelector from "../../ui/rowsSelector/rowsSelector";
 
@@ -35,10 +37,11 @@ export default function SerberAc() {
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState(5);
 
-  const filteredData = tableData.filter((SerberAc) =>
-    SerberAc.noRegistrasi.toLowerCase().includes(search.toLowerCase())
-  )
-  .slice(0, rows);
+  const filteredData = tableData
+    .filter((SerberAc) =>
+      SerberAc.noRegistrasi.toLowerCase().includes(search.toLowerCase())
+    )
+    .slice(0, rows);
 
   const handleExportExcel = () => console.log("Export ke Excel Servis");
   const handleExportPDF = () => console.log("Export ke PDF Servis");

@@ -13,7 +13,7 @@ export function usePagination<T>(data: T[], itemsPerPage: number = 10) {
   const getPageNumbers = () => {
     const visiblePages = 3;
     let start = Math.max(1, currentPage - 1);
-    let end = Math.min(start + visiblePages - 1, totalPages);
+    const end = Math.min(start + visiblePages - 1, totalPages);
 
     if (end - start < visiblePages - 1) {
       start = Math.max(1, end - visiblePages + 1);

@@ -1,4 +1,4 @@
-import TumbuhanFormInput from "../form/form-input/TumbuhanFormInput";
+import TumbuhanFormInput from "../form/form-input/service/ServiceTumbuhanForm";
 import PageMeta from "../common/PageMeta";
 import { FaTimes } from "react-icons/fa";
 

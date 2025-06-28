@@ -9,11 +9,11 @@ import {
   ServiceButton,
   EditButton,
   DeleteButton,
-} from "../ui/button/ActionBtn";
+  AddButton,
+  ExcelButton,
+  PDFButton,
+} from "../ui/button/ActionButton";
 import { useState } from "react";
-import AddButton from "../ui/button/AddBtn";
-import ExcelButton from "../ui/button/ExcelBtn";
-import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";

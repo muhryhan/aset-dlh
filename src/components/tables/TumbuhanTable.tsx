@@ -9,15 +9,15 @@ import {
   DistributionButton,
   EditButton,
   DeleteButton,
-} from "../ui/button/ActionBtn";
+  AddButton,
+  ExcelButton,
+  PDFButton,
+} from "../ui/button/ActionButton";
 import { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import AddButton from "../ui/button/AddBtn";
-import ExcelButton from "../ui/button/ExcelBtn";
-import PDFButton from "../ui/button/PdfBtn";
 import SearchInput from "../ui/search/Search";
 import RowsSelector from "../ui/rowsSelector/rowsSelector";
 import { useNavigate } from "react-router-dom";

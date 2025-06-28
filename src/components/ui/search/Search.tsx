@@ -12,7 +12,7 @@ const SearchInput: React.FC<Props> = ({ value, onChange }) => (
     placeholder="Cari... "
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    className="border border-gray-300 rounded px-3 py-1 text-theme-sm dark:bg-gray-800 dark:text-white"
+    className="border border-gray-300 rounded px-3 py-1 text-theme-sm dark:bg-gray-800 dark:text-white w-80 h-10"
   />
 );
 

@@ -1,4 +1,4 @@
-import KendaraanFormInput from "../form/form-input/KendaraanForm";
+import KendaraanForm from "../form/form-input/KendaraanForm";
 import PageMeta from "../common/PageMeta";
 import { FaTimes } from "react-icons/fa";
 import { KendaraanData } from "../../types/kendaraan";
@@ -33,7 +33,7 @@ export default function KendaraanInput({
         </div>
 
         <div className="overflow-y-auto px-6 pb-6 bg-white dark:bg-gray-800">
-          <KendaraanFormInput onSuccess={onSuccess} initialData={initialData} />
+          <KendaraanForm onSuccess={onSuccess} initialData={initialData} />
         </div>
       </div>
     </div>

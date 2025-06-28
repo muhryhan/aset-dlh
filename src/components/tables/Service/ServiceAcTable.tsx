@@ -5,14 +5,17 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import { EditButton, DeleteButton } from "../../ui/button/ActionBtn";
+import {
+  EditButton,
+  DeleteButton,
+  AddButton,
+  ExcelButton,
+  PDFButton,
+} from "../../ui/button/ActionButton";
 import { useState } from "react";
-import AddButton from "../../ui/button/AddBtn";
-import ExcelButton from "../../ui/button/ExcelBtn";
-import PDFButton from "../../ui/button/PdfBtn";
 import SearchInput from "../../ui/search/Search";
 import RowsSelector from "../../ui/rowsSelector/rowsSelector";
-import ServisAcFormInputModal from "../../modals/ServisAcInputModal";
+import ServisAcFormInputModal from "../../modals/service/ServiceAcInput";
 
 interface ServisData {
   id: number;

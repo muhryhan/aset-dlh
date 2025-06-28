@@ -1,6 +1,5 @@
 import type React from "react";
 import type { FC } from "react";
-
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
   id?: string;
@@ -17,7 +16,6 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
   hint?: string;
 }
-
 const Input: FC<InputProps> = ({
   type = "text",
   id,
@@ -46,7 +44,6 @@ const Input: FC<InputProps> = ({
   } else {
     inputClasses += ` bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800`;
   }
-
   return (
     <div className="relative">
       <input
@@ -63,7 +60,6 @@ const Input: FC<InputProps> = ({
         className={inputClasses}
         {...rest}
       />
-
       {hint && (
         <p
           className={`mt-1.5 text-xs ${
@@ -80,5 +76,4 @@ const Input: FC<InputProps> = ({
     </div>
   );
 };
-
 export default Input;
