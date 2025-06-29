@@ -72,7 +72,7 @@ export default function KendaraanTable() {
   };
 
   const handleDelete = async (id_alatberat: number) => {
-    if (confirm("Yakin ingin menghapus kendaraan ini?")) {
+    if (confirm("Yakin ingin menghapus alat berat ini?")) {
       try {
         await api.delete(`/api/alatberat/${id_alatberat}`);
         setData((prev) =>

@@ -125,7 +125,7 @@ export default function ServiceAlatBeratForm({
   };
 
   return (
-    <ComponentCard title="Form Input Servis Kendaraan">
+    <ComponentCard title="Form Input Servis Alat Berat">
       {alertMessage && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-1/2 z-50">
           <Alert

@@ -1,10 +1,13 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useSearch } from "../../hooks/useSearch";
+import { usePagination } from "../../hooks/usePagination";
+import { useFetch } from "../../hooks/useFetch";
+import { handleExportExcel } from "../../handler/handleExportExcel";
+import { handleExportPdf } from "../../handler/handleExportPdf";
+
+import SearchInput from "../ui/search/Search";
 import {
   ServiceButton,
   EditButton,
@@ -13,68 +16,62 @@ import {
   ExcelButton,
   PDFButton,
 } from "../ui/button/ActionButton";
-import { useState, useEffect } from "react";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import SearchInput from "../ui/search/Search";
-import RowsSelector from "../ui/rowsSelector/rowsSelector";
-import { useNavigate } from "react-router-dom";
-import AlatKerjaFormInputModal from "../modals/AlatKerjaInput";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+
 import api from "../../services/api";
-import { Link } from "react-router-dom";
+import AlatKerjaInput from "../modals/AlatKerjaInput";
+import { AlatKerjaData } from "../../types/alatKerja";
 
-type AlatKerjaData = {
-  id_alatkerja: number;
-  qrcode: string;
-  gambar: string;
-  merek: string;
-  no_registrasi: string;
-  no_serial: string;
-  asal: string;
-  tahun_pembelian: number;
-  harga_pembelian: number;
-  kondisi: string;
-  keterangan: string;
-};
+export default function KendaraanTable() {
+  const { no_registrasi } = useParams<{ no_registrasi: string }>();
+  const { data, setData, loading, fetchData } =
+    useFetch<AlatKerjaData>("/api/alatkerja");
 
-export default function AlatKerja() {
-  const [alatKerjaData, setAlatKerjaData] = useState<AlatKerjaData[]>([]);
-  const [search, setSearch] = useState("");
-  const [rows, setRows] = useState(5);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { search, setSearch, filtered } = useSearch(
+    data,
+    (item, query) =>
+      item.merek.toLowerCase().includes(query) ||
+      item.no_registrasi.toLowerCase().includes(query) ||
+      item.kondisi.toLowerCase().includes(query) ||
+      item.tahun_pembelian.toString().includes(query)
+  );
+
+  const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+
+  const {
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    paginatedData,
+    getPageNumbers,
+  } = usePagination(filtered);
 
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selected, setSelected] = useState<AlatKerjaData | null>(null);
 
-  const fetchData = async () => {
+  const handleEdit = async (no_registrasi: string) => {
     try {
-      const response = await api.get("/api/alatkerja");
-      setAlatKerjaData(response.data.data);
+      const res = await api.get(`/api/alatkerja/${no_registrasi}`);
+      setSelected(res.data.data);
+      setIsModalOpen(true);
     } catch (err) {
-      console.error("Gagal mengambil data alat kerja:", err);
-    } finally {
-      setLoading(false);
+      console.error("Gagal fetch data untuk edit:", err);
     }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const filteredData = alatKerjaData
-    .filter((item) => item.merek.toLowerCase().includes(search.toLowerCase()))
-    .slice(0, rows);
-
-  const handleEdit = (id_alatkerja: number) => {
-    navigate(`/edit-alatkerja/${id_alatkerja}`);
   };
 
   const handleDelete = async (id_alatkerja: number) => {
-    if (confirm("Yakin ingin menghapus alat kerja ini?")) {
+    if (confirm("Yakin ingin menghapus kendaraan ini?")) {
       try {
         await api.delete(`/api/alatkerja/${id_alatkerja}`);
-        setAlatKerjaData((prev) =>
+        setData((prev) =>
           prev.filter((item) => item.id_alatkerja !== id_alatkerja)
         );
       } catch (err) {
@@ -83,250 +80,211 @@ export default function AlatKerja() {
     }
   };
 
-  const handleExportExcel = () => {
-    const data = filteredData.map((item) => ({
-      "QR Code": item.qrcode,
-      Gambar: item.gambar,
-      Merek: item.merek,
-      "No. Registrasi": item.no_registrasi,
-      "No. Serial": item.no_serial,
-      Asal: item.asal,
-      "Tahun Pembuatan": item.tahun_pembelian,
-      "Harga Pembelian": item.harga_pembelian,
-      Kondisi: item.kondisi,
-      Keterangan: item.keterangan,
-    }));
+  const columns = [
+    {
+      header: "QR Code",
+      accessor: (d: AlatKerjaData) => (
+        <a
+          href={`${BASE_URL}/static/uploads/alatKerja/qrcode/${d.qrcode}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 underline"
+        >
+          Lihat
+        </a>
+      ),
+    },
+    {
+      header: "Gambar",
+      accessor: (d: AlatKerjaData) => (
+        <a
+          href={`${BASE_URL}/static/uploads/alatKerja/${d.gambar}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 underline"
+        >
+          Lihat
+        </a>
+      ),
+    },
+    { header: "Merek", accessor: (d: AlatKerjaData) => d.merek },
+    {
+      header: "No. Registrasi",
+      accessor: (d: AlatKerjaData) => d.no_registrasi,
+    },
+    { header: "No. Serial", accessor: (d: AlatKerjaData) => d.no_serial },
+    { header: "Asal", accessor: (d: AlatKerjaData) => d.asal },
+    {
+      header: "Tahun Pembelian",
+      accessor: (d: AlatKerjaData) => d.tahun_pembelian,
+    },
+    {
+      header: "Harga Pembelian",
+      accessor: (d: AlatKerjaData) =>
+        `Rp ${d.harga_pembelian.toLocaleString("id-ID")}`,
+    },
+    { header: "Kondisi", accessor: (d: AlatKerjaData) => d.kondisi },
+    { header: "Keterangan", accessor: (d: AlatKerjaData) => d.keterangan },
+  ];
 
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Alat Kerja");
-
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-    const fileData = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-
-    saveAs(fileData, "data-alatkerja.xlsx");
-  };
-
-  const handleExportPDF = () => {
-    const doc = new jsPDF();
-
-    const tableColumn = [
-      "QR Code",
-      "Merek",
-      "No. Registrasi",
-      "No. Serial",
-      "Asal",
-      "Tahun Pembelian",
-      "Harga Pembelian",
-      "Kondisi",
-      "Keterangan",
-    ];
-
-    const tableRows = filteredData.map((item) => [
-      item.qrcode,
-      item.merek,
-      item.no_registrasi,
-      item.no_serial,
-      item.asal,
-      `Rp ${item.harga_pembelian.toLocaleString("id-ID")}`,
-      item.harga_pembelian,
-      item.kondisi,
-      item.keterangan,
-    ]);
-
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-      styles: { fontSize: 8 },
-    });
-
-    doc.save("data-alatkerja.pdf");
-  };
+  const exportHeaders = columns.map((col) => col.header);
+  const exportRows = filtered.map((row) =>
+    columns.map((col) => col.accessor(row))
+  );
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between">
         <div className="flex gap-2 items-center">
-          <AddButton onClick={() => setIsModalOpen(true)} />
-          {isModalOpen && (
-            <AlatKerjaFormInputModal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              onSuccess={() => {
-                setIsModalOpen(false);
-                fetchData();
-              }}
-            />
-          )}
-          <RowsSelector value={rows} onChange={setRows} />
+          <AddButton
+            onClick={() => {
+              setSelected(null);
+              setIsModalOpen(true);
+            }}
+          />
         </div>
         <div className="flex gap-2 items-center">
           <SearchInput value={search} onChange={setSearch} />
-          <ExcelButton onClick={handleExportExcel} />
-          <PDFButton onClick={handleExportPDF} />
+          <ExcelButton
+            onClick={() =>
+              handleExportExcel(exportRows, `servis-${no_registrasi ?? "umum"}`)
+            }
+          />
+          <PDFButton
+            onClick={() =>
+              handleExportPdf(
+                exportHeaders,
+                exportRows,
+                `servis-${no_registrasi ?? "umum"}`
+              )
+            }
+          />
         </div>
       </div>
-      {loading && <p className="p-4 text-gray-500">Loading data...</p>}
-      <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1102px]">
-          <Table>
-            {/* Table Header */}
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  QR Code
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Gambar
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Merek
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  No Registrasi
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  No Serial
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Asal
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Tahun Pembelian
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Harga Pembelian
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Kondisi
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Keterangan
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Aksi
-                </TableCell>
-              </TableRow>
-            </TableHeader>
 
-            {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {filteredData.length > 0 ? (
-                filteredData.map((item) => (
-                  <TableRow key={item.id_alatkerja}>
-                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                      <Link
-                        to={`http://localhost:3000/static/uploads/alat-kerja/qrcode/${item.qrcode}`}
-                      >
-                        Lihat
-                      </Link>
-                    </TableCell>
-                    <TableCell className="px-5 py-3 text-theme-xs font-medium text-gray-600 dark:text-gray-400">
-                      <Link
-                        to={`http://localhost:3000/static/uploads/alat-kerja/${item.gambar}`}
-                      >
-                        Lihat
-                      </Link>
-                    </TableCell>
+      {isModalOpen && (
+        <AlatKerjaInput
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={() => {
+            setIsModalOpen(false);
+            fetchData();
+          }}
+          initialData={selected ?? undefined}
+        />
+      )}
 
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {item.merek}
-                    </TableCell>
-
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {item.no_registrasi}
-                    </TableCell>
-
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {item.no_serial}
-                    </TableCell>
-
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {item.asal}
-                    </TableCell>
-
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {item.tahun_pembelian}
-                    </TableCell>
-
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Rp {item.harga_pembelian.toLocaleString("id-ID")}
-                    </TableCell>
-
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {item.kondisi}
-                    </TableCell>
-
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {item.keterangan}
-                    </TableCell>
-
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      <div className="flex items-center gap-2">
-                        <ServiceButton
-                          onClick={() =>
-                            navigate(`/service-alat-kerja/${item.id_alatkerja}`)
-                          }
-                        />
-                        <EditButton
-                          onClick={() => handleEdit(item.id_alatkerja)}
-                        />
-                        <DeleteButton
-                          onClick={() => handleDelete(item.id_alatkerja)}
-                        />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
+      {loading ? (
+        <p className="p-4 text-gray-500 dark:tekt-white">Loading data...</p>
+      ) : (
+        <div className="max-w-full overflow-x-auto">
+          <div className="min-w-[1102px]">
+            <Table>
+              {/* Table Header */}
+              <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                 <TableRow>
-                  <TableCell className="text-center py-5 text-gray-500">
-                    Tidak ada data yang ditemukan.
+                  {columns.map((col, idx) => (
+                    <TableCell
+                      key={idx}
+                      isHeader
+                      className="px-5 py-3 font-bold text-center text-theme-sm text-gray-700 dark:text-gray-400"
+                    >
+                      {col.header}
+                    </TableCell>
+                  ))}
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-bold text-center text-theme-sm text-gray-700 dark:text-gray-400"
+                  >
+                    Aksi
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+
+              {/* Table Body */}
+              <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                {paginatedData.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length + 1}
+                      className="text-center text-gray-400 italic py-4"
+                    >
+                      Tidak ada data
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  paginatedData.map((item) => (
+                    <TableRow key={item.id_alatkerja}>
+                      {columns.map((col, idx) => (
+                        <TableCell
+                          key={idx}
+                          className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400"
+                        >
+                          {col.accessor(item)}
+                        </TableCell>
+                      ))}
+                      <TableCell className="px-5 py-3 text-center text-theme-sm font-medium text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center justify-center gap-2">
+                          <ServiceButton
+                            onClick={() =>
+                              navigate(
+                                `/servis/alatkerja/nounik/${encodeURIComponent(
+                                  item.no_registrasi
+                                )}`
+                              )
+                            }
+                          />
+                          <EditButton
+                            onClick={() => handleEdit(item.no_registrasi)}
+                          />
+                          <DeleteButton
+                            onClick={() => handleDelete(item.id_alatkerja)}
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-4 items-center">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-2 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50 mr-5"
+              >
+                &lt;
+              </button>
+              <div className="flex space-x-1">
+                {getPageNumbers().map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-3 py-1 rounded ${
+                      currentPage === page
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(p + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="px-2 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50 ml-5"
+              >
+                &gt;
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

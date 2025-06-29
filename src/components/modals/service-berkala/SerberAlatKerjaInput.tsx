@@ -1,29 +1,29 @@
-import ServiceAlatBeratForm from "../../form/form-input/service/ServiceAlatBeratForm";
+import SerberAlatKerjaForm from "../../form/form-input/service-berkala/SerberAlatKerjaForm";
 import PageMeta from "../../common/PageMeta";
 import { FaTimes } from "react-icons/fa";
-import { ServisData } from "../../../types/service";
+import { SerberAlatKerjaData } from "../../../types/serberAlatKerja";
 
-interface ServisAlatBeratInputModalProps {
+interface SerberAlatKerjaModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
   no_registrasi?: string;
-  initialData?: Partial<ServisData>;
+  initialData?: Partial<SerberAlatKerjaData>;
 }
 
-export default function ServiceAlatBeratInput({
+export default function SerberAlatKerjaInput({
   isOpen,
   onClose,
   onSuccess,
   initialData,
   no_registrasi,
-}: ServisAlatBeratInputModalProps) {
+}: SerberAlatKerjaModalProps) {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 p-4">
       <PageMeta
-        title="Input Data Servis Alat Berat"
-        description="Halaman Input Data Servis Alat Berat"
+        title="Ubah Data Servis Berkala Alat Berat"
+        description="Halaman Ubah Data Servis Berkala Alat Berat"
       />
 
       {/* Modal box */}
@@ -36,7 +36,7 @@ export default function ServiceAlatBeratInput({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6 bg-white dark:bg-gray-800">
-          <ServiceAlatBeratForm
+          <SerberAlatKerjaForm
             no_registrasi={no_registrasi}
             onSuccess={onSuccess}
             initialData={initialData}
