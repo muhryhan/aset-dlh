@@ -18,10 +18,10 @@ import ServiceKendaraan from "./pages/Service/ServiceKendaraan";
 import ServiceAlatBerat from "./pages/Service/ServiceAlatBerat";
 import ServiceAlatKerja from "./pages/Service/ServiceAlatKerja";
 import ServiceAc from "./pages/Service/ServiceAc";
-import PeriodicKendaraan from "./pages/ServiceBerkala/SerberKendaraan";
-import PeriodicAlatBerat from "./pages/ServiceBerkala/SerberAlatBerat";
-import PeriodicAlatKerja from "./pages/ServiceBerkala/SerberAlatKerja";
-import PeriodicAc from "./pages/ServiceBerkala/SerberAc";
+import SerberKendaraan from "./pages/ServiceBerkala/SerberKendaraan";
+import SerberAlatBerat from "./pages/ServiceBerkala/SerberAlatBerat";
+import SerberAlatKerja from "./pages/ServiceBerkala/SerberAlatKerja";
+import SerberAc from "./pages/ServiceBerkala/SerberAc";
 import TamanKota from "./pages/TamanKota";
 import TPUKota from "./pages/TPU";
 import ScanPage from "./pages/ScanQrCode/ScanPage";
@@ -81,10 +81,10 @@ export default function App() {
           <Route path="/servis/ac/nounik/:no_registrasi" element={<ServiceAc />} />
 
           {/* Periodic Services */}
-          <Route path="/periodic-kendaraan" element={<PeriodicKendaraan />} />
-          <Route path="/periodic-alat-berat" element={<PeriodicAlatBerat />} />
-          <Route path="/periodic-alat-kerja" element={<PeriodicAlatKerja />} />
-          <Route path="/periodic-ac" element={<PeriodicAc />} />
+          <Route path="/servis-berkala-kendaraan" element={<SerberKendaraan />} />
+          <Route path="/servis-berkala-alat-berat" element={<SerberAlatBerat />} />
+          <Route path="/servis-berkala-alat-kerja" element={<SerberAlatKerja />} />
+          <Route path="/servis-berkala-ac" element={<SerberAc />} />
 
           {/* Scan */}
         </Route>

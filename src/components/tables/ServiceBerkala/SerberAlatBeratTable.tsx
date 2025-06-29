@@ -20,7 +20,7 @@ import { SerberAlatBeratData } from "../../../types/serberAlatBerat";
 
 export default function SerberAlatBeratTable() {
   const { data, loading, fetchData } = useFetch<SerberAlatBeratData>(
-    "/api/servisberkalalatberat"
+    "/api/servisberkalaalatberat"
   );
 
   const { search, setSearch, filtered } = useSearch(data, (item, query) =>
@@ -40,7 +40,7 @@ export default function SerberAlatBeratTable() {
 
   const handleEdit = async (no_registrasi: string) => {
     try {
-      const res = await api.get(`/api/servisberkalalatberat/${no_registrasi}`);
+      const res = await api.get(`/api/servisberkalaalatberat/${no_registrasi}`);
       setSelected(res.data.data);
       setIsModalOpen(true);
     } catch (err) {

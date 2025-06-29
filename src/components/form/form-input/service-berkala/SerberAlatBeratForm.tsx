@@ -61,7 +61,7 @@ export default function SerberAlatBeratForm({
 
     try {
       const response = await api.put(
-        `/api/servisberkalaalatberat/${initialData?.no_registrasi}`,
+        `/api/servisberkalaalatberat/${initialData?.id_serberalatberat}`,
         formData
       );
 

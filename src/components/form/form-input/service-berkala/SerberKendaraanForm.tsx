@@ -38,8 +38,6 @@ export default function SerberKendaraanForm({
     ban: "",
   });
 
-  // console.log(initialData?.id_serberkendaraan);
-
   const handleDateChange = createDateHandler(setFormData);
 
   useEffect(() => {

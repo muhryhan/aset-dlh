@@ -37,7 +37,6 @@ export default function SerberKendaraanTable() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState<SerberKendaraanData | null>(null);
-  // console.log(selected);
 
   const handleEdit = async (no_polisi: string) => {
     try {

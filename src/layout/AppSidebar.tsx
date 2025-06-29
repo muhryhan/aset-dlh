@@ -57,10 +57,10 @@ const navItems: NavItem[] = [
     icon: <PeriodicIcon />,
     name: "Servis Berkala",
     subItems: [
-      { name: "Servis Kendaraan Berkala", path: "/periodic-kendaraan" },
-      { name: "Servis Alat Berat Berkala", path: "/periodic-alat-berat" },
-      { name: "Servis Alat Kerja Berkala", path: "/periodic-alat-kerja" },
-      { name: "Servis AC Berkala", path: "/periodic-ac" },
+      { name: "Servis Kendaraan Berkala", path: "/servis-berkala-kendaraan" },
+      { name: "Servis Alat Berat Berkala", path: "/servis-berkala-alat-berat" },
+      { name: "Servis Alat Kerja Berkala", path: "/servis-berkala-alat-kerja" },
+      { name: "Servis AC Berkala", path: "/servis-berkala-ac" },
     ],
   },
 ];
