@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignIn from "./pages/AuthPages/SignIn";
 import NotFound from "./pages/OtherPage/NotFound";
-import UserProfiles from "./pages/UserList";
+import UserList from "./pages/UserList";
 import Calendar from "./pages/Calendar";
 import Blank from "./pages/OtherPage/Blank";
 import AppLayout from "./layout/AppLayout";
@@ -12,8 +12,8 @@ import Kendaraan from "./pages/Kendaraan";
 import AlatBerat from "./pages/AlatBerat";
 import AlatKerja from "./pages/AlatKerja";
 import Ac from "./pages/Ac";
-import Tumbuhan from "./pages/Tumbuhan";
-import DistribusiTumbuhan from "./pages/DistTumbuhan/DistribusiTumbuhan";
+import Tanaman from "./pages/Tanaman";
+import DistribusiTanaman from "./pages/DistTanaman/DistribusiTanaman";
 import ServiceKendaraan from "./pages/Service/ServiceKendaraan";
 import ServiceAlatBerat from "./pages/Service/ServiceAlatBerat";
 import ServiceAlatKerja from "./pages/Service/ServiceAlatKerja";
@@ -42,11 +42,9 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          {/* Dashboard & Home */}
+          {/* Dashboard & Utility */}
           <Route path="/home" element={<Home />} />
-
-          {/* User and Calendar */}
-          <Route path="/user-list" element={<UserProfiles />} />
+          <Route path="/user-list" element={<UserList />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/blank" element={<Blank />} />
 
@@ -55,15 +53,9 @@ export default function App() {
           <Route path="/alat-berat" element={<AlatBerat />} />
           <Route path="/alat-kerja" element={<AlatKerja />} />
           <Route path="/ac" element={<Ac />} />
+          <Route path="/tanaman" element={<Tanaman />} />
           <Route path="/taman-kota" element={<TamanKota />} />
           <Route path="/tpu" element={<TPUKota />} />
-
-          {/* Tumbuhan */}
-          <Route path="/tumbuhan" element={<Tumbuhan />} />
-          <Route
-            path="/distribusi-tumbuhan/:id"
-            element={<DistribusiTumbuhan />}
-          />
 
           {/* Service Pages */}
           <Route
@@ -78,20 +70,33 @@ export default function App() {
             path="/servis/alatkerja/nounik/:no_registrasi"
             element={<ServiceAlatKerja />}
           />
-          <Route path="/servis/ac/nounik/:no_registrasi" element={<ServiceAc />} />
+          <Route
+            path="/servis/ac/nounik/:no_registrasi"
+            element={<ServiceAc />}
+          />
+          <Route
+            path="/distribusi-tanaman/:id_tanaman"
+            element={<DistribusiTanaman />}
+          />
 
-          {/* Periodic Services */}
-          <Route path="/servis-berkala-kendaraan" element={<SerberKendaraan />} />
-          <Route path="/servis-berkala-alat-berat" element={<SerberAlatBerat />} />
-          <Route path="/servis-berkala-alat-kerja" element={<SerberAlatKerja />} />
+          {/* Services Berkala Pages*/}
+          <Route
+            path="/servis-berkala-kendaraan"
+            element={<SerberKendaraan />}
+          />
+          <Route
+            path="/servis-berkala-alat-berat"
+            element={<SerberAlatBerat />}
+          />
+          <Route
+            path="/servis-berkala-alat-kerja"
+            element={<SerberAlatKerja />}
+          />
           <Route path="/servis-berkala-ac" element={<SerberAc />} />
-
-          {/* Scan */}
         </Route>
 
+        {/* Public */}
         <Route path="/scan" element={<ScanPage />} />
-
-        {/* Fallback */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

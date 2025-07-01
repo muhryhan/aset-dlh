@@ -1,27 +1,29 @@
-import AcForm from "../form/form-input/AcForm";
-import PageMeta from "../common/PageMeta";
+import TanamanMasukForm from "../../form/form-input/dist-tanaman/TanamanMasukForm";
+import PageMeta from "../../common/PageMeta";
 import { FaTimes } from "react-icons/fa";
-import { AcData } from "../../types/ac";
+import { TanamanMasukData } from "../../../types/tanamanMasuk";
 
-interface AcInputModalProps {
+interface TanamanMasukInputModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  initialData?: Partial<AcData>;
+  id_tanaman?: string;
+  initialData?: Partial<TanamanMasukData>;
 }
 
-export default function AcInput({
+export default function TanamanMasukInput({
   isOpen,
   onClose,
   onSuccess,
   initialData,
-}: AcInputModalProps) {
+  id_tanaman,
+}: TanamanMasukInputModalProps) {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 p-4 ">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 p-4">
       <PageMeta
-        title="Input Data Alat Berat"
-        description="Halaman Input Data Alat Berat"
+        title="Input Data Tanaman Masuk"
+        description="Halaman Input Data Tanaman Masuk"
       />
 
       {/* Modal box */}
@@ -34,7 +36,11 @@ export default function AcInput({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6 bg-white dark:bg-gray-800">
-          <AcForm onSuccess={onSuccess} initialData={initialData} />
+          <TanamanMasukForm
+            id_tanaman={id_tanaman}
+            onSuccess={onSuccess}
+            initialData={initialData}
+          />
         </div>
       </div>
     </div>

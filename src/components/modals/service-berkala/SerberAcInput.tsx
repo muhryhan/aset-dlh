@@ -1,27 +1,29 @@
-import AcForm from "../form/form-input/AcForm";
-import PageMeta from "../common/PageMeta";
+import SerberAcForm from "../../form/form-input/service-berkala/SerberAcForm";
+import PageMeta from "../../common/PageMeta";
 import { FaTimes } from "react-icons/fa";
-import { AcData } from "../../types/ac";
+import { SerberAcData } from "../../../types/serberAc";
 
-interface AcInputModalProps {
+interface SerberAcModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  initialData?: Partial<AcData>;
+  no_registrasi?: string;
+  initialData?: Partial<SerberAcData>;
 }
 
-export default function AcInput({
+export default function SerberAcInput({
   isOpen,
   onClose,
   onSuccess,
   initialData,
-}: AcInputModalProps) {
+  no_registrasi,
+}: SerberAcModalProps) {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 p-4 ">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 p-4">
       <PageMeta
-        title="Input Data Alat Berat"
-        description="Halaman Input Data Alat Berat"
+        title="Ubah Data Servis Berkala Ac"
+        description="Halaman Ubah Data Servis Berkala Ac"
       />
 
       {/* Modal box */}
@@ -34,7 +36,11 @@ export default function AcInput({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6 bg-white dark:bg-gray-800">
-          <AcForm onSuccess={onSuccess} initialData={initialData} />
+          <SerberAcForm
+            no_registrasi={no_registrasi}
+            onSuccess={onSuccess}
+            initialData={initialData}
+          />
         </div>
       </div>
     </div>

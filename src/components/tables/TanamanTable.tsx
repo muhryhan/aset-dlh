@@ -9,7 +9,7 @@ import { handleExportPdf } from "../../handler/handleExportPdf";
 
 import SearchInput from "../ui/search/Search";
 import {
-  ServiceButton,
+  DistributionButton,
   EditButton,
   DeleteButton,
   AddButton,
@@ -26,22 +26,19 @@ import {
 } from "../ui/table";
 
 import api from "../../services/api";
-import AcInput from "../modals/AcInput";
-import { AcData } from "../../types/ac";
+import TanamanInput from "../modals/TanamanInput";
+import { TanamanData } from "../../types/tanaman";
 
-export default function AcTable() {
-  const { no_registrasi } = useParams<{ no_registrasi: string }>();
-  const { data, setData, loading, fetchData } = useFetch<AcData>("/api/ac");
+export default function TanamanTable() {
+  const { id_tanaman } = useParams<{ id_tanaman: string }>();
+  const { data, setData, loading, fetchData } =
+    useFetch<TanamanData>("/api/tanaman");
 
   const { search, setSearch, filtered } = useSearch(
     data,
     (item, query) =>
-      item.merek.toLowerCase().includes(query) ||
-      item.no_registrasi.toLowerCase().includes(query) ||
-      item.ukuran.toLowerCase().includes(query) ||
-      item.ruangan.toLowerCase().includes(query) ||
-      item.kondisi.toLowerCase().includes(query) ||
-      item.tahun_pembelian.toString().includes(query)
+      item.nama.toLowerCase().includes(query) ||
+      item.jenis.toLowerCase().includes(query)
   );
 
   const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
@@ -56,11 +53,11 @@ export default function AcTable() {
 
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selected, setSelected] = useState<AcData | null>(null);
+  const [selected, setSelected] = useState<TanamanData | null>(null);
 
-  const handleEdit = async (no_registrasi: string) => {
+  const handleEdit = async (id_tanaman: number) => {
     try {
-      const res = await api.get(`/api/ac/${no_registrasi}`);
+      const res = await api.get(`/api/tanaman/${id_tanaman}`);
       setSelected(res.data.data);
       setIsModalOpen(true);
     } catch (err) {
@@ -68,11 +65,13 @@ export default function AcTable() {
     }
   };
 
-  const handleDelete = async (id_ac: number) => {
-    if (confirm("Yakin ingin menghapus ac ini?")) {
+  const handleDelete = async (id_tanaman: number) => {
+    if (confirm("Yakin ingin menghapus tanaman ini?")) {
       try {
-        await api.delete(`/api/ac/${id_ac}`);
-        setData((prev) => prev.filter((item) => item.id_ac !== id_ac));
+        await api.delete(`/api/tanaman/${id_tanaman}`);
+        setData((prev) =>
+          prev.filter((item) => item.id_tanaman !== id_tanaman)
+        );
       } catch (err) {
         console.error("Gagal menghapus data:", err);
       }
@@ -81,23 +80,10 @@ export default function AcTable() {
 
   const columns = [
     {
-      header: "QR Code",
-      accessor: (d: AcData) => (
-        <a
-          href={`${BASE_URL}/static/uploads/ac/qrcode/${d.qrcode}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 underline"
-        >
-          Lihat
-        </a>
-      ),
-    },
-    {
       header: "Gambar",
-      accessor: (d: AcData) => (
+      accessor: (d: TanamanData) => (
         <a
-          href={`${BASE_URL}/static/uploads/ac/${d.gambar}`}
+          href={`${BASE_URL}/static/uploads/tanaman/${d.gambar}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 underline"
@@ -106,26 +92,16 @@ export default function AcTable() {
         </a>
       ),
     },
-    { header: "Merek", accessor: (d: AcData) => d.merek },
+    { header: "Nama", accessor: (d: TanamanData) => d.nama },
     {
-      header: "No. Registrasi",
-      accessor: (d: AcData) => d.no_registrasi,
-    },
-    { header: "No. Serial", accessor: (d: AcData) => d.no_serial },
-    { header: "Ukuran", accessor: (d: AcData) => d.ukuran },
-    { header: "Ruangan", accessor: (d: AcData) => d.ruangan },
-    { header: "Asal", accessor: (d: AcData) => d.asal },
-    {
-      header: "Tahun Pembelian",
-      accessor: (d: AcData) => d.tahun_pembelian,
+      header: "Jenis",
+      accessor: (d: TanamanData) => d.jenis,
     },
     {
-      header: "Harga Pembelian",
-      accessor: (d: AcData) =>
-        `Rp ${d.harga_pembelian.toLocaleString("id-ID")}`,
+      header: "Stok",
+      accessor: (d: TanamanData) => d.stok,
     },
-    { header: "Kondisi", accessor: (d: AcData) => d.kondisi },
-    { header: "Keterangan", accessor: (d: AcData) => d.keterangan },
+    { header: "Keterangan", accessor: (d: TanamanData) => d.keterangan },
   ];
 
   const exportHeaders = columns.map((col) => col.header);
@@ -148,7 +124,7 @@ export default function AcTable() {
           <SearchInput value={search} onChange={setSearch} />
           <ExcelButton
             onClick={() =>
-              handleExportExcel(exportRows, `servis-${no_registrasi ?? "umum"}`)
+              handleExportExcel(exportRows, `tanaman-${id_tanaman ?? "umum"}`)
             }
           />
           <PDFButton
@@ -156,7 +132,7 @@ export default function AcTable() {
               handleExportPdf(
                 exportHeaders,
                 exportRows,
-                `servis-${no_registrasi ?? "umum"}`
+                `tanaman-${id_tanaman ?? "umum"}`
               )
             }
           />
@@ -164,7 +140,7 @@ export default function AcTable() {
       </div>
 
       {isModalOpen && (
-        <AcInput
+        <TanamanInput
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSuccess={() => {
@@ -215,7 +191,7 @@ export default function AcTable() {
                   </TableRow>
                 ) : (
                   paginatedData.map((item) => (
-                    <TableRow key={item.id_ac}>
+                    <TableRow key={item.id_tanaman}>
                       {columns.map((col, idx) => (
                         <TableCell
                           key={idx}
@@ -226,20 +202,18 @@ export default function AcTable() {
                       ))}
                       <TableCell className="px-5 py-3 text-center text-theme-sm font-medium text-gray-600 dark:text-gray-400">
                         <div className="flex items-center justify-center gap-2">
-                          <ServiceButton
+                          <DistributionButton
                             onClick={() =>
                               navigate(
-                                `/servis/ac/nounik/${encodeURIComponent(
-                                  item.no_registrasi
+                                `/distribusi-tanaman/${encodeURIComponent(
+                                  item.id_tanaman
                                 )}`
                               )
                             }
                           />
-                          <EditButton
-                            onClick={() => handleEdit(item.no_registrasi)}
-                          />
+                          <EditButton onClick={() => handleEdit(item.id_tanaman)} />
                           <DeleteButton
-                            onClick={() => handleDelete(item.id_ac)}
+                            onClick={() => handleDelete(item.id_tanaman)}
                           />
                         </div>
                       </TableCell>

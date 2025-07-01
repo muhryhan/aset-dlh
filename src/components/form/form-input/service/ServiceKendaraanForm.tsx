@@ -152,6 +152,7 @@ export default function ServiceKendaraanForm({
               value={formData.tanggal?.toString()}
               onChange={(dates) => handleDateChange(dates, "tanggal")}
               options={{ dateFormat: "Y-m-d" }}
+              placeholder="Pilih tanggal"
               className="w-full rounded-lg bg-white text-gray-800 border-gray-300 dark:bg-gray-900 dark:text-white dark:border-gray-700"
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2">

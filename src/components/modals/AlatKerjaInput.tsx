@@ -20,8 +20,8 @@ export default function AlatKerjaInput({
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 p-4 ">
       <PageMeta
-        title="Input Data Alat Berat"
-        description="Halaman Input Data Alat Berat"
+        title="Input Data Alat Kerja"
+        description="Halaman Input Data Alat Kerja"
       />
 
       {/* Modal box */}
@@ -34,7 +34,7 @@ export default function AlatKerjaInput({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6 bg-white dark:bg-gray-800">
-          <AlatKerjaForm onSuccess={onSuccess} initialData={initialData}/>
+          <AlatKerjaForm onSuccess={onSuccess} initialData={initialData} />
         </div>
       </div>
     </div>

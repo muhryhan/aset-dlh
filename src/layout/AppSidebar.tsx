@@ -50,8 +50,8 @@ const navItems: NavItem[] = [
   },
   {
     icon: <PlantIcon />,
-    name: "Tumbuhan",
-    path: "/tumbuhan",
+    name: "Tanaman",
+    path: "/tanaman",
   },
   {
     icon: <PeriodicIcon />,

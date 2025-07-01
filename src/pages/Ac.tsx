@@ -8,7 +8,7 @@ export default function Ac() {
       <PageMeta title="Ac" description="Halaman List Data Aset Ac" />
       <PageBreadcrumb pageTitle="Data Ac" />
       <div className="space-y-6">
-          <TableAc />
+        <TableAc />
       </div>
     </>
   );

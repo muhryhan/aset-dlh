@@ -7,7 +7,7 @@ import Input from "../../input/InputField";
 import Button from "../../../ui/button/Button";
 import Alert from "../../../ui/alert/Alert";
 import { CalenderIcon } from "../../../../icons";
-import { SerberAlatBeratData } from "../../../../types/serberAlatBerat";
+import { SerberAcData } from "../../../../types/serberAc";
 import api from "../../../../services/api";
 import { createDateHandler } from "../../../../utils/formHandler";
 import { formatDate } from "../../../../utils/dateUtils";
@@ -15,10 +15,10 @@ import { formatDate } from "../../../../utils/dateUtils";
 type Props = {
   onSuccess?: () => void;
   no_registrasi?: string;
-  initialData?: Partial<SerberAlatBeratData>;
+  initialData?: Partial<SerberAcData>;
 };
 
-export default function SerberAlatBeratForm({
+export default function SerberAcForm({
   onSuccess,
   initialData,
   no_registrasi,
@@ -31,8 +31,7 @@ export default function SerberAlatBeratForm({
 
   const [formData, setFormData] = useState({
     no_registrasi: no_registrasi ?? "",
-    oli_mesin: "",
-    filter_oli_mesin: "",
+    cuci: "",
   });
 
   const handleDateChange = createDateHandler(setFormData);
@@ -41,8 +40,7 @@ export default function SerberAlatBeratForm({
     if (initialData) {
       setFormData({
         no_registrasi: initialData.no_registrasi ?? "",
-        oli_mesin: formatDate(initialData.oli_mesin) ?? "",
-        filter_oli_mesin: formatDate(initialData.filter_oli_mesin) ?? "",
+        cuci: formatDate(initialData.cuci) ?? "",
       });
     }
   }, [initialData]);
@@ -61,7 +59,7 @@ export default function SerberAlatBeratForm({
 
     try {
       const response = await api.put(
-        `/api/servisberkalaalatberat/${initialData?.id_serberalatberat}`,
+        `/api/servisberkalaac/${initialData?.id_serberac}`,
         formData
       );
 
@@ -135,8 +133,7 @@ export default function SerberAlatBeratForm({
         </div>
 
         {/* Date Pickers */}
-        {renderDatePicker("Oli Mesin", "oli_mesin")}
-        {renderDatePicker("Filter Oli Mesin", "filter_oli_mesin")}
+        {renderDatePicker("Cuci", "cuci")}
 
         <div className="flex justify-end space-x-4 pt-6">
           <Button size="md" variant="warning" onClick={handleSubmit}>

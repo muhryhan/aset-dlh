@@ -18,7 +18,8 @@ type Props = {
   initialData?: Partial<SerberAlatKerjaData>;
 };
 
-export default function SerberAlatBeratForm({
+
+export default function SerberAlatKerjaForm({
   onSuccess,
   initialData,
   no_registrasi,
@@ -52,7 +53,7 @@ export default function SerberAlatBeratForm({
       setAlertMessage({
         variant: "warning",
         title: "Validasi Gagal",
-        message: "Nomor polisi tidak boleh kosong",
+        message: "Nomor registrasi tidak boleh kosong",
       });
       return;
     }

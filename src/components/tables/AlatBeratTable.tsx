@@ -30,7 +30,7 @@ import api from "../../services/api";
 import AlatBeratInput from "../modals/AlatBeratInput";
 import { AlatBeratData } from "../../types/alatBerat";
 
-export default function KendaraanTable() {
+export default function AlatBeratTable() {
   const { no_registrasi } = useParams<{ no_registrasi: string }>();
   const { data, setData, loading, fetchData } =
     useFetch<AlatBeratData>("/api/alatberat");
@@ -112,7 +112,10 @@ export default function KendaraanTable() {
       ),
     },
     { header: "Merek", accessor: (d: AlatBeratData) => d.merek },
-    { header: "No. Registrasi", accessor: (d: AlatBeratData) => d.no_registrasi },
+    {
+      header: "No. Registrasi",
+      accessor: (d: AlatBeratData) => d.no_registrasi,
+    },
     { header: "Warna", accessor: (d: AlatBeratData) => d.warna },
     {
       header: "Harga Pembelian",
@@ -223,7 +226,7 @@ export default function KendaraanTable() {
                       {columns.map((col, idx) => (
                         <TableCell
                           key={idx}
-                          className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400"
+                          className="px-5 py-3 text-center text-theme-sm font-medium text-gray-600 dark:text-gray-400"
                         >
                           {col.accessor(item)}
                         </TableCell>

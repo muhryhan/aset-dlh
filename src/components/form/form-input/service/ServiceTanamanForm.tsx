@@ -14,7 +14,7 @@ type Props = {
   onSuccess?: () => void;
 };
 
-export default function TumbuhanFormInput({ onSuccess }: Props) {
+export default function TanamanFormInput({ onSuccess }: Props) {
   // --- Alert Message State
   const [alertMessage, setAlertMessage] = useState<{
     variant: "success" | "warning" | "error" | "info";

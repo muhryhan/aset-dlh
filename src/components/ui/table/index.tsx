@@ -57,13 +57,16 @@ const TableRow: React.FC<TableRowProps> = ({ children, className }) => {
 const TableCell: React.FC<TableCellProps> = ({
   children,
   isHeader = false,
-  className,
+  className = "",
   rowSpan,
   colSpan,
 }) => {
   const CellTag = isHeader ? "th" : "td";
   return (
-    <CellTag className={` ${className}`} rowSpan={rowSpan} colSpan={colSpan}>
+    <CellTag 
+    className={` ${className}`} 
+    rowSpan={rowSpan} 
+    colSpan={colSpan}>
       {children}
     </CellTag>
   );

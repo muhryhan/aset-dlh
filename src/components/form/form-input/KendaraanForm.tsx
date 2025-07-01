@@ -18,14 +18,14 @@ import { useForm } from "../../../hooks/useForm";
 import { formatNumberWithDots } from "../../../utils/dotsUtils";
 import { KendaraanData } from "../../../types/kendaraan";
 const kategori = [
-  { label: "Roda 2", value: "Roda 2" },
-  { label: "Roda 3", value: "Roda 3" },
-  { label: "Roda 4", value: "Roda 4" },
-  { label: "Roda 6", value: "Roda 6" },
+  { label: "R2", value: "R2" },
+  { label: "R3", value: "R3" },
+  { label: "R4", value: "R4" },
+  { label: "R6", value: "R6" },
 ];
 const kondisi = [
   { label: "Baik", value: "Baik" },
-  { label: "Rusak Ringan", value: "Rusak Ringan" },
+  { label: "Rusak Ringan", value: "Rusak Ringan" }, 
   { label: "Rusak Berat", value: "Rusak Berat" },
 ];
 

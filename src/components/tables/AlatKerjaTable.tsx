@@ -29,7 +29,7 @@ import api from "../../services/api";
 import AlatKerjaInput from "../modals/AlatKerjaInput";
 import { AlatKerjaData } from "../../types/alatKerja";
 
-export default function KendaraanTable() {
+export default function AlatKerjaTable() {
   const { no_registrasi } = useParams<{ no_registrasi: string }>();
   const { data, setData, loading, fetchData } =
     useFetch<AlatKerjaData>("/api/alatkerja");
@@ -68,7 +68,7 @@ export default function KendaraanTable() {
   };
 
   const handleDelete = async (id_alatkerja: number) => {
-    if (confirm("Yakin ingin menghapus kendaraan ini?")) {
+    if (confirm("Yakin ingin menghapus alat kerja ini?")) {
       try {
         await api.delete(`/api/alatkerja/${id_alatkerja}`);
         setData((prev) =>
@@ -218,7 +218,7 @@ export default function KendaraanTable() {
                       {columns.map((col, idx) => (
                         <TableCell
                           key={idx}
-                          className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400"
+                          className="px-5 py-3 text-center text-theme-sm font-medium text-gray-600 dark:text-gray-400"
                         >
                           {col.accessor(item)}
                         </TableCell>

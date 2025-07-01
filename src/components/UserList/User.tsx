@@ -27,7 +27,7 @@ const users: User[] = [
   },
 ];
 
-export default function User() {
+export default function UserMetaList() {
   const [visiblePasswords, setVisiblePasswords] = useState<
     Record<number, boolean>
   >({});

@@ -226,7 +226,7 @@ export default function KendaraanTable() {
                       {columns.map((col, idx) => (
                         <TableCell
                           key={idx}
-                          className="px-5 py-3 text-theme-sm font-medium text-gray-600 dark:text-gray-400"
+                          className="px-5 py-3 text-center text-theme-sm font-medium text-gray-600 dark:text-gray-400"
                         >
                           {col.accessor(item)}
                         </TableCell>

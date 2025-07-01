@@ -67,7 +67,7 @@ export default function ServiceAlatKerjaTable() {
   };
 
   const cellClass =
-    "px-5 py-3 text-theme-sm align-top font-medium text-gray-600 dark:text-white";
+    "px-5 py-3 text-center text-theme-sm align-top font-medium text-gray-600 dark:text-white";
   const headerClass =
     "px-5 py-3 font-bold text-center text-theme-sm text-gray-700 dark:text-gray-400";
 

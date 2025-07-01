@@ -1,63 +1,53 @@
+import React from "react";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-type ServisAc = {
-  id: number;
-  qrCode: string;
-  gambar: string;
-  merek: string;
-  noRegistrasi: string;
-  noSerial: string;
-  ukuran: string;
-  ruangan: string;
-  asal: string;
-  tahunPembelian: string;
-  hargaPembelian: number;
-  kondisi: string;
-  keterangan: string;
-};
+import { useFetch } from "../../../hooks/useFetch";
+import { AcData } from "../../../types/ac";
 
 const FormDisableAc: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [servis, setServis] = useState<ServisAc | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { no_registrasi } = useParams<{ no_registrasi: string }>();
+  const { data, loading } = useFetch<AcData>("/api/ac");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`/api/ac-servis/${id}`);
-        setServis(response.data);
-      } catch {
-        setError("Gagal mengambil data servis AC.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const ac = data.find((d) => d.no_registrasi === no_registrasi);
 
-    fetchData();
-  }, [id]);
+  if (loading) {
+    return (
+      <div className="p-6 text-gray-500 dark:text-gray-300">
+        Memuat data ac...
+      </div>
+    );
+  }
 
-  if (loading) return <p>Memuat data...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (!ac) {
+    return (
+      <div className="p-6 text-red-500 dark:text-red-400">
+        Data ac tidak ditemukan.
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full mx-auto p-6 bg-white rounded shadow">
-      <form className="flex flex-col gap-6 w-full">
-        <InputField label="Merek" value={servis?.merek} />
-        <InputField label="No Registrasi" value={servis?.noRegistrasi} />
-        <InputField label="No Serial" value={servis?.noSerial} />
-        <InputField label="Ukuran" value={servis?.ukuran} />
-        <InputField label="Ruangan" value={servis?.ruangan} />
-        <InputField label="Asal" value={servis?.asal} />
-        <InputField label="Tahun Pembelian" value={servis?.tahunPembelian} />
+    <div className="w-full mx-auto p-6 bg-white rounded shadow dark:bg-white/[0.03]">
+      <form className="flex flex-col gap-6 w-full text-theme-xs font-medium text-gray-600 dark:text-gray-300">
+        <InputField label="Merek" value={ac.merek} />
+        <InputField label="Nomor Registrasi" value={ac.no_registrasi} />
+        <InputField label="Nomor Serial" value={ac.no_serial} />
+        <InputField label="Ukuran" value={ac.ukuran} />
+        <InputField label="Ruangan" value={ac.ruangan} />
+        <InputField label="Asal" value={ac.asal} />
+        <InputField
+          label="Tahun Pembelian"
+          value={ac.tahun_pembelian?.toString() ?? "-"}
+        />
         <InputField
           label="Harga Pembelian"
-          value={servis?.hargaPembelian?.toLocaleString("id-ID")}
+          value={
+            ac.harga_pembelian
+              ? `Rp ${ac.harga_pembelian.toLocaleString("id-ID")}`
+              : "-"
+          }
         />
-        <InputField label="Kondisi" value={servis?.kondisi} />
-        <InputField label="Keterangan" value={servis?.keterangan} />
+        <InputField label="Kondisi" value={ac.kondisi} />
+        <InputField label="Keterangan" value={ac.keterangan} />
       </form>
     </div>
   );
@@ -65,7 +55,7 @@ const FormDisableAc: React.FC = () => {
 
 export default FormDisableAc;
 
-// Komponen input field dinamis
+// Komponen input field
 type InputFieldProps = {
   label: string;
   value?: string;
@@ -73,14 +63,15 @@ type InputFieldProps = {
 
 const InputField: React.FC<InputFieldProps> = ({ label, value }) => (
   <div className="w-full">
-    <label className="block text-sm font-medium text-gray-700 mb-1">
+    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
       {label}
     </label>
     <input
       type="text"
-      value={value || ""}
+      value={value || "-"}
       disabled
-      className="w-full border border-gray-300 rounded-md shadow-sm bg-gray-100 p-2"
+      readOnly
+      className="w-full border border-gray-300 rounded-md shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 cursor-not-allowed"
     />
   </div>
 );
